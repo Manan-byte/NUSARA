@@ -45,27 +45,6 @@ const DEFAULT_ADMINS: AdminAccount[] = [
     createdAt: '09 Okt 2026',
   },
 ];
-if (typeof window !== 'undefined') {
-  [
-    'SIM_WARGA_TRANSAKSI_IPL',
-    'SIM_WARGA_TRANSAKSI_IPL_V2',
-    'SIM_WARGA_TRANSAKSI_IPL_V2026',
-    'SIM_WARGA_URUNAN_LIST',
-    'SIM_WARGA_URUNAN_LIST_V2',
-    'SIM_WARGA_URUNAN_LIST_V2026',
-    'SIM_WARGA_DATA_WARGA',
-    'SIM_WARGA_PENGELUARAN_KAS',
-    'SIM_WARGA_SALDO_AWAL_KAS',
-    'SIM_WARGA_OWNED_WARGA_KEYS',
-    'SIM_WARGA_OWNED_PJU_IDS',
-    'SIM_WARGA_15_SEED_DONE_V1',
-    'SIM_WARGA_JADWAL_RONDA',
-    'SIM_WARGA_PENGUMUMAN',
-    'SIM_WARGA_MY_OWNED_RECORDS_V3',
-    'SIM_WARGA_MY_OWNED_RECORDS_V2',
-    'SIM_WARGA_DUMMY_V2026_MASTER'
-  ].forEach((k) => localStorage.removeItem(k));
-}
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('beranda');
@@ -200,7 +179,16 @@ export const App: React.FC = () => {
   const [dashboardSummary, setDashboardSummary] = useState(initialDashboardSummary);
   const [wargaList, setWargaList] = useState<WargaRecord[]>(initialWargaList);
   const [rondaList, setRondaList] = useState<RondaWithStatus[]>(initialJadwalRondaList);
-  const [pengumumanList, setPengumumanList] = useState<PengumumanRecord[]>(initialPengumumanList);
+  const [pengumumanList, setPengumumanList] = useState<PengumumanRecord[]>(() => {
+    try {
+      const saved = localStorage.getItem('SIM_WARGA_PENGUMUMAN_LIST');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch {}
+    return initialPengumumanList;
+  });
   const [transaksiList, setTransaksiList] = useState<TransaksiIPL[]>(initialTransaksiIplList);
   const [pengeluaranList, setPengeluaranList] = useState<PengeluaranKasRecord[]>(initialPengeluaranKasList);
   const [programUrunan, setProgramUrunan] = useState<ProgramUrunanRecord>(initialProgramPJU);
@@ -353,6 +341,12 @@ export const App: React.FC = () => {
   useEffect(() => {
     localStorage.setItem('SIM_WARGA_PENGELUARAN_KAS', JSON.stringify(pengeluaranList));
   }, [pengeluaranList]);
+  useEffect(() => {
+    try {
+      localStorage.setItem('SIM_WARGA_PENGUMUMAN_LIST', JSON.stringify(pengumumanList));
+    } catch {}
+  }, [pengumumanList]);
+
 
   useEffect(() => {
     localStorage.setItem('SIM_WARGA_TARIF_IPL', tarifIplPerBulan.toString());

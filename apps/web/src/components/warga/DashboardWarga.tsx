@@ -5961,7 +5961,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4.5 lg:flex-1 min-h-0 overflow-y-auto pr-0.5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-max content-start gap-4 lg:flex-1 min-h-0 overflow-y-auto pr-1 pb-6">
                     {filteredAnn.map((p, idx) => {
                       const themes = [
                         {
@@ -5992,10 +5992,10 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                       return (
                         <div
                           key={p.id}
-                          className={`rounded-[28px] overflow-hidden flex flex-col justify-between shadow-xl relative group transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl border-2 border-white/10 bg-gradient-to-b ${theme.cardBg} text-white`}
+                          className={`min-h-[440px] sm:min-h-[460px] rounded-[28px] overflow-hidden flex flex-col justify-between shadow-xl relative group transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl border-2 border-white/10 bg-gradient-to-b ${theme.cardBg} text-white`}
                         >
-                          {/* TOP MEDIA IMAGE (MATCHING IMAGE #1) */}
-                          <div className="relative h-44 sm:h-48 w-full overflow-hidden flex-shrink-0">
+                          {/* TOP MEDIA IMAGE */}
+                          <div className="relative h-40 sm:h-44 w-full overflow-hidden flex-shrink-0">
                             <img
                               src={p.gambarBanner || theme.bannerDefault}
                               alt={p.judul}
