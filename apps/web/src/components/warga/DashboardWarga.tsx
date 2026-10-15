@@ -903,12 +903,10 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
       return sum + val;
     }, 0);
 
-  const pemasukan = summary.pemasukanIpl !== undefined ? summary.pemasukanIpl : calcPemasukan;
-  const pengeluaran = summary.pengeluaranKas !== undefined ? summary.pengeluaranKas : calcPengeluaran;
-  const sisaSaldo = summary.sisaSaldoKas !== undefined
-    ? summary.sisaSaldoKas
-    : Math.max(0, (summary.saldoAwalKas || 0) + pemasukan - pengeluaran);
-
+  const pemasukan = calcPemasukan > 0 ? calcPemasukan : (summary.pemasukanIpl || 0);
+  const pengeluaran = calcPengeluaran > 0 ? calcPengeluaran : (summary.pengeluaranKas || 0);
+  const saldoAwal = summary.saldoAwalKas || 0;
+  const sisaSaldo = Math.max(0, saldoAwal + pemasukan - pengeluaran);
   const totalKK = summary.totalRumah !== undefined ? summary.totalRumah : wargaList.length;
   const lunasKK = summary.rumahLunas !== undefined
     ? summary.rumahLunas
