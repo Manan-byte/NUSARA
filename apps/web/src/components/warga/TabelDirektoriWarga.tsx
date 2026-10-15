@@ -360,19 +360,7 @@ export const TabelDirektoriWarga: React.FC<TabelDirektoriWargaProps> = ({
             <span>
               Menampilkan <strong>{startIndex + 1}</strong> - <strong>{Math.min(startIndex + pageSize, filtered.length)}</strong> dari <strong>{filtered.length}</strong> warga
             </span>
-            <span className="text-slate-300 dark:text-slate-700">•</span>
-            <div className="flex items-center gap-1">
-              <span>Baris:</span>
-              <select
-                value={pageSize}
-                onChange={(e) => setPageSize(Number(e.target.value))}
-                className="bg-slate-50 dark:bg-[#1E293B] border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 font-bold text-slate-700 dark:text-slate-200 focus:outline-none"
-              >
-                <option value={10}>10</option>
-                <option value={20}>20</option>
-                <option value={50}>50</option>
-              </select>
-            </div>
+
           </div>
 
           <div className="flex items-center gap-1 self-end sm:self-center">

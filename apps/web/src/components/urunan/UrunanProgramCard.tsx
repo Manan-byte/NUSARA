@@ -572,21 +572,7 @@ export const UrunanProgramCard: React.FC<UrunanProgramCardProps> = ({
               <span>
                 Menampilkan <strong>{startIndex + 1}</strong> - <strong>{Math.min(startIndex + pageSize, filteredList.length)}</strong> dari <strong>{filteredList.length}</strong> data
               </span>
-              <span className="text-slate-300">•</span>
-              <div className="flex items-center gap-1">
-                <span>Baris:</span>
-                <select
-                  value={pageSize}
-                  onChange={(e) => setPageSize(Number(e.target.value))}
-                  className="bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 font-bold text-slate-700 focus:outline-none"
-                >
-                  <option value={10}>10</option>
-                  <option value={20}>20</option>
-                  <option value={50}>50</option>
-                </select>
-              </div>
             </div>
-
             {/* Tombol Halaman */}
             <div className="flex items-center gap-1 self-center sm:self-auto">
               <button
