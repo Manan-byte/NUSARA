@@ -5,9 +5,15 @@
 @layer base {
   html, body, #root {
     width: 100%;
+    max-width: 100%;
+    overflow-x: hidden !important;
     min-height: 100vh;
     margin: 0;
     padding: 0;
+  }
+
+  * {
+    -webkit-overflow-scrolling: touch;
   }
 
   html {

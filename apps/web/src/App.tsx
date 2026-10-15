@@ -1746,7 +1746,7 @@ export const App: React.FC = () => {
   }, [isAdmin, currentAdmin]);
 
   return (
-    <div className={`relative ${isAdmin && currentAdmin ? 'h-screen max-h-screen overflow-hidden' : 'min-h-screen overflow-x-hidden'} transition-colors duration-200`}>
+    <div className={`relative w-full max-w-full overflow-x-hidden ${isAdmin && currentAdmin ? 'h-screen max-h-screen md:overflow-hidden' : 'min-h-screen'} transition-colors duration-200`}>
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed top-6 right-4 sm:right-8 z-[60] bg-[#0B484C] text-[#F3D37A] text-xs sm:text-sm font-bold px-5 py-3.5 rounded-2xl shadow-2xl border border-[#D9B352]/70 animate-in fade-in slide-in-from-top-4 duration-200">

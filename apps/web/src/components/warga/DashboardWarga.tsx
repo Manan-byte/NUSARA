@@ -1931,12 +1931,12 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
   return (
     <div
       data-view="dashboard-warga"
-      className="carlic-website-bg fixed inset-0 w-screen h-screen overflow-hidden p-1.5 sm:p-2 flex flex-col items-center justify-start select-none"
+      className="carlic-website-bg fixed inset-0 w-full max-w-full h-full overflow-x-hidden overflow-y-auto lg:overflow-hidden p-1 sm:p-2 flex flex-col items-center justify-start select-none"
     >
       {/* =================================================================== */}
       {/* FULL-WIDTH TRANSLUCENT GLASS BOARD OVER SCENIC WEBSITE BACKGROUND   */}
       {/* =================================================================== */}
-        <div className="carlic-board w-full max-w-[1680px] flex-1 flex flex-col rounded-[22px] sm:rounded-[26px] p-2 sm:p-2.5 overflow-y-auto lg:overflow-hidden min-h-0">
+      <div className="carlic-board w-full max-w-full lg:max-w-[1680px] flex-1 flex flex-col rounded-[16px] sm:rounded-[26px] p-2 sm:p-2.5 overflow-x-hidden min-h-0">
         {/* ================================================================= */}
         <header className="relative z-30 rounded-[18px] px-3.5 py-2 sm:px-4 sm:py-2 mb-2 flex flex-col lg:flex-row lg:items-center justify-between gap-2">
           {/* Decorative Clipped Background Layer so Popover is Never Clipped */}
@@ -2023,14 +2023,14 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
             );
 
             return (
-              <div className="relative z-20 flex items-center gap-2.5 flex-shrink-0 whitespace-nowrap">
+              <div className="relative z-20 flex flex-wrap sm:flex-nowrap items-center gap-1.5 sm:gap-2.5 max-w-full justify-start sm:justify-end">
                 <button
                   type="button"
                   onClick={() => {
                     handleOpenFormWarga();
                     onSelectTab('warga');
                   }}
-                  className="px-4 py-2.5 rounded-full bg-white/95 hover:bg-white text-[#092C2E] text-xs font-extrabold shadow-md transition-colors flex items-center gap-2 flex-shrink-0"
+                  className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-white/95 hover:bg-white text-[#092C2E] text-[11px] sm:text-xs font-extrabold shadow-md transition-colors flex items-center gap-1.5 flex-shrink-0"
                 >
                   <UserPlus className="w-3.5 h-3.5 text-[#0B484C]" />
                   <span>+ Isi Data Warga</span>
@@ -2039,12 +2039,11 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                 <button
                   type="button"
                   onClick={() => onSelectTab('ipl')}
-                  className="pk-gold-gradient px-4 py-2.5 rounded-full text-[#062C2F] text-xs font-extrabold shadow-md hover:brightness-105 transition-all flex items-center gap-2 flex-shrink-0"
+                  className="pk-gold-gradient px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-[#062C2F] text-[11px] sm:text-xs font-extrabold shadow-md hover:brightness-105 transition-all flex items-center gap-1.5 flex-shrink-0"
                 >
                   <CreditCard className="w-3.5 h-3.5 text-[#062C2F]" />
                   <span>Bayar / Cek IPL</span>
                 </button>
-
                 {/* Tombol Lonceng Pusat Notifikasi Paguyuban */}
                 <div className="relative">
                   <button
@@ -2179,9 +2178,9 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
         {/* ================================================================= */}
         {/* 2. MAIN BODY: VERTICAL PILL SIDEBAR KIRI + KONTEN MENU KANAN      */}
         {/* ================================================================= */}
-        <div className="flex flex-col lg:flex-row gap-3 items-stretch flex-1 min-h-0 overflow-y-auto lg:overflow-visible">
-          <aside className="carlic-card lg:rounded-full px-2 py-2.5 flex lg:flex-col items-center justify-between gap-1.5 lg:w-[58px] flex-shrink-0 lg:h-full">
-            <nav className="flex lg:flex-col items-center gap-1.5 overflow-x-auto lg:overflow-visible w-full lg:w-auto justify-around lg:justify-start scrollbar-none">
+        <div className="flex flex-col lg:flex-row gap-2.5 sm:gap-3 items-stretch flex-1 min-h-0 w-full max-w-full overflow-x-hidden">
+          <aside className="carlic-card lg:rounded-full px-2 py-2 flex lg:flex-col items-center justify-between gap-1.5 lg:w-[58px] flex-shrink-0 lg:h-full max-w-full overflow-hidden">
+            <nav className="flex lg:flex-col items-center gap-1 overflow-x-auto max-w-full justify-around lg:justify-start scrollbar-none">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = currentTab === item.id;
@@ -2244,7 +2243,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
           </aside>
 
           {/* RIGHT CONTENT AREA (KONSISTEN 456PX DI SEMUA 6 MENU) */}
-          <div className="flex-1 min-w-0 lg:h-full overflow-y-auto lg:overflow-visible pr-0.5">
+          <div className="flex-1 min-w-0 w-full max-w-full lg:h-full overflow-y-auto lg:overflow-visible pr-0.5">
             {/* MENU 1: BERANDA (TANPA DUPLIKASI ANGKA KAS & TANPA FINGERPRINT)*/}
             {/* ============================================================= */}
             {currentTab === 'beranda' && (
@@ -2683,9 +2682,9 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                         <>
                           <div className="flex flex-col flex-1 min-h-0 min-w-0">
                             {/* Top Bar: Filter Status + Search + Tombol Bayar IPL */}
-                            <div className="flex items-center justify-between gap-2 mb-2 flex-shrink-0">
-                              {/* Filter Tabs (Single Row, Never Wraps) */}
-                              <div className="flex items-center gap-1.5 flex-nowrap flex-shrink-0">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2 flex-shrink-0 max-w-full">
+                              {/* Filter Tabs */}
+                              <div className="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1 sm:pb-0 scrollbar-none flex-nowrap flex-shrink-0">
                                 {(['ALL', 'Lunas', 'Menunggu Verifikasi', 'Belum Bayar'] as const).map((st) => {
                                   const pendingCount = wargaList.filter(
                                     (w) => w.statusIpl === 'Menunggu Verifikasi'
@@ -2735,8 +2734,8 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                                 })}
                               </div>
 
-                              <div className="flex items-center gap-2 flex-shrink-0">
-                                <div className="relative w-32 sm:w-36">
+                              <div className="flex items-center gap-2 justify-between sm:justify-end w-full sm:w-auto flex-shrink-0">
+                                <div className="relative flex-1 sm:w-36">
                                   <Search className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
                                   <input
                                     type="text"
@@ -2793,8 +2792,8 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                               </div>
                             </div>
 
-                            {/* Grid 2 Kolom x 3 Baris (6 Kartu Warga per Halaman — Lega & Mudah Dibaca) */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 sm:grid-rows-3 gap-2.5 flex-1 min-h-0">
+                            {/* Grid 2 Kolom (Scrollable vertikal di HP agar tidak pernah terpotong) */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 flex-1 min-h-0 overflow-y-auto pr-0.5">
                               {pageItems.map((w, i) => {
                                 const rejectedReason = getRejectedIplReason(w);
                                 const iplAcc = getWargaIplAccumulated(w);
@@ -3714,9 +3713,9 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                       {urunanMode === 'daftar' ? (
                         <>
                           <div className="flex flex-col flex-1 min-h-0 min-w-0">
-                            {/* Top Bar Seragam dengan Menu 2 (IPL): Filter Status + Search + Tombol Bayar PJU */}
-                            <div className="flex items-center justify-between gap-2 mb-2 flex-shrink-0">
-                              <div className="flex items-center gap-1.5 flex-nowrap flex-shrink-0">
+                            {/* Top Bar: Responsive flex-col di HP, flex-row di Desktop agar tidak pernah overflow horizontal */}
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2 flex-shrink-0 max-w-full">
+                              <div className="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1 sm:pb-0 scrollbar-none flex-nowrap flex-shrink-0">
                                 {(
                                   [
                                     { id: 'ALL', label: `Semua (${groupedList.length})` },
@@ -3756,8 +3755,8 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                                 ))}
                               </div>
 
-                              <div className="flex items-center gap-2">
-                                <div className="relative w-32 sm:w-36">
+                              <div className="flex items-center gap-2 justify-between sm:justify-end w-full sm:w-auto flex-shrink-0">
+                                <div className="relative flex-1 sm:w-36">
                                   <Search className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
                                   <input
                                     type="text"
@@ -3818,8 +3817,8 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                               </div>
                             )}
 
-                            {/* GRID 2X3 (6 KARTU PER HALAMAN) SERAGAM 2 BARIS SEPERTI MENU IPL — ANTI TUMPUK & ANTI POTONG */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 sm:grid-rows-3 gap-2.5 flex-1 min-h-0">
+                            {/* GRID KARTU PJU: Scrollable vertikal di HP agar tidak pernah terpotong */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 flex-1 min-h-0 overflow-y-auto pr-0.5">
                               {pageItems.map((item) => {
                                 const isBoth = item.hasWajib && item.hasDonatur;
                                 const isDonatur = item.hasDonatur;
@@ -4645,8 +4644,8 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                   {wargaMode === 'direktori' ? (
                     <div className="carlic-card p-4 lg:h-full flex flex-col justify-between">
                       <div className="flex flex-col flex-1 min-h-0">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-2.5 flex-shrink-0">
-                          <div className="flex flex-wrap items-center gap-1.5">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2 flex-shrink-0 max-w-full">
+                          <div className="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1 sm:pb-0 scrollbar-none flex-nowrap sm:flex-wrap flex-shrink-0">
                             {(
                               [
                                 { id: 'ALL', label: 'Semua Blok' },
@@ -4673,8 +4672,8 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                             ))}
                           </div>
 
-                          <div className="flex items-center gap-2.5">
-                            <div className="relative sm:w-60">
+                          <div className="flex items-center gap-2 justify-between sm:justify-end w-full sm:w-auto flex-shrink-0">
+                            <div className="relative flex-1 sm:w-60">
                               <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                               <input
                                 type="text"
@@ -4698,7 +4697,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 lg:grid-rows-3 gap-2.5 flex-1 min-h-0">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 flex-1 min-h-0 overflow-y-auto pr-0.5">
                           {pageItems.map((w, idx) => {
                             const isOwned = isWargaOwnedByUser(w);
                             return (
