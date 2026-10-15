@@ -1,0 +1,345 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body, #root {
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    font-size: 16px;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #073538;
+    color: #092C2E;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .dark body {
+    background-color: #041E20;
+    color: #F4F7F5;
+  }
+
+  h1, h2, h3, h4, .font-heading {
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+    letter-spacing: -0.025em;
+  }
+}
+
+/* ===================================================================== */
+/* PESONA KAHURIPAN SCENIC WEBSITE BACKGROUND + GLASS BOARD              */
+/* ===================================================================== */
+.carlic-website-bg {
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(235, 203, 107, 0.34) 0%, transparent 38%),
+    radial-gradient(circle at 88% 82%, rgba(217, 179, 82, 0.28) 0%, transparent 42%),
+    linear-gradient(
+      135deg,
+      rgba(6, 44, 47, 0.58) 0%,
+      rgba(11, 72, 76, 0.42) 50%,
+      rgba(6, 44, 47, 0.64) 100%
+    ),
+    url('/background.jpg');
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.dark .carlic-website-bg {
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(217, 179, 82, 0.2) 0%, transparent 40%),
+    linear-gradient(
+      135deg,
+      rgba(4, 24, 26, 0.78) 0%,
+      rgba(7, 43, 46, 0.72) 50%,
+      rgba(3, 18, 20, 0.82) 100%
+    ),
+    url('/background.jpg');
+  background-position: center;
+  background-attachment: fixed;
+}
+
+/* Panoramic Header Banner Inside Dashboard */
+.pk-hero-banner {
+  background-image:
+    linear-gradient(
+      105deg,
+      rgba(6, 43, 46, 0.94) 0%,
+      rgba(11, 72, 76, 0.86) 52%,
+      rgba(15, 88, 93, 0.58) 100%
+    ),
+    url('/lush-ridge-trail.jpg');
+  background-size: cover;
+  background-position: center 35%;
+  border: 1.5px solid rgba(229, 193, 88, 0.55);
+  box-shadow: 0 18px 40px -12px rgba(6, 43, 46, 0.38);
+}
+
+/* Translucent Frosted Glass Board with Subtle Gold Architectural Grid */
+.carlic-board {
+  background-color: rgba(245, 242, 234, 0.86);
+  background-image:
+    radial-gradient(rgba(217, 179, 82, 0.16) 1px, transparent 1px),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(244, 239, 226, 0.82) 100%);
+  background-size: 28px 28px, 100% 100%;
+  backdrop-filter: blur(22px);
+  border: 2px solid rgba(229, 193, 88, 0.55);
+  box-shadow:
+    0 35px 90px -20px rgba(3, 24, 26, 0.65),
+    0 0 0 1px rgba(255, 255, 255, 0.7) inset;
+}
+
+.dark .carlic-board {
+  background-color: rgba(7, 40, 43, 0.86);
+  background-image:
+    radial-gradient(rgba(217, 179, 82, 0.12) 1px, transparent 1px),
+    linear-gradient(135deg, rgba(7, 40, 43, 0.9) 0%, rgba(5, 28, 30, 0.92) 100%);
+  background-size: 28px 28px, 100% 100%;
+  border: 1.5px solid rgba(217, 179, 82, 0.4);
+  box-shadow: 0 35px 90px -20px rgba(0, 0, 0, 0.85);
+}
+
+.carlic-card {
+  background-color: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(12px);
+  border-radius: 26px;
+  box-shadow: 0 10px 28px -8px rgba(8, 59, 62, 0.08);
+  border: 1px solid rgba(217, 179, 82, 0.24);
+}
+
+.dark .carlic-card {
+  background-color: rgba(11, 56, 59, 0.92);
+  border-color: rgba(217, 179, 82, 0.25);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.55);
+}
+
+/* Kartu Utama Pesona Kahuripan: Deep Emerald-Teal + Aksen Emas */
+.carlic-sage-card,
+.carlic-hero-card {
+  background: linear-gradient(135deg, #0F585D 0%, #0B484C 55%, #073336 100%) !important;
+  border-radius: 26px;
+  border: 1.5px solid rgba(229, 193, 88, 0.5) !important;
+  box-shadow: 0 16px 34px -8px rgba(8, 59, 62, 0.45);
+  color: #ffffff !important;
+}
+
+/* Tombol Utama Pesona Kahuripan: Deep Teal + Aksen Emas */
+.carlic-sage-btn {
+  background: linear-gradient(135deg, #0F585D 0%, #083B3E 100%);
+  border: 1px solid rgba(229, 193, 88, 0.55);
+  box-shadow: 0 8px 20px -6px rgba(8, 59, 62, 0.45);
+  transition: all 0.2s ease;
+}
+
+.carlic-sage-btn:hover {
+  background: linear-gradient(135deg, #13676D 0%, #0B484C 100%);
+  border-color: rgba(229, 193, 88, 0.9);
+  transform: translateY(-1px);
+}
+
+/* Lencana & Aksen Emas Pesona Kahuripan */
+.pk-gold-gradient {
+  background: linear-gradient(135deg, #EBCB6B 0%, #D4AA42 55%, #B88B28 100%);
+}
+
+/* Crisp Clean SaaS Card & Pill Styles (for Admin / Tables) */
+.saas-card {
+  background-color: #FFFFFF;
+  border: 1px solid rgba(217, 179, 82, 0.22);
+  box-shadow: 0 1px 3px 0 rgba(8, 59, 62, 0.06);
+}
+
+.dark .saas-card {
+  background-color: #0B383B;
+  border-color: rgba(217, 179, 82, 0.22);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.35);
+}
+/* ===================================================================== */
+/* UNIVERSAL FORM CONTROLS (INPUT, SELECT, TEXTAREA) LIGHT & DARK MODE   */
+/* ===================================================================== */
+.dark input[type="text"],
+.dark input[type="number"],
+.dark input[type="password"],
+.dark input[type="search"],
+.dark input[type="tel"],
+.dark select,
+.dark textarea {
+  background-color: #051E20 !important;
+  border-color: rgba(217, 179, 82, 0.35) !important;
+  color: #FFFFFF !important;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: rgba(255, 255, 255, 0.45) !important;
+}
+
+.dark select option {
+  background-color: #072426 !important;
+  color: #FFFFFF !important;
+}
+
+/* Modal and secondary cancel buttons in dark mode */
+.dark .btn-cancel,
+.dark button.bg-stone-100,
+.dark button.bg-stone-50 {
+  background-color: #051E20 !important;
+  color: #E2E8F0 !important;
+  border: 1px solid rgba(217, 179, 82, 0.3) !important;
+}
+
+.saas-card-subtle {
+  background-color: #FAF8F3;
+  border: 1px solid rgba(217, 179, 82, 0.2);
+}
+
+.dark .saas-card-subtle {
+  background-color: #072B2E;
+  border-color: rgba(217, 179, 82, 0.15);
+}
+
+/* Custom smooth scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(217, 179, 82, 0.4);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(217, 179, 82, 0.65);
+}
+
+/* ===================================================================== */
+/* TINGKATKAN KONTRAST TEKS & KETERBACAAN MODE GELAP (DARK MODE)         */
+/* ===================================================================== */
+.dark {
+  color-scheme: dark;
+}
+
+/* Teks sekunder, subjudul, dan keterangan di Dark Mode dibuat cerah & kontras */
+.dark .text-stone-500 {
+  color: #D6D3D1; /* stone-300 */
+}
+
+.dark .text-stone-400 {
+  color: #E7E5E4; /* stone-200 */
+}
+
+.dark .text-stone-600 {
+  color: #F5F5F4; /* stone-100 */
+}
+
+.dark .text-\[\#1C221E\] {
+  color: #FFFFFF;
+}
+
+.dark .text-\[\#0B484C\] {
+  color: #F3D37A; /* Emas cerah pada latar gelap */
+}
+.dark .text-amber-700,
+.dark .text-amber-800,
+.dark .text-amber-900,
+.dark .text-\[\#9A7018\] {
+  color: #FDE68A; /* amber-200 cerah */
+}
+.dark .text-orange-800,
+.dark .text-orange-900 {
+  color: #FED7AA; /* orange-200 cerah */
+}
+
+.dark .text-rose-700,
+.dark .text-rose-800 {
+  color: #FECDD3; /* rose-200 cerah */
+}
+
+.dark .text-sky-800,
+.dark .text-sky-900,
+.dark .text-sky-700 {
+  color: #BAE6FD; /* sky-200 cerah */
+}
+
+/* Kontras badge status di Dark Mode */
+.dark .bg-stone-200\/80,
+.dark .bg-stone-200 {
+  background-color: rgba(68, 64, 60, 0.85);
+  color: #F5F5F4;
+}
+
+.dark .bg-emerald-100 {
+  background-color: rgba(6, 78, 59, 0.6);
+  color: #A7F3D0;
+  border-color: rgba(52, 211, 153, 0.4);
+}
+
+.dark .bg-amber-100 {
+  background-color: rgba(120, 53, 15, 0.55);
+  color: #FDE68A;
+  border-color: rgba(251, 191, 36, 0.45);
+}
+
+.dark .bg-orange-100 {
+  background-color: rgba(124, 45, 18, 0.6);
+  color: #FED7AA;
+  border-color: rgba(251, 146, 60, 0.45);
+}
+
+.dark .bg-rose-100,
+.dark .bg-rose-50 {
+  background-color: rgba(136, 19, 55, 0.6);
+  color: #FECDD3;
+  border-color: rgba(251, 113, 133, 0.45);
+}
+
+.dark .bg-sky-100,
+.dark .bg-sky-50 {
+  background-color: rgba(12, 74, 110, 0.6);
+  color: #BAE6FD;
+  border-color: rgba(56, 189, 248, 0.45);
+}
+
+/* ===================================================================== */
+/* STIL PRINT KHUSUS CETAK / SIMPAN PDF KWITANSI DIGITAL RESMI           */
+/* ===================================================================== */
+@media print {
+  body {
+    background: #FFFFFF !important;
+    color: #1C221E !important;
+  }
+  body * {
+    visibility: hidden;
+  }
+  .print-kwitansi-sheet,
+  .print-kwitansi-sheet * {
+    visibility: visible;
+  }
+  .print-kwitansi-sheet {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto;
+    padding: 24px;
+    margin: 0;
+    background: #FFFFFF !important;
+    color: #1C221E !important;
+    box-shadow: none !important;
+    border: 2px solid #D9B352 !important;
+    border-radius: 16px !important;
+    z-index: 999999 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+}

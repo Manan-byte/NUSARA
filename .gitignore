@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Production builds
+dist/
+dist-ssr/
+*.tsbuildinfo
+
+# Rust target
+target/
+apps/server/target/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Cache and logs
+*.log
+.turbo/
+.forgeguard/cache/
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 140" width="100%" height="100%">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="forestGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F3327"/>
+      <stop offset="100%" stop-color="#1B4D3E"/>
+    </linearGradient>
+    <linearGradient id="leafGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2E7D32"/>
+      <stop offset="100%" stop-color="#4CAF50"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E5C158"/>
+      <stop offset="100%" stop-color="#C5A059"/>
+    </linearGradient>
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <!-- Background Canvas Card (Optional Subtle Warm Card) -->
+  <rect width="540" height="140" rx="24" fill="#FAF8F5" />
+
+  <!-- Botanical Emblem (Modern Minimalist Abstract 8 + Leaf Motif) -->
+  <g transform="translate(32, 22)" filter="url(#softShadow)">
+    <!-- Base Outer Leaf Loop (Upper) -->
+    <path d="M48 10 C32 10 20 22 20 38 C20 54 34 62 48 68 C62 62 76 54 76 38 C76 22 64 10 48 10 Z" 
+          fill="none" stroke="url(#forestGrad)" stroke-width="4.5" stroke-linejoin="round"/>
+    <!-- Outer Leaf Loop (Lower - Forming Figure 8) -->
+    <path d="M48 68 C30 74 14 84 14 96 C14 110 28 118 48 118 C68 118 82 110 82 96 C82 84 66 74 48 68 Z" 
+          fill="none" stroke="url(#forestGrad)" stroke-width="4.5" stroke-linejoin="round"/>
+    
+    <!-- Organic Leaf Accent Filling Upper Loop -->
+    <path d="M48 18 C38 28 36 42 48 54 C60 42 58 28 48 18 Z" 
+          fill="url(#leafGrad)" opacity="0.9"/>
+          
+    <!-- Gold Ribbon Central Spine -->
+    <path d="M48 14 Q52 42 48 68 Q44 94 48 114" 
+          fill="none" stroke="url(#goldGrad)" stroke-width="2.5" stroke-linecap="round"/>
+          
+    <!-- Small Leaf Sprout Accent -->
+    <path d="M48 54 C58 52 66 44 70 36 C64 48 54 52 48 54 Z" fill="#81C784"/>
+  </g>
+
+  <!-- Typography Brand Identity -->
+  <g transform="translate(142, 28)">
+    <!-- "Pesona" Script / Elegant Italic Typography -->
+    <text x="0" y="24" 
+          font-family="'Playfair Display', 'Plus Jakarta Sans', Georgia, serif" 
+          font-size="26" 
+          font-style="italic" 
+          font-weight="600" 
+          fill="#2E7D32" 
+          letter-spacing="0.5">
+      Pesona
+    </text>
+
+    <!-- "KAHURIPAN 8" Bold Modern Civic Sans-Serif -->
+    <text x="0" y="58" 
+          font-family="'Plus Jakarta Sans', system-ui, -apple-system, sans-serif" 
+          font-size="34" 
+          font-weight="800" 
+          fill="#0F3327" 
+          letter-spacing="2">
+      KAHURIPAN 8
+    </text>
+
+    <!-- "TAHAP 2" Minimalist Modern Pill Badge -->
+    <g transform="translate(0, 68)">
+      <rect width="112" height="24" rx="12" fill="#0F3327"/>
+      <!-- Gold Trim Accent on Pill -->
+      <rect x="1.5" y="1.5" width="109" height="21" rx="10.5" fill="none" stroke="url(#goldGrad)" stroke-width="1" opacity="0.6"/>
+      <text x="56" y="16" 
+            text-anchor="middle" 
+            font-family="'Plus Jakarta Sans', system-ui, sans-serif" 
+            font-size="11" 
+            font-weight="700" 
+            fill="#FFFFFF" 
+            letter-spacing="2.5">
+        TAHAP 2
+      </text>
+    </g>
+
+    <!-- Subtitle Civic Tagline -->
+    <text x="124" y="84" 
+          font-family="'Plus Jakarta Sans', system-ui, sans-serif" 
+          font-size="11" 
+          font-weight="500" 
+          fill="#78716C" 
+          letter-spacing="0.8">
+      PORTAL DIGITAL WARGA RT / RW
+    </text>
+  </g>
+</svg>

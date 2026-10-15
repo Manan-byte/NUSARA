@@ -1,0 +1,20 @@
+{
+  "name": "sim-warga-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sistem Informasi & Administrasi Warga Digital Pesona Kahuripan 8 Tahap 2",
+  "scripts": {
+    "dev": "pnpm --filter web dev",
+    "dev:all": "concurrently -n \"SERVER,WEB\" -c \"magenta,cyan\" \"cargo run --manifest-path apps/server/Cargo.toml\" \"pnpm --filter web dev\"",
+    "start": "pnpm dev:all",
+    "build": "pnpm --filter web build",
+    "preview": "pnpm --filter web preview",
+    "server": "cargo run --manifest-path apps/server/Cargo.toml",
+    "server:build": "cargo build --release --manifest-path apps/server/Cargo.toml"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.6",
+    "turbo": "^2.4.0",
+    "typescript": "^5.7.0"
+  }
+}
