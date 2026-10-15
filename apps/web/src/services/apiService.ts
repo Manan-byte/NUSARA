@@ -25,6 +25,12 @@ const DEFAULT_GAS_URL =
   'https://script.google.com/macros/s/AKfycbw9v-Ihioux0HFuvq_CV-b1OkUSZ53IDUZBPJnE2ej21abxj_pKgSMbiSmPeko9zYmY/exec';
 
 export function getGasApiUrl(): string {
+  if (typeof window !== 'undefined') {
+    const localUrl = localStorage.getItem('SIM_WARGA_GAS_URL');
+    if (localUrl && localUrl.trim().length > 0) {
+      return localUrl.trim();
+    }
+  }
   const envUrl = import.meta.env.VITE_GAS_API_URL;
   if (envUrl && envUrl.trim().length > 0) {
     return envUrl.trim();

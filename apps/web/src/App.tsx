@@ -714,19 +714,7 @@ export const App: React.FC = () => {
         second: '2-digit',
       }) + ' WIB';
 
-    // 1. Kirim via daftarWarga
-    await postToGas({
-      action: 'daftarWarga',
-      data: {
-        ...wargaWithId,
-        namaLengkap: cleanName,
-        nama: cleanName,
-        catatan: noteWithIdAndPw,
-        waktuInput: wargaWithId.waktuInput || nowWib,
-      } as unknown as Record<string, unknown>,
-    });
-
-    // 2. Sinkronkan juga daftar lengkap via syncAll agar tab DATA_WARGA Google Sheets 100% terupdate dan terformat rapi!
+    // Sinkronkan data lengkap langsung ke Google Sheets (ke Google Sheets baru hasil migrasi atau lama)
     const { residents, iplRecords, pengeluaranRecords, urunanRecords } = formatPayloadForGas(
       nextList,
       transaksiList,
@@ -740,7 +728,6 @@ export const App: React.FC = () => {
       pengeluaranRecords: pengeluaranRecords as unknown as Record<string, unknown>[],
       urunanRecords: urunanRecords as unknown as Record<string, unknown>[],
     });
-
     showToast(`Sukses! Data ${wargaWithId.namaLengkap} (${wargaWithId.alamatRumah}) telah masuk ke Google Sheets!`);
   };
 

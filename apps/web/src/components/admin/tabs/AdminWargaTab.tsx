@@ -215,26 +215,7 @@ export const AdminWargaTab: React.FC<AdminWargaTabProps> = ({
             </strong>{' '}
             dari {filteredWarga.length} KK
           </span>
-          <div className="hidden sm:flex items-center gap-1 ml-2 pl-2 border-l border-stone-200 dark:border-stone-700">
-            <span className="text-[10px]">Per halaman:</span>
-            {[6, 9, 12].map((cnt) => (
-              <button
-                key={cnt}
-                type="button"
-                onClick={() => {
-                  setWargaPerPage(cnt);
-                  setWargaPage(1);
-                }}
-                className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                  wargaPerPage === cnt
-                    ? 'bg-[#0B484C] text-[#F3D37A]'
-                    : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300'
-                }`}
-              >
-                {cnt}
-              </button>
-            ))}
-          </div>
+
         </div>
 
         <div className="flex items-center gap-1.5">
