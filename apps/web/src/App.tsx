@@ -490,25 +490,14 @@ export const App: React.FC = () => {
             pinHash: w.pinHash || (w.pin ? await hashPasswordSha256(w.pin) : undefined),
           }))
         );
-        if (wargaWithHashes && wargaWithHashes.length > 0) {
-          setWargaList(wargaWithHashes);
-        }
-        if (liveData.transaksiList && liveData.transaksiList.length > 0) {
-          setTransaksiList(liveData.transaksiList);
-        }
-        if (liveData.pengeluaranList && liveData.pengeluaranList.length > 0) {
-          setPengeluaranList(liveData.pengeluaranList);
-        }
-        if (liveData.urunanList && liveData.urunanList.length > 0) {
-          setUrunanList(liveData.urunanList);
-        }
-        const effectiveWarga = wargaWithHashes && wargaWithHashes.length > 0 ? wargaWithHashes : initialWargaList;
-        const effectiveTrx = liveData.transaksiList && liveData.transaksiList.length > 0 ? liveData.transaksiList : initialTransaksiIplList;
-        const effectiveExp = liveData.pengeluaranList && liveData.pengeluaranList.length > 0 ? liveData.pengeluaranList : initialPengeluaranKasList;
+        setWargaList(wargaWithHashes);
+        setTransaksiList(liveData.transaksiList || []);
+        setPengeluaranList(liveData.pengeluaranList || []);
+        setUrunanList(liveData.urunanList || []);
         const newSummary = computeSummary(
-          effectiveWarga,
-          effectiveTrx,
-          effectiveExp,
+          wargaWithHashes,
+          liveData.transaksiList || [],
+          liveData.pengeluaranList || [],
           tarifIplPerBulan,
           saldoAwalKas
         );
@@ -709,31 +698,49 @@ export const App: React.FC = () => {
     setOwnedWargaKeys((prev) =>
       Array.from(new Set([...prev, wargaWithId.id!, wargaWithId.alamatRumah]))
     );
+    // Otomatis buatkan tagihan IPL untuk warga baru (status: Belum Bayar)
+    const newIplBill: TransaksiIPL = {
+      no: transaksiList.length + 1,
+      noTransaksi: `#IPL-${('000' + (transaksiList.length + 1)).slice(-3)}`,
+      namaWarga: wargaWithId.namaLengkap,
+      lokasiRumah: wargaWithId.alamatRumah,
+      periodeTercover: wargaWithId.periodeTercover || 'Oktober 2026',
+      durasiPaket: '1 Bulan',
+      nominalBayar: wargaWithId.nominalIpl || 30000,
+      status: 'Belum Bayar',
+      tanggalPelunasan: '-',
+      metodePembayaran: 'Menunggu Pembayaran',
+      keterangan: `Tagihan IPL Otomatis (${wargaWithId.id})`,
+    };
+    const nextTrxList = [newIplBill, ...transaksiList];
+    setTransaksiList(nextTrxList);
+
+    // Otomatis buatkan tagihan Urunan Wajib PJU untuk warga baru
+    const newPjuBill: ItemUrunanWarga = {
+      id: `#PJU-${('000' + (urunanList.length + 1)).slice(-3)}`,
+      noUrut: urunanList.length + 1,
+      programId: 'PRG-PJU-01',
+      tipe: 'URUNAN_WAJIB',
+      namaWarga: wargaWithId.namaLengkap,
+      nominal: 115000,
+      metode: 'TF',
+      status: 'Menunggu Verifikasi',
+      tanggal: 'Oktober 2026',
+      keterangan: `Tagihan Wajib PJU Otomatis (${wargaWithId.alamatRumah})`,
+    };
+    const nextUrunanList = [newPjuBill, ...urunanList];
+    setUrunanList(nextUrunanList);
+
     setDashboardSummary(
-      computeSummary(nextList, transaksiList, pengeluaranList, tarifIplPerBulan, saldoAwalKas)
+      computeSummary(nextList, nextTrxList, pengeluaranList, tarifIplPerBulan, saldoAwalKas)
     );
 
-    // Tambahkan baris warga baru langsung ke tab DATA_WARGA di Google Sheets (action: daftarWarga)
-    const wrgId = wargaWithId.id!;
-    const cleanName = wargaWithId.namaLengkap.replace(/^\[#WRG-\d+\]\s*/i, '').trim();
-    const rawNote = (wargaWithId.catatan || 'Input Mandiri Warga').replace(/^ID:\s*#WRG-\d+\s*•\s*/i, '');
-    const noteWithIdAndPw = `ID: ${wrgId} • ${rawNote}${rawNote.includes('Password:') || !wargaWithId.pin ? '' : ` • Password: ${wargaWithId.pin}`}`;
-    const nowWib =
-      new Date().toLocaleString('id-ID', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-      }) + ' WIB';
-
-    // Sinkronkan data lengkap langsung ke Google Sheets (ke Google Sheets baru hasil migrasi atau lama)
+    // Sinkronkan data lengkap langsung ke 3 Tab Google Sheets (DATA_WARGA, PEMBAYARAN_IPL, URUNAN_PJU)
     const { residents, iplRecords, pengeluaranRecords, urunanRecords } = formatPayloadForGas(
       nextList,
-      transaksiList,
+      nextTrxList,
       pengeluaranList,
-      urunanList
+      nextUrunanList
     );
     await postToGas({
       action: 'syncAll',
@@ -742,7 +749,7 @@ export const App: React.FC = () => {
       pengeluaranRecords: pengeluaranRecords as unknown as Record<string, unknown>[],
       urunanRecords: urunanRecords as unknown as Record<string, unknown>[],
     });
-    showToast(`Sukses! Data ${wargaWithId.namaLengkap} (${wargaWithId.alamatRumah}) telah masuk ke Google Sheets!`);
+    showToast(`Sukses! Data ${wargaWithId.namaLengkap} (${wargaWithId.alamatRumah}) otomatis masuk ke Warga, IPL, dan PJU!`);
   };
 
   // Update Data Warga Milik Sendiri (Kecuali Status Iuran IPL yang dikunci)

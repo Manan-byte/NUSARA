@@ -81,14 +81,20 @@ function doPost(e) {
       var last4Wa = rawWaDigits.length >= 4 ? ("'" + rawWaDigits.slice(-4)) : "-";
       var timestampNow = Utilities.formatDate(new Date(), "GMT+7", "dd MMM yyyy, HH:mm:ss") + " WIB";
       var rowIdx = nextNo + 1;
+      var namaWarga = r.namaLengkap || r.nama || "-";
+      var lokasiRumah = r.alamatRumah || r.blokNomor || ("Blok " + (r.blok || "E") + " No. " + (r.noRumah || r.nomor || 1));
+      var nominalIpl = r.nominalIpl || 30000;
+      var periodeIpl = r.periodeTercover || r.periodeIpl || "Oktober 2026";
+      var statusIpl = r.statusIpl || "Belum Bayar";
+
       sheetWarga.appendRow([
         nextNo,
         idWarga,
-        r.namaLengkap || r.nama || "-",
+        namaWarga,
         r.jenisKelamin || "Laki-laki",
         r.blok || "E",
         Number(r.noRumah || r.nomor) || 1,
-        r.alamatRumah || r.blokNomor || ("Blok " + (r.blok || "E") + " No. " + (r.noRumah || r.nomor || 1)),
+        lokasiRumah,
         "'" + (r.noWhatsapp || r.telepon || "-"),
         r.statusTempatTinggal || r.statusMenetap || "Menetap",
         r.pekerjaan || "-",
@@ -97,18 +103,63 @@ function doPost(e) {
         r.statusDalamKeluarga || "Kepala Keluarga",
         Number(r.jmlJiwa || r.jumlahAnggota) || 1,
         r.anggotaKeluargaTambahan || r.anggotaKeluarga || "-",
-        r.statusIpl || "Belum Bayar",
-        r.periodeTercover || r.periodeIpl || "Oktober 2026",
-        formatRp(r.nominalIpl || 30000),
+        statusIpl,
+        periodeIpl,
+        formatRp(nominalIpl),
         r.tanggalUpdate || r.tanggalBayarIpl || Utilities.formatDate(new Date(), "GMT+7", "dd MMM yyyy"),
         catatanWithPw,
         pinVal,
         last4Wa,
         r.waktuInput || timestampNow
       ]);
+
+      // Otomatis Buat Baris Tagihan ke tab PEMBAYARAN_IPL (walaupun Belum Bayar)
+      try {
+        var sheetIpl = ss.getSheetByName("PEMBAYARAN_IPL") || ss.insertSheet("PEMBAYARAN_IPL");
+        var nextTrxNo = Math.max(1, sheetIpl.getLastRow());
+        var trxId = "#IPL-" + ("000" + nextTrxNo).slice(-3);
+        sheetIpl.appendRow([
+          nextTrxNo,
+          trxId,
+          namaWarga,
+          lokasiRumah,
+          periodeIpl,
+          "1 Bulan",
+          formatRp(nominalIpl),
+          statusIpl,
+          "-",
+          "Menunggu Pembayaran",
+          "-",
+          "Tagihan IPL Terdaftar Otomatis (" + idWarga + ")",
+          timestampNow
+        ]);
+      } catch (errIpl) {
+        Logger.log("Err append IPL: " + errIpl);
+      }
+
+      // Otomatis Buat Baris Tagihan ke tab URUNAN_PJU (walaupun Belum Bayar)
+      try {
+        var sheetUrunan = ss.getSheetByName("URUNAN_PJU") || ss.insertSheet("URUNAN_PJU");
+        var nextUrunanNo = Math.max(1, sheetUrunan.getLastRow());
+        var idPju = "#PJU-" + ("000" + nextUrunanNo).slice(-3);
+        sheetUrunan.appendRow([
+          nextUrunanNo,
+          idPju,
+          namaWarga,
+          "URUNAN_WAJIB",
+          formatRp(115000),
+          "Menunggu Penyetoran",
+          "-",
+          "Tagihan Wajib PJU Terdaftar Otomatis (" + lokasiRumah + ")",
+          timestampNow
+        ]);
+      } catch (errPju) {
+        Logger.log("Err append PJU: " + errPju);
+      }
+
       return createJsonResponse({
         success: true,
-        message: "Data warga baru berhasil ditambahkan ke tab DATA_WARGA!"
+        message: "Data warga berhasil dicatat lengkap ke DATA_WARGA, PEMBAYARAN_IPL, dan URUNAN_PJU!"
       });
     }
 

@@ -36,7 +36,6 @@ export const initialUrunanList: ItemUrunanWarga[] = ${JSON.stringify(urunanList,
 `;
 
 fs.writeFileSync('D:/AI BUAT/sim-warga/apps/web/src/data/mockUrunanData.ts', urunanContent);
-console.log('Successfully written apps/web/src/data/mockUrunanData.ts');
 
 // 2. Generate mockInitialData.ts
 const rawResidents = extracted.residents;
@@ -204,81 +203,92 @@ const pengumumanList = [
   }
 ];
 
-// Real Ronda Schedule
-const jadwalRondaList = [
+// Generate Full 16 Schedules (4 Days x 4 Weeks) so every single week has Senin, Rabu, Jumat, and Sabtu!
+const weekDays = [
   {
-    id: 'RND-001',
-    mingguKe: 1,
-    hari: 'Senin',
-    tanggal: 'Setiap Senin Malam',
-    jamOperasional: '22:00 - 04:00 WIB',
-    lokasiPos: 'Pos Keamanan & Keliling Seluruh Blok D & E',
-    statusPublikasi: 'PUBLISHED',
-    petugas: [
-      { slot: 1, namaLengkap: 'Darisman', blokRumah: 'E4/5', isKoordinator: true },
-      { slot: 2, namaLengkap: 'DASRIL', blokRumah: 'E6/33', isKoordinator: false },
-      { slot: 3, namaLengkap: 'Demmi Ilham', blokRumah: 'E5/30', isKoordinator: false },
-      { slot: 4, namaLengkap: 'Dwi Saputra', blokRumah: 'D13/7', isKoordinator: false },
-      { slot: 5, namaLengkap: 'Edy Suyono', blokRumah: 'E1/13', isKoordinator: false },
-      { slot: 6, namaLengkap: 'EKO PRIYANTO', blokRumah: 'D12/5', isKoordinator: false }
+    dayName: 'Senin',
+    subText: 'Setiap Senin Malam',
+    jam: '21:00 - 04:00 WIB',
+    lokasi: 'Pos Keamanan & Gerbang Utama PK8-2',
+    officers: [
+      { nama: 'Darisman', blok: 'E4/5' },
+      { nama: 'DASRIL', blok: 'E6/33' },
+      { nama: 'Demmi Ilham', blok: 'E5/30' },
+      { nama: 'Dwi Saputra', blok: 'D13/7' },
+      { nama: 'Edy Suyono', blok: 'E1/13' },
+      { nama: 'EKO PRIYANTO', blok: 'D12/5' }
     ],
-    catatan: 'Patroli jalur utama, pengecekan lampu jalan, dan gerbang masuk.'
+    catatan: 'Patroli jalur utama, pengecekan lampu jalan, dan siaga gerbang masuk.'
   },
   {
-    id: 'RND-002',
-    mingguKe: 2,
-    hari: 'Rabu',
-    tanggal: 'Setiap Rabu Malam',
-    jamOperasional: '22:00 - 04:00 WIB',
-    lokasiPos: 'Pos Keamanan & Keliling Blok D10 s/d D16',
-    statusPublikasi: 'PUBLISHED',
-    petugas: [
-      { slot: 1, namaLengkap: 'Aditia Dharmawan', blokRumah: 'D13/9', isKoordinator: true },
-      { slot: 2, namaLengkap: 'Ahmad Fauzi', blokRumah: 'E6/31', isKoordinator: false },
-      { slot: 3, namaLengkap: 'Aris Nurhidayat', blokRumah: 'D15/6', isKoordinator: false },
-      { slot: 4, namaLengkap: 'Ali Nurdin Buyung', blokRumah: 'D13/10', isKoordinator: false },
-      { slot: 5, namaLengkap: 'Yosef Putu', blokRumah: 'E10/3', isKoordinator: false },
-      { slot: 6, namaLengkap: 'Anggi Nariyanto', blokRumah: 'E10/13', isKoordinator: false }
+    dayName: 'Rabu',
+    subText: 'Setiap Rabu Malam',
+    jam: '21:00 - 04:00 WIB',
+    lokasi: 'Pos Keamanan & Keliling Blok D10 s/d D16',
+    officers: [
+      { nama: 'Aditia Dharmawan', blok: 'D13/9' },
+      { nama: 'Ahmad Fauzi', blok: 'E6/31' },
+      { nama: 'Aris Nurhidayat', blok: 'D15/6' },
+      { nama: 'Ali Nurdin Buyung', blok: 'D13/10' },
+      { nama: 'Yosef Putu', blok: 'E10/3' },
+      { nama: 'Anggi Nariyanto', blok: 'E10/13' }
     ],
-    catatan: 'Patroli gang blok D & pengecekan saluran air fasum.'
+    catatan: 'Patroli gang blok D & pengecekan saluran air fasilitas umum.'
   },
   {
-    id: 'RND-003',
-    mingguKe: 3,
-    hari: 'Jumat',
-    tanggal: 'Setiap Jumat Malam',
-    jamOperasional: '22:00 - 04:00 WIB',
-    lokasiPos: 'Pos Keamanan & Keliling Blok E1 s/d E11',
-    statusPublikasi: 'PUBLISHED',
-    petugas: [
-      { slot: 1, namaLengkap: 'YOGA SEPTI ANDIKA', blokRumah: 'E9/30', isKoordinator: true },
-      { slot: 2, namaLengkap: 'UCOK SAYUR', blokRumah: 'Pedagang Warga', isKoordinator: false },
-      { slot: 3, namaLengkap: 'ARIEF Licardo', blokRumah: 'E10/6', isKoordinator: false },
-      { slot: 4, namaLengkap: 'Mahmad Zainuri', blokRumah: 'D11/7', isKoordinator: false },
-      { slot: 5, namaLengkap: 'Ahmad Wasroi', blokRumah: 'E10/8', isKoordinator: false },
-      { slot: 6, namaLengkap: 'ANDREA BAYU AGUSTORO', blokRumah: 'E8/10', isKoordinator: false }
+    dayName: 'Jumat',
+    subText: 'Setiap Jumat Malam',
+    jam: '21:00 - 04:00 WIB',
+    lokasi: 'Pos Keamanan & Keliling Blok E1 s/d E11',
+    officers: [
+      { nama: 'YOGA SEPTI ANDIKA', blok: 'E9/30' },
+      { nama: 'UCOK SAYUR', blok: 'Pedagang Warga' },
+      { nama: 'ARIEF Licardo', blok: 'E10/6' },
+      { nama: 'Mahmad Zainuri', blok: 'D11/7' },
+      { nama: 'Ahmad Wasroi', blok: 'E10/8' },
+      { nama: 'ANDREA BAYU AGUSTORO', blok: 'E8/10' }
     ],
-    catatan: 'Patroli gang blok E & koordinasi logistik ronda.'
+    catatan: 'Patroli gang blok E & koordinasi logistik konsumsi pos siskamling.'
   },
   {
-    id: 'RND-004',
-    mingguKe: 4,
-    hari: 'Sabtu',
-    tanggal: 'Malam Minggu (Ronda Massal)',
-    jamOperasional: '22:00 - 04:00 WIB',
-    lokasiPos: 'Seluruh Wilayah RT 08 PK8-2',
-    statusPublikasi: 'PUBLISHED',
-    petugas: [
-      { slot: 1, namaLengkap: 'Rachmatullah Tiflen', blokRumah: 'E8/4', isKoordinator: true },
-      { slot: 2, namaLengkap: 'Roland Fitzgerald', blokRumah: 'E2/7', isKoordinator: false },
-      { slot: 3, namaLengkap: 'Ujang Piyan', blokRumah: 'E1/24', isKoordinator: false },
-      { slot: 4, namaLengkap: 'Teguh Sentosa', blokRumah: 'D10/1', isKoordinator: false },
-      { slot: 5, namaLengkap: 'Bagus Gumelar', blokRumah: 'D15/9', isKoordinator: false },
-      { slot: 6, namaLengkap: 'Warga Siskamling Bersama', blokRumah: 'RT 08', isKoordinator: false }
+    dayName: 'Sabtu',
+    subText: 'Malam Minggu (Ronda Massal)',
+    jam: '21:00 - 04:00 WIB',
+    lokasi: 'Seluruh Wilayah RT 08 PK8-2',
+    officers: [
+      { nama: 'Rachmatullah Tiflen', blok: 'E8/4' },
+      { nama: 'Roland Fitzgerald', blok: 'E2/7' },
+      { nama: 'Ujang Piyan', blok: 'E1/24' },
+      { nama: 'Teguh Sentosa', blok: 'D10/1' },
+      { nama: 'Bagus Gumelar', blok: 'D15/9' },
+      { nama: 'Warga Siskamling Bersama', blok: 'RT 08' }
     ],
-    catatan: 'Ronda massal seluruh warga paguyuban ditemani donasi konsumsi tetangga.'
+    catatan: 'Ronda massal seluruh warga paguyuban bersama pengurus & santap malam.'
   }
 ];
+
+const jadwalRondaList = [];
+for (let mg = 1; mg <= 4; mg++) {
+  weekDays.forEach((wd) => {
+    const id = `RND-M${mg}-${wd.dayName.toUpperCase()}`;
+    jadwalRondaList.push({
+      id,
+      mingguKe: mg,
+      hari: wd.dayName,
+      tanggal: `${wd.subText} (Minggu ${mg})`,
+      jamOperasional: wd.jam,
+      lokasiPos: wd.lokasi,
+      statusPublikasi: 'PUBLISHED',
+      petugas: wd.officers.map((off, oIdx) => ({
+        slot: oIdx + 1,
+        namaLengkap: off.nama,
+        blokRumah: off.blok,
+        isKoordinator: oIdx === 0
+      })),
+      catatan: wd.catatan
+    });
+  });
+}
 
 // Initial Dashboard Summary
 const totalWarga = wargaList.length;
@@ -376,4 +386,4 @@ export const initialJadwalRondaList: (JadwalRondaRecord & { statusPublikasi: 'PU
 `;
 
 fs.writeFileSync('D:/AI BUAT/sim-warga/apps/web/src/data/mockInitialData.ts', mockInitialDataContent);
-console.log('Successfully written apps/web/src/data/mockInitialData.ts!');
+console.log('Successfully written apps/web/src/data/mockInitialData.ts with 16 complete schedules (4 days x 4 weeks)!');
