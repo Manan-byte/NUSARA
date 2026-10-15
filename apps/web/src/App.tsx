@@ -51,6 +51,8 @@ if (typeof window !== 'undefined') {
   localStorage.removeItem('SIM_WARGA_PENGELUARAN_KAS');
   localStorage.removeItem('SIM_WARGA_URUNAN_LIST');
   localStorage.removeItem('SIM_WARGA_PENGUMUMAN_LIST');
+  localStorage.removeItem('SIM_WARGA_JADWAL_RONDA');
+  localStorage.removeItem('SIM_WARGA_RONDA_LIST');
   localStorage.removeItem('SIM_WARGA_OWNED_WARGA_KEYS');
   localStorage.removeItem('SIM_WARGA_MY_OWNED_RECORDS_V3');
 }

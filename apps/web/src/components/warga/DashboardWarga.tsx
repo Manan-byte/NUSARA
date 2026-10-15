@@ -6104,43 +6104,63 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
           >
             <div
               onClick={(e) => e.stopPropagation()}
-              className="carlic-card max-w-xl w-full p-5 sm:p-6 relative flex flex-col max-h-[88vh]"
+              className="carlic-card max-w-2xl w-full p-4 sm:p-5 relative flex flex-col max-h-[92vh] shadow-2xl rounded-[28px] overflow-hidden"
             >
               <button
                 type="button"
                 onClick={() => setDetailPengumuman(null)}
-                className="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 flex items-center justify-center absolute top-4 right-4"
+                className="w-8 h-8 rounded-full bg-black/60 hover:bg-black/80 text-white flex items-center justify-center absolute top-6 right-6 z-20 transition-colors shadow-md backdrop-blur-md"
               >
                 <X className="w-4 h-4" />
               </button>
 
+              {/* Top Hero Banner Image */}
+              <div className="rounded-2xl overflow-hidden h-44 sm:h-52 w-full relative border border-stone-200/80 dark:border-stone-700/80 shadow-md flex-shrink-0 mb-3 group">
+                <img
+                  src={detailPengumuman.gambarBanner || '/kegiatan/informasi_4.jpg'}
+                  alt={detailPengumuman.judul}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    if (!target.src.includes('informasi_4.jpg')) {
+                      target.src = '/kegiatan/informasi_4.jpg';
+                    }
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none" />
+                <div className="absolute bottom-2.5 left-3.5 right-3.5 flex items-center justify-between text-white text-[11px] font-bold">
+                  <span className="px-2.5 py-0.5 rounded-full bg-black/50 backdrop-blur-md border border-white/20">
+                    📸 Dokumentasi Resmi PK8-2
+                  </span>
+                  <span className="px-2.5 py-0.5 rounded-full bg-black/50 backdrop-blur-md border border-white/20">
+                    {detailPengumuman.tanggalAcara}
+                  </span>
+                </div>
+              </div>
+
               {/* Header Jarkoman */}
-              <div className="pr-8 mb-3 flex-shrink-0">
-                <div className="flex flex-wrap items-center gap-2 mb-1.5">
+              <div className="mb-2.5 flex-shrink-0">
+                <div className="flex flex-wrap items-center gap-2 mb-1">
                   <span className="px-2.5 py-0.5 rounded-full bg-[#0B484C] text-[#F3D37A] text-[10px] font-extrabold uppercase tracking-wider">
                     📰 PENGUMUMAN / JARKOMAN
                   </span>
                   <span className="px-2.5 py-0.5 rounded-full bg-[#FEF6DF] text-[#9A7018] border border-[#D9B352]/40 text-[10px] font-extrabold">
                     {detailPengumuman.kategori}
                   </span>
-                  <span className="text-[11px] font-bold text-stone-400">
-                    • {detailPengumuman.tanggalAcara}
-                  </span>
                 </div>
-                <h3 className="text-base sm:text-lg font-extrabold text-[#1C221E] dark:text-white leading-snug">
+                <h3 className="text-base sm:text-lg font-black text-[#1C221E] dark:text-white leading-snug">
                   {detailPengumuman.judul}
                 </h3>
                 <p className="text-[11px] text-stone-400 mt-0.5">
-                  Oleh: <strong className="text-stone-600 dark:text-stone-300">{detailPengumuman.author || 'BPH Paguyuban Pesona Kahuripan 8 Tahap 2'}</strong>
+                  Oleh: <strong className="text-stone-700 dark:text-stone-200">{detailPengumuman.author || 'BPH Paguyuban Pesona Kahuripan 8 Tahap 2'}</strong>
                 </p>
               </div>
 
               {/* Isi Lengkap Jarkoman (Scrollable & Rapi) */}
-              <div className="p-4 rounded-2xl bg-[#F8F8F6] dark:bg-stone-800/80 border border-stone-200/70 dark:border-stone-700 overflow-y-auto flex-1 min-h-0">
-                <div className="text-xs sm:text-[13px] text-[#1C221E] dark:text-stone-100 leading-relaxed whitespace-pre-line font-medium">
+              <div className="p-4 rounded-2xl bg-white dark:bg-stone-900/90 border border-stone-200/80 dark:border-stone-700 shadow-inner overflow-y-auto flex-1 min-h-0">
+                <div className="text-xs sm:text-[13px] text-stone-800 dark:text-stone-100 leading-relaxed whitespace-pre-line font-medium border-l-4 border-[#0B484C] dark:border-[#F3D37A] pl-3.5">
                   {detailPengumuman.deskripsi}
                 </div>
-
                 {externalUrl && (
                   <div className="mt-3.5 pt-3 border-t border-stone-200/80 dark:border-stone-700 flex items-center justify-between gap-3">
                     <div className="min-w-0">
