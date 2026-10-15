@@ -3163,7 +3163,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                         </>
                       ) : (
                         /* MODE FORMULIR KONFIRMASI BAYAR IPL (PROPORSIONAL PENUH TANPA RUANG KOSONG MENGGANTUNG) */
-                        <div className="flex flex-col justify-between h-full min-h-0">
+                        <div className="flex flex-col gap-3.5 h-auto min-h-0 lg:h-full lg:justify-between w-full max-w-full">
                           {/* 1. Header Bar (1 Baris Rapi) */}
                           <div className="flex items-center justify-between gap-3 flex-shrink-0">
                             <div className="min-w-0">
@@ -4187,7 +4187,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                         </>
                       ) : (
                         /* MODE FORMULIR PEMBAYARAN URUNAN PJU (MASUK KE MENU PJU & GOOGLE SHEETS — DENGAN VERIFIKASI PENGURUS) */
-                        <div className="flex flex-col justify-between h-full min-h-0">
+                        <div className="flex flex-col gap-3.5 h-auto min-h-0 lg:h-full lg:justify-between w-full max-w-full">
                           <div className="flex items-center justify-between gap-3 flex-shrink-0">
                             <div className="min-w-0">
                               <h3 className="text-base sm:text-lg font-extrabold text-[#1C221E] dark:text-white truncate">
@@ -4911,7 +4911,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                     const isWargaFormValid =
                       isWargaFormComplete && !formWargaError;
                     return (
-                      <div className="carlic-card p-4 sm:p-5 lg:h-full flex flex-col justify-between min-h-0">
+                      <div className="carlic-card p-3.5 sm:p-5 h-auto min-h-0 lg:h-full flex flex-col justify-between w-full max-w-full">
                         {/* ========================================================= */}
                         {/* TOP SECTION: HEADER & TIMELINE STEPPER (FLEX-SHRINK-0)    */}
                         {/* ========================================================= */}

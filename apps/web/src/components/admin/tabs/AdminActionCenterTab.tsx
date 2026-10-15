@@ -85,7 +85,7 @@ export const AdminActionCenterTab: React.FC<AdminActionCenterTabProps> = ({
   const persenIpl = wargaList.length > 0 ? Math.round((lunasWargaCount / wargaList.length) * 100) : 0;
 
   return (
-    <div className="flex-1 min-h-0 flex flex-col justify-between gap-2 overflow-hidden h-full">
+    <div className="flex-1 min-h-0 flex flex-col justify-between gap-2 overflow-y-auto md:overflow-hidden h-auto md:h-full w-full max-w-full">
       {/* ROW 1: COMPACT HERO GREETING BANNER */}
       <div className="px-3.5 py-2 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50/70 to-[#FEF9EB] dark:from-[#072426] dark:to-stone-900 border border-[#D9B352]/40 shadow-2xs flex items-center justify-between gap-3 flex-shrink-0">
         <div className="flex items-center gap-2.5 min-w-0">
@@ -198,9 +198,9 @@ export const AdminActionCenterTab: React.FC<AdminActionCenterTabProps> = ({
       </div>
 
       {/* ROW 3: 3-COLUMN BENTO GRID */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-2.5 flex-1 min-h-0 overflow-hidden items-stretch">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-2.5 flex-1 min-h-0 overflow-visible md:overflow-hidden items-stretch">
         {/* COLUMN 1 (4 COLS): CASH FLOW CHART + GAUGE */}
-        <div className="md:col-span-4 flex flex-col justify-between gap-2 h-full min-h-0 overflow-hidden">
+        <div className="md:col-span-4 flex flex-col justify-between gap-2 h-auto md:h-full min-h-0 overflow-hidden">
           <div className="p-3 rounded-2xl bg-white dark:bg-[#072B2E] border border-stone-200/80 dark:border-[#D9B352]/30 shadow-2xs flex flex-col justify-between flex-1 min-h-0 overflow-hidden">
             <div className="flex items-center justify-between mb-1">
               <div>
@@ -311,7 +311,7 @@ export const AdminActionCenterTab: React.FC<AdminActionCenterTabProps> = ({
         </div>
 
         {/* COLUMN 2 (4 COLS): PINTASAN AKSI CEPAT & SPREADSHEET REKAP */}
-        <div className="md:col-span-4 flex flex-col justify-between gap-2 h-full min-h-0 overflow-hidden">
+        <div className="md:col-span-4 flex flex-col justify-between gap-2 h-auto md:h-full min-h-0 overflow-hidden">
           {/* Quick Actions Grid */}
           <div className="p-3 rounded-2xl bg-white dark:bg-[#072B2E] border border-stone-200/80 dark:border-[#D9B352]/30 shadow-2xs flex flex-col justify-between flex-1 min-h-0 overflow-hidden">
             <div className="flex items-center justify-between mb-2">
@@ -430,7 +430,7 @@ export const AdminActionCenterTab: React.FC<AdminActionCenterTabProps> = ({
         </div>
 
         {/* COLUMN 3 (4 COLS): ANTREAN VERIFIKASI TERPADU */}
-        <div className="md:col-span-4 flex flex-col justify-between gap-2 h-full min-h-0 overflow-hidden">
+        <div className="md:col-span-4 flex flex-col justify-between gap-2 h-auto md:h-full min-h-0 overflow-hidden">
           <div className="p-3 rounded-2xl bg-white dark:bg-[#072B2E] border border-stone-200/80 dark:border-[#D9B352]/30 shadow-2xs flex-1 min-h-0 flex flex-col justify-between overflow-hidden">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1 bg-stone-100 dark:bg-[#051E20] p-1 rounded-xl text-[10px] font-bold">

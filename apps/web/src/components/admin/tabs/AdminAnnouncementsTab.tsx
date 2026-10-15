@@ -125,7 +125,7 @@ export const AdminAnnouncementsTab: React.FC<AdminAnnouncementsTabProps> = ({
   };
 
   return (
-    <div className="flex-1 min-h-0 flex flex-col justify-between gap-2.5 overflow-hidden h-full">
+    <div className="flex-1 min-h-0 flex flex-col justify-between gap-2.5 overflow-y-auto md:overflow-hidden h-auto md:h-full w-full max-w-full">
       {/* 1. TOP HEADER & ACTIONS */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 flex-shrink-0">
         <div>
