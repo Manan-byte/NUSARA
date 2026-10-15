@@ -284,8 +284,8 @@ export async function fetchLiveSheetData(): Promise<LiveSheetData | null> {
 
       const periode = isCol1Id ? String(vals[16] || 'Oktober 2026').trim() : String(vals[15] || 'Oktober 2026').trim();
       const nominal = isCol1Id
-        ? (typeof vals[17] === 'number' ? Math.round(vals[17]) : parseInt(String(vals[17]), 10) || 30000)
-        : (typeof vals[16] === 'number' ? Math.round(vals[16]) : parseInt(String(vals[16]), 10) || 30000);
+        ? (typeof vals[17] === 'number' ? Math.round(vals[17]) : parseInt(String(vals[17] || '').replace(/\D/g, ''), 10) || 30000)
+        : (typeof vals[16] === 'number' ? Math.round(vals[16]) : parseInt(String(vals[16] || '').replace(/\D/g, ''), 10) || 30000);
       const tanggalUpdate = isCol1Id ? String(vals[18] || '-').trim() : String(vals[17] || '-').trim();
       const catatan = isCol1Id ? String(vals[19] || '-').trim() : String(vals[18] || '-').trim();
       let pin = isCol1Id ? String(vals[20] || '').trim() : String(vals[19] || '').trim();
@@ -346,7 +346,7 @@ export async function fetchLiveSheetData(): Promise<LiveSheetData | null> {
       let periode = String(vals[4] || 'Oktober 2026').trim();
       if (periode.startsWith('Date(')) periode = 'Oktober 2026';
       const durasi = String(vals[5] || '1 Bulan').trim();
-      const nominal = typeof vals[6] === 'number' ? Math.round(vals[6]) : parseInt(String(vals[6]), 10) || 30000;
+      const nominal = typeof vals[6] === 'number' ? Math.round(vals[6]) : parseInt(String(vals[6] || '').replace(/\D/g, ''), 10) || 30000;
       const statusRaw = String(vals[7] || 'Lunas').trim();
       const status = statusRaw.includes('Lunas')
         ? 'Lunas'
@@ -405,8 +405,8 @@ export async function fetchLiveSheetData(): Promise<LiveSheetData | null> {
       const katRaw = isCol1Id ? String(vals[3] || '').trim().toLowerCase() : String(vals[2] || '').trim().toLowerCase();
       const tipe: 'DONATUR' | 'URUNAN_WAJIB' = katRaw.includes('donatur') ? 'DONATUR' : 'URUNAN_WAJIB';
       const nominal = isCol1Id
-        ? (typeof vals[4] === 'number' ? Math.round(vals[4]) : parseInt(String(vals[4]), 10) || 115000)
-        : (typeof vals[3] === 'number' ? Math.round(vals[3]) : parseInt(String(vals[3]), 10) || 115000);
+        ? (typeof vals[4] === 'number' ? Math.round(vals[4]) : parseInt(String(vals[4] || '').replace(/\D/g, ''), 10) || 115000)
+        : (typeof vals[3] === 'number' ? Math.round(vals[3]) : parseInt(String(vals[3] || '').replace(/\D/g, ''), 10) || 115000);
       const metodeRaw = isCol1Id ? String(vals[5] || 'TF').trim() : String(vals[4] || 'TF').trim();
       const metode = metodeRaw.toLowerCase().includes('cash') || metodeRaw.toLowerCase().includes('tunai') ? 'Cash' : 'TF';
       // Auto-detect apakah Kolom 7 adalah Bukti Bayar (10 Kolom) atau Keterangan (Legacy 8 Kolom)

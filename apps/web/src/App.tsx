@@ -366,8 +366,8 @@ export const App: React.FC = () => {
     ).size;
     const pemasukan = tList
       .filter((t) => t.status === 'Lunas')
-      .reduce((acc, curr) => acc + curr.nominalBayar, 0);
-    const pengeluaran = pList.reduce((acc, curr) => acc + curr.nominal, 0);
+      .reduce((acc, curr) => acc + (typeof curr.nominalBayar === 'number' ? curr.nominalBayar : parseInt(String(curr.nominalBayar || '').replace(/\D/g, ''), 10) || 0), 0);
+    const pengeluaran = pList.reduce((acc, curr) => acc + (typeof curr.nominal === 'number' ? curr.nominal : parseInt(String(curr.nominal || '').replace(/\D/g, ''), 10) || 0), 0);
 
     // KAS RT TIDAK PERNAH MINUS: Saldo Awal + Pemasukan - Pengeluaran, diproteksi Math.max(0, ...)
     const sisaSaldo = Math.max(0, saldoAwal + pemasukan - pengeluaran);
@@ -453,6 +453,18 @@ export const App: React.FC = () => {
       rekapPerBlok,
     };
   };
+  // Sinkronisasi dinamis metrik dashboard murni dari data aktif terkini tanpa hardcode
+  useEffect(() => {
+    const updated = computeSummary(
+      wargaList,
+      transaksiList,
+      pengeluaranList,
+      tarifIplPerBulan,
+      saldoAwalKas
+    );
+    setDashboardSummary(updated);
+  }, [wargaList, transaksiList, pengeluaranList, tarifIplPerBulan, saldoAwalKas]);
+
 
   const [isSyncingSheet, setIsSyncingSheet] = useState(false);
 

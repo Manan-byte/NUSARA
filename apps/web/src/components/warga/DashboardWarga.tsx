@@ -885,19 +885,57 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
     { id: string; title: string; desc: string; time: string; targetTab: string; openPjuForm?: boolean; pengumumanObj?: PengumumanRecord; cat: 'pengumuman' | 'aktivitas' }[]
   >([]);
 
-  // Core Metrics
-  const sisaSaldo = Math.max(0, summary.sisaSaldoKas ?? 0);
-  const pemasukan = summary.pemasukanIpl ?? 0;
-  const pengeluaran = summary.pengeluaranKas ?? 0;
-  const totalKK = summary.totalRumah ?? wargaList.length;
-  const lunasKK = summary.rumahLunas ?? wargaList.filter((w) => w.statusIpl === 'Lunas').length;
-  const menetap = summary.wargaMenetap ?? wargaList.length;
-  const pulangPergi = summary.wargaPulangPergi ?? 0;
-  const belumMenetap = summary.wargaBelumMenetap ?? 0;
-  const persentaseNum = Math.min(
-    100,
-    Math.max(0, parseInt(summary.persentasePemasukan || '0', 10) || 0)
-  );
+  // Core Metrics: Murni dihitung langsung dari data transaksi, pengeluaran, dan kependudukan warga tanpa hardcode
+  const calcPemasukan = transaksiList
+    .filter((t) => t.status === 'Lunas')
+    .reduce((sum, t) => {
+      const val = typeof t.nominalBayar === 'number'
+        ? t.nominalBayar
+        : parseInt(String(t.nominalBayar || '').replace(/\D/g, ''), 10) || 0;
+      return sum + val;
+    }, 0);
+
+  const calcPengeluaran = pengeluaranList
+    .reduce((sum, p) => {
+      const val = typeof p.nominal === 'number'
+        ? p.nominal
+        : parseInt(String(p.nominal || '').replace(/\D/g, ''), 10) || 0;
+      return sum + val;
+    }, 0);
+
+  const pemasukan = summary.pemasukanIpl !== undefined ? summary.pemasukanIpl : calcPemasukan;
+  const pengeluaran = summary.pengeluaranKas !== undefined ? summary.pengeluaranKas : calcPengeluaran;
+  const sisaSaldo = summary.sisaSaldoKas !== undefined
+    ? summary.sisaSaldoKas
+    : Math.max(0, (summary.saldoAwalKas || 0) + pemasukan - pengeluaran);
+
+  const totalKK = summary.totalRumah !== undefined ? summary.totalRumah : wargaList.length;
+  const lunasKK = summary.rumahLunas !== undefined
+    ? summary.rumahLunas
+    : wargaList.filter((w) => w.statusIpl === 'Lunas').length;
+
+  const menetap = summary.wargaMenetap !== undefined
+    ? summary.wargaMenetap
+    : wargaList.filter((w) => {
+        const st = (w.statusTempatTinggal || '').toLowerCase();
+        return st.includes('menetap') && !st.includes('belum');
+      }).length;
+
+  const pulangPergi = summary.wargaPulangPergi !== undefined
+    ? summary.wargaPulangPergi
+    : wargaList.filter((w) => {
+        const st = (w.statusTempatTinggal || '').toLowerCase();
+        return st.includes('pergi') || st.includes('pulang');
+      }).length;
+
+  const belumMenetap = summary.wargaBelumMenetap !== undefined
+    ? summary.wargaBelumMenetap
+    : wargaList.filter((w) => {
+        const st = (w.statusTempatTinggal || '').toLowerCase();
+        return st.includes('belum');
+      }).length;
+
+  const persentaseNum = totalKK > 0 ? Math.round((lunasKK / totalKK) * 100) : 0;
 
   const noRek = rekeningBank?.noRekening || '1240010437979';
   const namaBank = rekeningBank?.namaBank || 'Bank Mandiri';
