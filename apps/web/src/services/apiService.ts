@@ -41,14 +41,18 @@ export const RUST_API_BASE_URL =
 export const ADMIN_AUTH_TOKEN_KEY = 'SIM_WARGA_ADMIN_AUTH_TOKEN';
 
 export function getAdminAuthToken(): string {
-  return localStorage.getItem(ADMIN_AUTH_TOKEN_KEY) || 'simwarga-master-bearer-token-2026';
+  if (typeof window === 'undefined') return '';
+  return sessionStorage.getItem(ADMIN_AUTH_TOKEN_KEY) || '';
 }
 
 export function setAdminAuthToken(token: string): void {
-  localStorage.setItem(ADMIN_AUTH_TOKEN_KEY, token.trim());
+  if (typeof window === 'undefined') return;
+  sessionStorage.setItem(ADMIN_AUTH_TOKEN_KEY, token.trim());
 }
 
 export function clearAdminAuthToken(): void {
+  if (typeof window === 'undefined') return;
+  sessionStorage.removeItem(ADMIN_AUTH_TOKEN_KEY);
   localStorage.removeItem(ADMIN_AUTH_TOKEN_KEY);
 }
 

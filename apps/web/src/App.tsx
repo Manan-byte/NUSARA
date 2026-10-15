@@ -1727,6 +1727,7 @@ export const App: React.FC = () => {
         window.clearTimeout(timeoutId);
       }
       timeoutId = window.setTimeout(() => {
+        clearAdminAuthToken();
         setCurrentAdmin(null);
         setActiveTab('beranda');
         showToast('Sesi admin ditutup otomatis karena tidak aktif selama 20 menit demi keamanan.');

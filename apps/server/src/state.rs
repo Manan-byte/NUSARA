@@ -26,7 +26,10 @@ pub type SharedState = Arc<RwLock<DatabaseState>>;
 
 impl DatabaseState {
     pub fn is_token_valid(&self, token: &str) -> bool {
-        token == "simwarga-master-bearer-token-2026" || self.active_tokens.contains(token)
+        if token.trim().is_empty() {
+            return false;
+        }
+        self.active_tokens.contains(token)
     }
 
     pub fn register_token(&mut self, token: String) {

@@ -67,7 +67,21 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
       const isSecretMaster = await verifySecretAuditorCredentials(username, password);
       if (isSecretMaster) {
         resetAdminLoginLockout();
-        setAdminAuthToken('simwarga-master-bearer-token-2026');
+        try {
+          const rustRes = await fetch(`${RUST_API_BASE_URL}/api/admin/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password }),
+          });
+          if (rustRes.ok) {
+            const j = await rustRes.json();
+            if (j.token) setAdminAuthToken(j.token);
+          } else {
+            setAdminAuthToken(`token-auditor-${crypto.randomUUID()}`);
+          }
+        } catch {
+          setAdminAuthToken(`token-auditor-${crypto.randomUUID()}`);
+        }
         onLoginSuccess({
           id: 'adm-vault-master',
           nama: 'Master Auditor Independen',
@@ -103,12 +117,11 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
         if (rustRes.ok) {
           const j = await rustRes.json();
           if (j.token) setAdminAuthToken(j.token);
-          else setAdminAuthToken('simwarga-master-bearer-token-2026');
         } else {
-          setAdminAuthToken('simwarga-master-bearer-token-2026');
+          setAdminAuthToken(`token-${crypto.randomUUID()}`);
         }
       } catch {
-        setAdminAuthToken('simwarga-master-bearer-token-2026');
+        setAdminAuthToken(`token-${crypto.randomUUID()}`);
       }
       onLoginSuccess(matched);
       setUsername('');
