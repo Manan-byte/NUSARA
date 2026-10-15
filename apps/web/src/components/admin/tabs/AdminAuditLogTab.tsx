@@ -112,9 +112,8 @@ export const AdminAuditLogTab: React.FC<AdminAuditLogTabProps> = ({
   const handlePrintGeneralReport = () => {
     const periodLabel =
       monthFilter === 'ALL' ? 'Seluruh Riwayat Mutasi' : `Periode Bulan ${monthFilter}`;
-    const printWindow = window.open('', '_blank');
+    const printWindow = window.open('', 'CetakAuditGeneralPopup', 'width=880,height=900,left=150,top=50,resizable=yes,scrollbars=yes');
     if (!printWindow) return;
-
     const rowsHtml = filteredLogs
       .map(
         (l, i) => `
@@ -146,10 +145,20 @@ export const AdminAuditLogTab: React.FC<AdminAuditLogTabProps> = ({
             th { background: #0B484C; color: #F3D37A; font-size: 11px; padding: 10px 8px; text-transform: uppercase; font-weight: 900; letter-spacing: 0.5px; }
             .footer { margin-top: 30px; display: flex; justify-content: space-between; font-size: 11px; }
             .sig { text-align: center; width: 240px; }
-            @media print { body { padding: 12px; } }
+            .top-toolbar { position: sticky; top: 0; background: #0B484C; padding: 10px 18px; display: flex; justify-content: space-between; align-items: center; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.15); z-index: 9999; }
+            .btn-print { background: #F3D37A; color: #0B484C; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 12px; }
+            .btn-close { background: rgba(255, 255, 255, 0.2); color: #FFFFFF; border: 1px solid rgba(255, 255, 255, 0.4); padding: 8px 14px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 12px; }
+            @media print { .top-toolbar { display: none !important; } body { padding: 12px; } }
           </style>
         </head>
         <body>
+          <div class="top-toolbar">
+            <div style="color: #FFF; font-weight: 800; font-size: 13px;">📄 Laporan Audit Blackbox Siap Cetak</div>
+            <div style="display: flex; gap: 10px;">
+              <button class="btn-print" onclick="window.print()">🖨️ Cetak / Simpan PDF</button>
+              <button class="btn-close" onclick="window.close()">✕ Keluar / Tutup</button>
+            </div>
+          </div>
           <div class="header">
             <h1 class="title">PAGUYUBAN WARGA PESONA KAHURIPAN 8 TAHAP 2</h1>
             <p class="sub">BADAN PENGAWAS &amp; AUDITOR BLACKBOX INDEPENDEN • RT 08 / RW 08</p>
@@ -201,9 +210,9 @@ export const AdminAuditLogTab: React.FC<AdminAuditLogTabProps> = ({
           </div>
 
           <script>
-            window.onload = function() { window.print(); };
+            window.onafterprint = function() { window.close(); };
+            window.onload = function() { setTimeout(function() { window.print(); }, 350); };
           </script>
-        </body>
       </html>
     `;
 
@@ -214,7 +223,7 @@ export const AdminAuditLogTab: React.FC<AdminAuditLogTabProps> = ({
 
   // Print Single Log Audit Slip
   const handlePrintSingleLog = (log: WargaAuditLogEntry) => {
-    const printWindow = window.open('', '_blank');
+    const printWindow = window.open('', 'CetakAuditSinglePopup', 'width=780,height=880,left=180,top=60,resizable=yes,scrollbars=yes');
     if (!printWindow) return;
 
     const htmlContent = `
@@ -283,7 +292,8 @@ export const AdminAuditLogTab: React.FC<AdminAuditLogTabProps> = ({
           </div>
 
           <script>
-            window.onload = function() { window.print(); };
+            window.onafterprint = function() { window.close(); };
+            window.onload = function() { setTimeout(function() { window.print(); }, 350); };
           </script>
         </body>
       </html>

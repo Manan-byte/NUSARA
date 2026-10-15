@@ -423,11 +423,57 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       margin: 0;
-      padding: 24px;
-      background: #FFFFFF;
+      padding: 16px 20px;
+      background: #F8FAFC;
       color: #1C221E;
       line-height: 1.4;
       font-size: 13px;
+    }
+    .top-toolbar {
+      position: sticky;
+      top: 0;
+      background: #0B484C;
+      padding: 10px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+      z-index: 9999;
+    }
+    .top-toolbar-title {
+      color: #FFFFFF;
+      font-weight: 800;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .top-toolbar-actions {
+      display: flex;
+      gap: 10px;
+    }
+    .btn-print {
+      background: #F3D37A;
+      color: #0B484C;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .btn-close {
+      background: rgba(255, 255, 255, 0.2);
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 12px;
     }
     .kwitansi-box {
       max-width: 680px;
@@ -584,8 +630,9 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
       line-height: 1.5;
     }
     @media print {
+      .top-toolbar { display: none !important; }
       body {
-        padding: 0;
+        padding: 0 !important;
         background: #FFF !important;
       }
       .kwitansi-box {
@@ -598,6 +645,16 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
   </style>
 </head>
 <body>
+  <div class="top-toolbar">
+    <div class="top-toolbar-title">
+      <span>📄 Kwitansi Resmi Siap Cetak (${k.resiNo})</span>
+    </div>
+    <div class="top-toolbar-actions">
+      <button class="btn-print" onclick="window.print()">🖨️ Cetak / Simpan PDF</button>
+      <button class="btn-close" onclick="window.close()">✕ Keluar / Tutup</button>
+    </div>
+  </div>
+
   <div class="kwitansi-box">
     <div class="header">
       <div class="logo-container">
@@ -676,6 +733,9 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
   </div>
 
   <script>
+    window.onafterprint = function() {
+      window.close();
+    };
     window.onload = function() {
       setTimeout(function() {
         window.print();
@@ -685,50 +745,37 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
 </body>
 </html>`;
 
-    // Priority: Hidden iframe print avoids popup blockers and is completely immune to page overflow clipping
-    const iframe = document.createElement('iframe');
-    iframe.style.position = 'fixed';
-    iframe.style.right = '0';
-    iframe.style.bottom = '0';
-    iframe.style.width = '0';
-    iframe.style.height = '0';
-    iframe.style.border = '0';
-    iframe.id = 'kwitansi-print-frame';
-    document.body.appendChild(iframe);
-
-    const frameDoc = iframe.contentWindow?.document;
-    if (frameDoc) {
-      frameDoc.open();
-      frameDoc.write(htmlContent);
-      frameDoc.close();
-      setTimeout(() => {
-        try {
+    const popup = window.open('', 'CetakKwitansiPopup', 'width=780,height=880,left=150,top=60,resizable=yes,scrollbars=yes');
+    if (popup) {
+      popup.document.open();
+      popup.document.write(htmlContent);
+      popup.document.close();
+      setKwitansiModal(null);
+    } else {
+      const iframe = document.createElement('iframe');
+      iframe.style.position = 'fixed';
+      iframe.style.right = '0';
+      iframe.style.bottom = '0';
+      iframe.style.width = '0';
+      iframe.style.height = '0';
+      iframe.style.border = '0';
+      document.body.appendChild(iframe);
+      const doc = iframe.contentWindow?.document;
+      if (doc) {
+        doc.open();
+        doc.write(htmlContent);
+        doc.close();
+        setTimeout(() => {
           iframe.contentWindow?.focus();
           iframe.contentWindow?.print();
-        } catch {
-          const printWin = window.open('', '_blank');
-          if (printWin) {
-            printWin.document.open();
-            printWin.document.write(htmlContent);
-            printWin.document.close();
-          }
-        }
-        setTimeout(() => {
-          try {
-            document.body.removeChild(iframe);
-          } catch {}
-          setIsPrintingKwitansi(false);
-        }, 1200);
-      }, 400);
-    } else {
-      const printWin = window.open('', '_blank');
-      if (printWin) {
-        printWin.document.open();
-        printWin.document.write(htmlContent);
-        printWin.document.close();
+          setTimeout(() => {
+            try { document.body.removeChild(iframe); } catch {}
+            setKwitansiModal(null);
+          }, 1000);
+        }, 300);
       }
-      setTimeout(() => setIsPrintingKwitansi(false), 1000);
     }
+    setIsPrintingKwitansi(false);
   };
   const handleOpenKwitansiIpl = (w: WargaRecord) => {
     const acc = getWargaIplAccumulated(w);
