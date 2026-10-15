@@ -45,17 +45,6 @@ const DEFAULT_ADMINS: AdminAccount[] = [
     createdAt: '09 Okt 2026',
   },
 ];
-if (typeof window !== 'undefined') {
-  localStorage.removeItem('SIM_WARGA_DATA_WARGA');
-  localStorage.removeItem('SIM_WARGA_TRANSAKSI_IPL');
-  localStorage.removeItem('SIM_WARGA_PENGELUARAN_KAS');
-  localStorage.removeItem('SIM_WARGA_URUNAN_LIST');
-  localStorage.removeItem('SIM_WARGA_PENGUMUMAN_LIST');
-  localStorage.removeItem('SIM_WARGA_JADWAL_RONDA');
-  localStorage.removeItem('SIM_WARGA_RONDA_LIST');
-  localStorage.removeItem('SIM_WARGA_OWNED_WARGA_KEYS');
-  localStorage.removeItem('SIM_WARGA_MY_OWNED_RECORDS_V3');
-}
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('beranda');
@@ -188,8 +177,26 @@ export const App: React.FC = () => {
 
   // Core application state with clean initial empty data
   const [dashboardSummary, setDashboardSummary] = useState(initialDashboardSummary);
-  const [wargaList, setWargaList] = useState<WargaRecord[]>(initialWargaList);
-  const [rondaList, setRondaList] = useState<RondaWithStatus[]>(initialJadwalRondaList);
+  const [wargaList, setWargaList] = useState<WargaRecord[]>(() => {
+    try {
+      const saved = localStorage.getItem('SIM_WARGA_DATA_WARGA');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch {}
+    return initialWargaList;
+  });
+  const [rondaList, setRondaList] = useState<RondaWithStatus[]>(() => {
+    try {
+      const saved = localStorage.getItem('SIM_WARGA_RONDA_LIST');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch {}
+    return initialJadwalRondaList;
+  });
   const [pengumumanList, setPengumumanList] = useState<PengumumanRecord[]>(() => {
     try {
       const saved = localStorage.getItem('SIM_WARGA_PENGUMUMAN_LIST');
@@ -200,10 +207,37 @@ export const App: React.FC = () => {
     } catch {}
     return initialPengumumanList;
   });
-  const [transaksiList, setTransaksiList] = useState<TransaksiIPL[]>(initialTransaksiIplList);
-  const [pengeluaranList, setPengeluaranList] = useState<PengeluaranKasRecord[]>(initialPengeluaranKasList);
+  const [transaksiList, setTransaksiList] = useState<TransaksiIPL[]>(() => {
+    try {
+      const saved = localStorage.getItem('SIM_WARGA_TRANSAKSI_IPL');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch {}
+    return initialTransaksiIplList;
+  });
+  const [pengeluaranList, setPengeluaranList] = useState<PengeluaranKasRecord[]>(() => {
+    try {
+      const saved = localStorage.getItem('SIM_WARGA_PENGELUARAN_KAS');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch {}
+    return initialPengeluaranKasList;
+  });
   const [programUrunan, setProgramUrunan] = useState<ProgramUrunanRecord>(initialProgramPJU);
-  const [urunanList, setUrunanList] = useState<ItemUrunanWarga[]>(initialUrunanList);
+  const [urunanList, setUrunanList] = useState<ItemUrunanWarga[]>(() => {
+    try {
+      const saved = localStorage.getItem('SIM_WARGA_URUNAN_LIST');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch {}
+    return initialUrunanList;
+  });
 
   const handleAddUrunan = async (item: ItemUrunanWarga) => {
     const nextPjuNo = urunanList.length + 1;
@@ -357,6 +391,17 @@ export const App: React.FC = () => {
       localStorage.setItem('SIM_WARGA_PENGUMUMAN_LIST', JSON.stringify(pengumumanList));
     } catch {}
   }, [pengumumanList]);
+  useEffect(() => {
+    try {
+      localStorage.setItem('SIM_WARGA_URUNAN_LIST', JSON.stringify(urunanList));
+    } catch {}
+  }, [urunanList]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('SIM_WARGA_RONDA_LIST', JSON.stringify(rondaList));
+    } catch {}
+  }, [rondaList]);
 
 
   useEffect(() => {
