@@ -14,7 +14,11 @@ import {
   FileSpreadsheet,
   HelpCircle,
   ArrowRight,
-  Info
+  Info,
+  X,
+  Rocket,
+  Users,
+  CreditCard
 } from 'lucide-react';
 import {
   WargaRecord,
@@ -65,10 +69,12 @@ export const AdminDatabaseTab: React.FC<AdminDatabaseTabProps> = ({
     title?: string;
     message?: string;
   }>({ status: 'idle' });
-
   const [sheetCheck, setSheetCheck] = useState<'idle' | 'testing' | 'ok' | 'error'>('idle');
   const [gasCheck, setGasCheck] = useState<'idle' | 'testing' | 'ok' | 'error'>('idle');
   const [connectionVerified, setConnectionVerified] = useState<boolean>(false);
+
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false);
+  const [isRollbackModalOpen, setIsRollbackModalOpen] = useState<boolean>(false);
 
   const [migrating, setMigrating] = useState(false);
   const [migrationStatus, setMigrationStatus] = useState<string | null>(null);
@@ -216,24 +222,31 @@ export const AdminDatabaseTab: React.FC<AdminDatabaseTabProps> = ({
     setTestingConnection(false);
   };
 
-  // 3. Kloning & Pindahkan Seluruh Database Sekarang
-  const handleMigrateDatabase = async () => {
+  // 3. Buka Modal Konfirmasi Kloning
+  const handleMigrateDatabase = () => {
     if (!cleanTargetSheetId) {
-      alert('Mohon masukkan Link atau ID Google Sheets Baru.');
+      setTestResult({
+        status: 'error',
+        title: 'Spreadsheet ID Kosong',
+        message: 'Mohon masukkan Link atau ID Google Sheets Baru pada kolom 1.'
+      });
       return;
     }
     if (!targetGasUrlInput.trim()) {
-      alert('Mohon masukkan URL Web App Google Apps Script Baru.');
+      setTestResult({
+        status: 'error',
+        title: 'URL Web App Kosong',
+        message: 'Mohon masukkan URL Web App Google Apps Script Baru pada kolom 2.'
+      });
       return;
     }
 
-    const confirmAction = window.confirm(
-      `Konfirmasi Pemindahan Database:\n\n` +
-      `Sistem akan mengkloning seluruh ${wargaList.length} data warga, ${transaksiList.length} transaksi kas IPL, pengeluaran, dan urunan PJU ke Google Sheets baru Anda.\n\n` +
-      `Lanjutkan proses pemindahan?`
-    );
-    if (!confirmAction) return;
+    setIsConfirmModalOpen(true);
+  };
 
+  // Eksekusi Kloning setelah user klik konfirmasi di modal kustom
+  const executeMigration = async () => {
+    setIsConfirmModalOpen(false);
     setMigrating(true);
     setMigrationStatus('Menyiapkan paket data 30 KK & pembukuan kas...');
 
@@ -265,12 +278,9 @@ export const AdminDatabaseTab: React.FC<AdminDatabaseTabProps> = ({
       let responseJson: { success?: boolean; message?: string; wargaCount?: number; iplCount?: number; expenseCount?: number; urunanCount?: number } = {};
       try {
         responseJson = JSON.parse(responseText);
-      } catch {
-        // jika respon berupa teks biasa
-      }
+      } catch {}
 
       if (response.ok && (responseJson.success !== false)) {
-        // Simpan konfigurasi baru ke localStorage
         setSpreadsheetId(cleanTargetSheetId);
         setGasApiUrl(targetGasUrlInput.trim());
 
@@ -288,25 +298,27 @@ export const AdminDatabaseTab: React.FC<AdminDatabaseTabProps> = ({
       }
     } catch (err) {
       setMigrationStatus(null);
-      alert(`Gagal memindahkan database: ${err instanceof Error ? err.message : 'Koneksi terputus'}. Pastikan URL Web App benar dan izin akses "Anyone" aktif.`);
+      setTestResult({
+        status: 'error',
+        title: 'Gagal Memindahkan Database',
+        message: `Terjadi kendala: ${err instanceof Error ? err.message : 'Koneksi terputus'}. Pastikan URL Web App benar dan izin "Who has access" diset ke "Anyone".`
+      });
     } finally {
       setMigrating(false);
     }
   };
 
-  // 4. Rollback ke Database Asli PK8
+  // 4. Buka Modal Konfirmasi Rollback
   const handleRollbackDefault = () => {
-    const ok = window.confirm(
-      'Kembalikan Koneksi ke Spreadsheet Master Asli RT 08?\n\n' +
-      'Sistem akan mengalihkan kembali koneksi ke Google Spreadsheet resmi Paguyuban PK8 Tahap 2 semula.'
-    );
-    if (!ok) return;
+    setIsRollbackModalOpen(true);
+  };
 
+  const executeRollback = () => {
+    setIsRollbackModalOpen(false);
     localStorage.removeItem('SIM_WARGA_SPREADSHEET_ID');
     localStorage.removeItem('SIM_WARGA_GAS_URL');
     window.location.reload();
   };
-
   return (
     <div className="flex-1 min-h-0 flex flex-col justify-between gap-2.5 overflow-y-auto md:overflow-hidden h-auto md:h-full w-full max-w-full select-none">
       {/* 1. TOP TITLE ROW */}
@@ -697,6 +709,169 @@ export const AdminDatabaseTab: React.FC<AdminDatabaseTabProps> = ({
           </div>
         </div>
       </div>
+      {/* =================================================================== */}
+      {/* MODAL KUSTOM: KONFIRMASI PEMINDAHAN DATABASE (DESAIN ELEGAN)        */}
+      {/* =================================================================== */}
+      {isConfirmModalOpen && (
+        <div
+          onClick={() => setIsConfirmModalOpen(false)}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#041E20]/80 backdrop-blur-md animate-in fade-in duration-150 select-none"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-lg bg-white dark:bg-[#072426] rounded-3xl border-2 border-[#D9B352]/70 shadow-2xl p-6 space-y-4 animate-in zoom-in-95 duration-150"
+          >
+            {/* Close Button */}
+            <button
+              type="button"
+              onClick={() => setIsConfirmModalOpen(false)}
+              className="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 text-stone-500 hover:text-stone-800 dark:hover:text-stone-200 flex items-center justify-center absolute top-4 right-4 transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            {/* Header */}
+            <div className="flex items-center gap-3 pb-3 border-b border-stone-100 dark:border-stone-800">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#0B484C] to-emerald-600 text-white flex items-center justify-center shadow-md flex-shrink-0">
+                <Rocket className="w-6 h-6 text-[#F3D37A]" />
+              </div>
+              <div>
+                <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700">
+                  Siap Dipindahkan
+                </span>
+                <h3 className="text-base sm:text-lg font-black text-[#1C221E] dark:text-white mt-0.5">
+                  Konfirmasi Pemindahan Database
+                </h3>
+              </div>
+            </div>
+
+            <p className="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
+              Sistem akan mengkloning seluruh data aktif saat ini dan mengalihkan pembukuan resmi ke Google Sheets baru Anda:
+            </p>
+
+            {/* Data Summary Grid */}
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="p-2.5 rounded-xl bg-stone-50 dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 flex items-center gap-2">
+                <Users className="w-4 h-4 text-[#0B484C] dark:text-[#F3D37A] flex-shrink-0" />
+                <div>
+                  <span className="font-black text-[#1C221E] dark:text-white block">{wargaList.length} KK Warga</span>
+                  <span className="text-[10px] text-stone-400">Direktori Lengkap</span>
+                </div>
+              </div>
+              <div className="p-2.5 rounded-xl bg-stone-50 dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 flex items-center gap-2">
+                <CreditCard className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                <div>
+                  <span className="font-black text-[#1C221E] dark:text-white block">{transaksiList.length} Transaksi</span>
+                  <span className="text-[10px] text-stone-400">Pembukuan Kas IPL</span>
+                </div>
+              </div>
+              <div className="p-2.5 rounded-xl bg-stone-50 dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 flex items-center gap-2">
+                <FileSpreadsheet className="w-4 h-4 text-rose-600 flex-shrink-0" />
+                <div>
+                  <span className="font-black text-[#1C221E] dark:text-white block">{pengeluaranList.length} Belanja Kas</span>
+                  <span className="text-[10px] text-stone-400">Nota Pengeluaran</span>
+                </div>
+              </div>
+              <div className="p-2.5 rounded-xl bg-stone-50 dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-amber-500 flex-shrink-0" />
+                <div>
+                  <span className="font-black text-[#1C221E] dark:text-white block">{urunanList.length} Donatur</span>
+                  <span className="text-[10px] text-stone-400">Urunan Lampu PJU</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Safety Guarantee Box */}
+            <div className="p-3 rounded-xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-700/60 text-[11px] text-amber-900 dark:text-amber-200 space-y-1">
+              <div className="font-bold flex items-center gap-1.5 text-amber-800 dark:text-amber-300">
+                <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                <span>Jaminan Keamanan &amp; Backup:</span>
+              </div>
+              <p className="leading-relaxed">
+                Spreadsheet lama Anda <strong>tidak akan terhapus</strong> dan otomatis menjadi arsip cadangan (backup). Anda bisa kembali ke database semula kapan saja lewat tombol reset di pojok kanan atas.
+              </p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="grid grid-cols-2 gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setIsConfirmModalOpen(false)}
+                className="py-3 px-4 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-bold text-xs transition-colors"
+              >
+                Batal / Periksa Dulu
+              </button>
+              <button
+                type="button"
+                onClick={executeMigration}
+                className="py-3 px-4 rounded-xl carlic-sage-btn text-[#F3D37A] font-black text-xs flex items-center justify-center gap-2 shadow-md transition-all active:scale-98"
+              >
+                <Send className="w-4 h-4" />
+                <span>Ya, Pindahkan Sekarang</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* =================================================================== */}
+      {/* MODAL KUSTOM: KONFIRMASI ROLLBACK KE DATABASE ASLI                  */}
+      {/* =================================================================== */}
+      {isRollbackModalOpen && (
+        <div
+          onClick={() => setIsRollbackModalOpen(false)}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#041E20]/80 backdrop-blur-md animate-in fade-in duration-150 select-none"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-md bg-white dark:bg-[#072426] rounded-3xl border-2 border-amber-400 shadow-2xl p-6 space-y-4 animate-in zoom-in-95 duration-150"
+          >
+            <button
+              type="button"
+              onClick={() => setIsRollbackModalOpen(false)}
+              className="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 text-stone-500 flex items-center justify-center absolute top-4 right-4"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <div className="flex items-center gap-3 pb-3 border-b border-stone-100 dark:border-stone-800">
+              <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center shadow-md flex-shrink-0">
+                <RotateCcw className="w-6 h-6 text-amber-600" />
+              </div>
+              <div>
+                <h3 className="text-base font-black text-[#1C221E] dark:text-white">
+                  Reset ke Database Asli PK8?
+                </h3>
+                <span className="text-[10px] text-stone-400 font-medium">
+                  Memulihkan koneksi ke Spreadsheet Master RT 08
+                </span>
+              </div>
+            </div>
+
+            <p className="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
+              Sistem akan menghapus koneksi kustom dan mengalihkan kembali seluruh pembacaan website ke Google Sheets resmi Paguyuban Pesona Kahuripan 8 Tahap 2 semula.
+            </p>
+
+            <div className="grid grid-cols-2 gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setIsRollbackModalOpen(false)}
+                className="py-3 px-4 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-bold text-xs"
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                onClick={executeRollback}
+                className="py-3 px-4 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-black text-xs flex items-center justify-center gap-2 shadow-md transition-all active:scale-98"
+              >
+                <RotateCcw className="w-4 h-4" />
+                <span>Ya, Reset ke DB Asli</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
