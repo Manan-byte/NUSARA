@@ -210,7 +210,18 @@
   border-color: rgba(217, 179, 82, 0.15);
 }
 
-/* Custom smooth scrollbar */
+/* Sembunyikan scrollbar sepenuhnya untuk elemen dengan class .scrollbar-none */
+.scrollbar-none {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Custom smooth scrollbar untuk container biasa */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;

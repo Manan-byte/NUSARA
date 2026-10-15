@@ -1931,12 +1931,12 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
   return (
     <div
       data-view="dashboard-warga"
-      className="carlic-website-bg relative lg:fixed lg:inset-0 w-full max-w-full min-h-screen lg:h-full overflow-x-hidden p-1.5 sm:p-2 lg:p-2.5 flex flex-col items-center justify-start select-none"
+      className="carlic-website-bg relative lg:fixed lg:inset-0 w-full max-w-full min-h-screen lg:h-full lg:overflow-hidden overflow-x-hidden p-1.5 sm:p-2 lg:p-2 flex flex-col items-center justify-start select-none"
     >
       {/* =================================================================== */}
       {/* FULL-WIDTH TRANSLUCENT GLASS BOARD OVER SCENIC WEBSITE BACKGROUND   */}
       {/* =================================================================== */}
-      <div className="carlic-board w-full max-w-full lg:max-w-[1680px] min-h-screen lg:min-h-0 lg:flex-1 flex flex-col rounded-[18px] sm:rounded-[26px] p-2.5 sm:p-3 lg:p-2.5 overflow-x-hidden mb-8 lg:mb-0">
+      <div className="carlic-board w-full max-w-full lg:max-w-[1680px] min-h-screen lg:min-h-0 lg:h-full lg:flex-1 flex flex-col rounded-[18px] sm:rounded-[24px] p-2 sm:p-2.5 lg:p-2 overflow-x-hidden lg:overflow-hidden mb-8 lg:mb-0">
         {/* ================================================================= */}
         <header className="relative z-30 rounded-[18px] px-3.5 py-2 sm:px-4 sm:py-2 mb-2 flex flex-col lg:flex-row lg:items-center justify-between gap-2">
           {/* Decorative Clipped Background Layer so Popover is Never Clipped */}
@@ -2187,7 +2187,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
         {/* ================================================================= */}
         {/* 2. MAIN BODY: VERTICAL PILL SIDEBAR KIRI + KONTEN MENU KANAN      */}
         {/* ================================================================= */}
-        <div className="flex flex-col lg:flex-row gap-2.5 sm:gap-3 items-stretch flex-1 min-h-0 w-full max-w-full overflow-x-hidden">
+        <div className="flex flex-col lg:flex-row gap-2 sm:gap-2.5 items-stretch flex-1 min-h-0 w-full max-w-full overflow-x-hidden lg:overflow-hidden lg:h-full">
           {/* DESKTOP-ONLY VERTICAL PILL SIDEBAR */}
           <aside className="hidden lg:flex carlic-card lg:rounded-full px-2 py-3 flex-col items-center justify-between gap-2 lg:w-[58px] flex-shrink-0 lg:h-full">
             <nav className="flex flex-col items-center gap-1.5">
@@ -2243,7 +2243,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
           </aside>
 
           {/* RIGHT CONTENT AREA */}
-          <div className="flex-1 min-w-0 w-full max-w-full lg:h-full pb-20 lg:pb-0 overflow-y-auto lg:overflow-visible pr-0.5">
+          <div className="flex-1 min-w-0 w-full max-w-full lg:h-full pb-20 lg:pb-0 overflow-y-auto lg:overflow-hidden pr-0.5">
             {/* MENU 1: BERANDA (TANPA DUPLIKASI ANGKA KAS & TANPA FINGERPRINT)*/}
             {/* ============================================================= */}
             {currentTab === 'beranda' && (
@@ -2792,8 +2792,8 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                               </div>
                             </div>
 
-                            {/* Grid 2 Kolom (Scrollable vertikal di HP agar tidak pernah terpotong) */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 flex-1 min-h-0 overflow-y-auto pr-0.5">
+                            {/* Grid 2 Kolom (Compact auto-rows-max: tidak pernah melar saat data sedikit) */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 auto-rows-max content-start gap-2.5 flex-1 min-h-0 overflow-y-auto pr-0.5">
                               {pageItems.map((w, i) => {
                                 const rejectedReason = getRejectedIplReason(w);
                                 const iplAcc = getWargaIplAccumulated(w);
@@ -2802,7 +2802,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                                 return (
                                   <div
                                     key={w.id || i}
-                                    className={`px-3.5 py-2.5 rounded-2xl flex flex-col justify-between h-full transition-colors ${
+                                    className={`px-3.5 py-2.5 rounded-2xl flex flex-col justify-between h-auto min-h-[96px] transition-colors ${
                                       rejectedReason
                                         ? 'bg-rose-50/80 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800'
                                         : iplAcc.isExpired
@@ -3817,8 +3817,8 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                               </div>
                             )}
 
-                            {/* GRID KARTU PJU: Scrollable vertikal di HP agar tidak pernah terpotong */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 flex-1 min-h-0 overflow-y-auto pr-0.5">
+                            {/* GRID KARTU PJU: Compact auto-rows-max (tidak pernah melar saat data sedikit) */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 auto-rows-max content-start gap-2.5 flex-1 min-h-0 overflow-y-auto pr-0.5">
                               {pageItems.map((item) => {
                                 const isBoth = item.hasWajib && item.hasDonatur;
                                 const isDonatur = item.hasDonatur;
@@ -3853,7 +3853,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                                 return (
                                   <div
                                     key={item.key}
-                                    className={`p-3 rounded-2xl border flex flex-col justify-between transition-all h-full ${
+                                    className={`p-3 rounded-2xl border flex flex-col justify-between transition-all h-auto min-h-[96px] ${
                                       isRej
                                         ? 'bg-rose-50/80 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800'
                                         : isPend
@@ -4697,14 +4697,14 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 flex-1 min-h-0 overflow-y-auto pr-0.5">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-max content-start gap-2.5 flex-1 min-h-0 overflow-y-auto pr-0.5">
                           {pageItems.map((w, idx) => {
                             const isOwned = isWargaOwnedByUser(w);
                             return (
                               <div
                                 key={w.id || idx}
                                 onClick={() => handleOpenDetailWarga(w)}
-                                className={`cursor-pointer px-3.5 py-2.5 rounded-2xl transition-colors flex flex-col justify-between h-full ${
+                                className={`cursor-pointer px-3.5 py-2.5 rounded-2xl transition-colors flex flex-col justify-between h-auto min-h-[96px] ${
                                   isOwned
                                     ? 'bg-[#FEF9EB] dark:bg-[#0F494D]/60 border border-[#D9B352]/60 hover:bg-[#FAF1D6]'
                                     : 'bg-[#F8F8F6] dark:bg-stone-800/60 hover:bg-[#EFECE6] dark:hover:bg-stone-800'
@@ -5693,7 +5693,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                               </div>
                             </div>
                           </div>
-                          <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#FEF6DF] text-[#9A7018] border border-[#D9B352]/40">
+                          <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#FEF6DF] dark:bg-[#072426] text-[#9A7018] dark:text-[#F3D37A] border border-[#D9B352]/40 dark:border-[#D9B352]/60 whitespace-nowrap flex-shrink-0">
                             21.00 – 04.00
                           </span>
                         </div>
@@ -5818,7 +5818,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                               * Jika berhalangan pada saat jadwal, segera koordinasi dengan teman di hari tersebut
                             </p>
                           </div>
-                          <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#FEF6DF] text-[#9A7018] border border-[#D9B352]/40 whitespace-nowrap flex-shrink-0">
+                          <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#FEF6DF] dark:bg-[#072426] text-[#9A7018] dark:text-[#F3D37A] border border-[#D9B352]/40 dark:border-[#D9B352]/60 whitespace-nowrap flex-shrink-0">
                             ⏰ 21.00 s/d 04.00 WIB
                           </span>
                         </div>
@@ -5910,7 +5910,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                                     </div>
                                   </div>
                                   <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-white dark:bg-stone-700 text-[#0B484C] dark:text-[#F3D37A] border border-stone-200/70 dark:border-stone-600 whitespace-nowrap flex-shrink-0">
-                                    Blok {p.blokRumah}
+                                    {p.blokRumah.startsWith('Blok') ? p.blokRumah : `Blok ${p.blokRumah}`}
                                   </span>
                                 </div>
                               );
@@ -5967,7 +5967,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-max content-start gap-4 lg:flex-1 min-h-0 overflow-y-auto pr-1 pb-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-max content-start gap-3.5 lg:flex-1 min-h-0 overflow-y-auto lg:overflow-hidden pr-1 pb-1">
                     {filteredAnn.map((p, idx) => {
                       const themes = [
                         {
@@ -5998,10 +5998,10 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                       return (
                         <div
                           key={p.id}
-                          className={`min-h-[440px] sm:min-h-[460px] rounded-[28px] overflow-hidden flex flex-col justify-between shadow-xl relative group transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl border-2 border-white/10 bg-gradient-to-b ${theme.cardBg} text-white`}
+                          className={`h-auto min-h-[380px] lg:min-h-0 rounded-[24px] overflow-hidden flex flex-col justify-between shadow-xl relative group transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl border-2 border-white/10 bg-gradient-to-b ${theme.cardBg} text-white`}
                         >
                           {/* TOP MEDIA IMAGE */}
-                          <div className="relative h-40 sm:h-44 w-full overflow-hidden flex-shrink-0">
+                          <div className="relative h-36 lg:h-36 w-full overflow-hidden flex-shrink-0">
                             <img
                               src={p.gambarBanner || theme.bannerDefault}
                               alt={p.judul}
