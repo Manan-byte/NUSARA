@@ -180,7 +180,7 @@ export const AdminResidentsTab: React.FC<AdminResidentsTabProps> = ({
                 className="h-8 px-3.5 rounded-xl bg-[#0B484C] hover:bg-[#093A3E] text-[#F3D37A] font-extrabold text-xs flex items-center gap-1 shadow-xs flex-shrink-0 transition-colors"
               >
                 <Plus className="w-3.5 h-3.5" />
-                <span>+ Warga Baru</span>
+                <span>Warga Baru</span>
               </button>
             </div>
           </div>

@@ -288,11 +288,11 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
             </div>
 
             {/* Quick Login Bar (Single Line) */}
-            <div className="mt-5 pt-3.5 flex items-center justify-between gap-2 text-xs text-stone-500 dark:text-stone-400 border-t border-stone-100 dark:border-stone-800 whitespace-nowrap">
+            <div className="mt-4 pt-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-stone-500 dark:text-stone-400 border-t border-stone-100 dark:border-stone-800">
               <span>
                 Pilih Akun Cepat (<strong className="text-[#092C2E] dark:text-stone-200">admin123</strong>):
               </span>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-1.5 w-full sm:w-auto">
                 <button
                   type="button"
                   onClick={() => {

@@ -1782,7 +1782,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
     const cleanBlokLetter = formBlok.trim().toUpperCase().replace(/^BLOK\s*/i, '');
     const cleanNoBlok = formNoBlok.trim();
     const fullBlok = cleanNoBlok ? `${cleanBlokLetter}${cleanNoBlok}` : cleanBlokLetter;
-    const cleanNoRumah = formNoRumah.trim();
+    const cleanNoRumah = (formNoRumah.trim() || cleanNoBlok);
     const cleanWa = formWa.trim().replace(/\D/g, '');
     const namaVal = validateNamaWarga(cleanNama);
     if (!namaVal.isValid) {
@@ -1931,12 +1931,12 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
   return (
     <div
       data-view="dashboard-warga"
-      className="carlic-website-bg fixed inset-0 w-full max-w-full h-full overflow-x-hidden overflow-y-auto lg:overflow-hidden p-1 sm:p-2 flex flex-col items-center justify-start select-none"
+      className="carlic-website-bg relative lg:fixed lg:inset-0 w-full max-w-full min-h-screen lg:h-full overflow-x-hidden p-1.5 sm:p-2 lg:p-2.5 flex flex-col items-center justify-start select-none"
     >
       {/* =================================================================== */}
       {/* FULL-WIDTH TRANSLUCENT GLASS BOARD OVER SCENIC WEBSITE BACKGROUND   */}
       {/* =================================================================== */}
-      <div className="carlic-board w-full max-w-full lg:max-w-[1680px] flex-1 flex flex-col rounded-[16px] sm:rounded-[26px] p-2 sm:p-2.5 overflow-x-hidden min-h-0">
+      <div className="carlic-board w-full max-w-full lg:max-w-[1680px] min-h-screen lg:min-h-0 lg:flex-1 flex flex-col rounded-[18px] sm:rounded-[26px] p-2.5 sm:p-3 lg:p-2.5 overflow-x-hidden mb-8 lg:mb-0">
         {/* ================================================================= */}
         <header className="relative z-30 rounded-[18px] px-3.5 py-2 sm:px-4 sm:py-2 mb-2 flex flex-col lg:flex-row lg:items-center justify-between gap-2">
           {/* Decorative Clipped Background Layer so Popover is Never Clipped */}
@@ -2814,7 +2814,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                                         : 'bg-[#F8F8F6] dark:bg-stone-800/60'
                                     }`}
                                   >
-                                    <div className="flex items-start justify-between gap-2">
+                                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-1.5 sm:gap-2">
                                       <div className="flex items-center gap-2.5 min-w-0">
                                         <div
                                           className={`w-8 h-8 rounded-full font-extrabold text-xs flex items-center justify-center flex-shrink-0 ${
@@ -2825,11 +2825,11 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                                         >
                                           {w.blok}
                                         </div>
-                                        <div className="min-w-0">
-                                          <h4 className="text-xs sm:text-sm font-extrabold text-[#1C221E] dark:text-white truncate">
+                                        <div className="min-w-0 flex-1">
+                                          <h4 className="text-xs sm:text-sm font-extrabold text-[#1C221E] dark:text-white leading-snug">
                                             {w.namaLengkap}
                                           </h4>
-                                          <span className="text-[10px] text-stone-500 dark:text-stone-300 font-semibold block truncate">
+                                          <span className="text-[10px] text-stone-500 dark:text-stone-300 font-semibold block leading-tight">
                                             {w.alamatRumah} •{' '}
                                             {iplAcc.isExpired ? (
                                               <strong className="text-orange-700 dark:text-orange-300">
@@ -3110,8 +3110,8 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                             </div>
                           </div>
 
-                          <div className="flex flex-wrap items-center justify-between gap-2 pt-3 mt-2 border-t border-stone-200/80 dark:border-stone-800 text-xs flex-shrink-0">
-                            <div className="flex items-center gap-2">
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-3 mt-2 border-t border-stone-200/80 dark:border-stone-800 text-xs flex-shrink-0 w-full">
+                            <div className="flex items-center justify-between sm:justify-start gap-2 w-full sm:w-auto">
                               <span className="px-2.5 py-1 rounded-lg bg-[#0B484C]/10 dark:bg-stone-800 text-[#0B484C] dark:text-[#F3D37A] font-extrabold text-[11px]">
                                 Halaman {iplPage} dari {totalPages}
                               </span>
@@ -3119,12 +3119,12 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                                 Total <strong className="text-[#1C221E] dark:text-white">{filteredIpl.length} KK</strong>
                               </span>
                             </div>
-                            <div className="flex items-center gap-1.5">
+                            <div className="flex items-center justify-center sm:justify-end gap-1.5 w-full sm:w-auto overflow-x-auto max-w-full pb-1 sm:pb-0 scrollbar-none">
                               <button
                                 type="button"
                                 disabled={iplPage <= 1}
                                 onClick={() => setIplPage((p) => Math.max(1, p - 1))}
-                                className="h-8 px-2.5 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 border border-stone-200 dark:border-stone-700 font-extrabold text-[11px] text-stone-700 dark:text-stone-200 flex items-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                                className="h-8 px-2.5 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 border border-stone-200 dark:border-stone-700 font-extrabold text-[11px] text-stone-700 dark:text-stone-200 flex items-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex-shrink-0"
                               >
                                 <ChevronLeft className="w-3.5 h-3.5" />
                                 <span>Sebelumnya</span>
@@ -3135,7 +3135,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                                   key={pg}
                                   type="button"
                                   onClick={() => setIplPage(pg)}
-                                  className={`w-8 h-8 rounded-xl font-black text-xs transition-all flex items-center justify-center ${
+                                  className={`w-8 h-8 rounded-xl font-black text-xs transition-all flex items-center justify-center flex-shrink-0 ${
                                     iplPage === pg
                                       ? 'bg-[#0B484C] text-[#F3D37A] shadow-xs ring-2 ring-[#D9B352]/60'
                                       : 'bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:border-[#0B484C]'
@@ -3149,7 +3149,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                                 type="button"
                                 disabled={iplPage >= totalPages}
                                 onClick={() => setIplPage((p) => Math.min(totalPages, p + 1))}
-                                className={`h-8 px-2.5 rounded-xl font-extrabold text-[11px] flex items-center gap-1 transition-all ${
+                                className={`h-8 px-2.5 rounded-xl font-extrabold text-[11px] flex items-center gap-1 transition-all flex-shrink-0 ${
                                   iplPage < totalPages
                                     ? 'bg-[#0B484C] text-[#F3D37A] hover:bg-[#08383B] shadow-xs'
                                     : 'bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-400 opacity-40 cursor-not-allowed'
@@ -3866,7 +3866,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                                     }`}
                                   >
                                     {/* BARIS ATAS KARTU: NOMOR + NAMA & SUBJUDUL BLOK DI KIRI | 1 BADGE STATUS DI KANAN */}
-                                    <div className="flex items-start justify-between gap-2">
+                                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-1.5 sm:gap-2">
                                       <div className="flex items-center gap-2.5 min-w-0">
                                         <div
                                           className={`w-8 h-8 rounded-xl font-extrabold text-xs flex items-center justify-center flex-shrink-0 ${
@@ -3881,11 +3881,11 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                                         >
                                           {item.displayNo}
                                         </div>
-                                        <div className="min-w-0">
-                                          <h4 className="text-xs sm:text-sm font-extrabold text-[#1C221E] dark:text-white truncate">
+                                        <div className="min-w-0 flex-1">
+                                          <h4 className="text-xs sm:text-sm font-extrabold text-[#1C221E] dark:text-white leading-snug">
                                             {item.namaWarga}
                                           </h4>
-                                          <span className="text-[10px] text-stone-500 dark:text-stone-300 font-semibold block truncate">
+                                          <span className="text-[10px] text-stone-500 dark:text-stone-300 font-semibold block leading-tight">
                                             {item.alamatRumah} •{' '}
                                             {isBoth ? (
                                               <strong className="text-[#0B484C] dark:text-[#F3D37A]">
@@ -4134,8 +4134,8 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                             </div>
                           </div>
 
-                          <div className="flex flex-wrap items-center justify-between gap-2 pt-3 mt-2 border-t border-stone-200/80 dark:border-stone-800 text-xs flex-shrink-0">
-                            <div className="flex items-center gap-2 flex-wrap">
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-3 mt-2 border-t border-stone-200/80 dark:border-stone-800 text-xs flex-shrink-0 w-full">
+                            <div className="flex items-center justify-between sm:justify-start gap-2 w-full sm:w-auto">
                               <span className="px-2.5 py-1 rounded-lg bg-[#0B484C]/10 dark:bg-stone-800 text-[#0B484C] dark:text-[#F3D37A] font-extrabold text-[11px]">
                                 Halaman {urunanPage} dari {totalPages}
                               </span>
@@ -4143,12 +4143,12 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                                 Total <strong className="text-[#1C221E] dark:text-white">{filteredUrunan.length} KK</strong> • Terkumpul: <strong className="text-[#0B484C] dark:text-[#F3D37A]">Rp {totalTerkumpul.toLocaleString('id-ID')}</strong>
                               </span>
                             </div>
-                            <div className="flex items-center gap-1.5">
+                            <div className="flex items-center justify-center sm:justify-end gap-1.5 w-full sm:w-auto overflow-x-auto max-w-full pb-1 sm:pb-0 scrollbar-none">
                               <button
                                 type="button"
                                 disabled={urunanPage <= 1}
                                 onClick={() => setUrunanPage((p) => Math.max(1, p - 1))}
-                                className="h-8 px-2.5 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 border border-stone-200 dark:border-stone-700 font-extrabold text-[11px] text-stone-700 dark:text-stone-200 flex items-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                                className="h-8 px-2.5 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 border border-stone-200 dark:border-stone-700 font-extrabold text-[11px] text-stone-700 dark:text-stone-200 flex items-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex-shrink-0"
                               >
                                 <ChevronLeft className="w-3.5 h-3.5" />
                                 <span>Sebelumnya</span>
@@ -4159,7 +4159,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                                   key={pg}
                                   type="button"
                                   onClick={() => setUrunanPage(pg)}
-                                  className={`w-8 h-8 rounded-xl font-black text-xs transition-all flex items-center justify-center ${
+                                  className={`w-8 h-8 rounded-xl font-black text-xs transition-all flex items-center justify-center flex-shrink-0 ${
                                     urunanPage === pg
                                       ? 'bg-[#0B484C] text-[#F3D37A] shadow-xs ring-2 ring-[#D9B352]/60'
                                       : 'bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:border-[#0B484C]'
@@ -4173,7 +4173,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                                 type="button"
                                 disabled={urunanPage >= totalPages}
                                 onClick={() => setUrunanPage((p) => Math.min(totalPages, p + 1))}
-                                className={`h-8 px-2.5 rounded-xl font-extrabold text-[11px] flex items-center gap-1 transition-all ${
+                                className={`h-8 px-2.5 rounded-xl font-extrabold text-[11px] flex items-center gap-1 transition-all flex-shrink-0 ${
                                   urunanPage < totalPages
                                     ? 'bg-[#0B484C] text-[#F3D37A] hover:bg-[#08383B] shadow-xs'
                                     : 'bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-400 opacity-40 cursor-not-allowed'
@@ -4758,8 +4758,8 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                         </div>
                       </div>
 
-                      <div className="flex flex-wrap items-center justify-between gap-2 pt-3 mt-2 border-t border-stone-200/80 dark:border-stone-800 text-xs flex-shrink-0">
-                        <div className="flex items-center gap-2">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-3 mt-2 border-t border-stone-200/80 dark:border-stone-800 text-xs flex-shrink-0 w-full">
+                        <div className="flex items-center justify-between sm:justify-start gap-2 w-full sm:w-auto">
                           <span className="px-2.5 py-1 rounded-lg bg-[#0B484C]/10 dark:bg-stone-800 text-[#0B484C] dark:text-[#F3D37A] font-extrabold text-[11px]">
                             Halaman {wargaPage} dari {totalPages}
                           </span>
@@ -4767,12 +4767,12 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                             Total <strong className="text-[#1C221E] dark:text-white">{filteredWargaList.length} KK</strong>
                           </span>
                         </div>
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center justify-center sm:justify-end gap-1.5 w-full sm:w-auto overflow-x-auto max-w-full pb-1 sm:pb-0 scrollbar-none">
                           <button
                             type="button"
                             disabled={wargaPage <= 1}
                             onClick={() => setWargaPage((p) => Math.max(1, p - 1))}
-                            className="h-8 px-2.5 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 border border-stone-200 dark:border-stone-700 font-extrabold text-[11px] text-stone-700 dark:text-stone-200 flex items-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                            className="h-8 px-2.5 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 border border-stone-200 dark:border-stone-700 font-extrabold text-[11px] text-stone-700 dark:text-stone-200 flex items-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex-shrink-0"
                           >
                             <ChevronLeft className="w-3.5 h-3.5" />
                             <span>Sebelumnya</span>
@@ -4783,7 +4783,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                               key={pg}
                               type="button"
                               onClick={() => setWargaPage(pg)}
-                              className={`w-8 h-8 rounded-xl font-black text-xs transition-all flex items-center justify-center ${
+                              className={`w-8 h-8 rounded-xl font-black text-xs transition-all flex items-center justify-center flex-shrink-0 ${
                                 wargaPage === pg
                                   ? 'bg-[#0B484C] text-[#F3D37A] shadow-xs ring-2 ring-[#D9B352]/60'
                                   : 'bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:border-[#0B484C]'
@@ -4797,7 +4797,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                             type="button"
                             disabled={wargaPage >= totalPages}
                             onClick={() => setWargaPage((p) => Math.min(totalPages, p + 1))}
-                            className={`h-8 px-2.5 rounded-xl font-extrabold text-[11px] flex items-center gap-1 transition-all ${
+                            className={`h-8 px-2.5 rounded-xl font-extrabold text-[11px] flex items-center gap-1 transition-all flex-shrink-0 ${
                               wargaPage < totalPages
                                 ? 'bg-[#0B484C] text-[#F3D37A] hover:bg-[#08383B] shadow-xs'
                                 : 'bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-400 opacity-40 cursor-not-allowed'
@@ -4859,7 +4859,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                     const cleanBlokLetter = formBlok.trim().toUpperCase().replace(/^BLOK\s*/i, '');
                     const cleanNoBlok = formNoBlok.trim();
                     const fullBlokInput = cleanNoBlok ? `${cleanBlokLetter}${cleanNoBlok}` : cleanBlokLetter;
-                    const cleanNoRumahInput = formNoRumah.trim();
+                    const cleanNoRumahInput = (formNoRumah.trim() || cleanNoBlok);
                     const targetAddressKey = cleanBlokLetter && cleanNoRumahInput
                       ? cleanAddressKey(fullBlokInput, cleanNoRumahInput)
                       : '';
@@ -4868,7 +4868,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                       : null;
                     const isStep2Valid = Boolean(
                       formBlok.trim().length >= 1 &&
-                      formNoRumah.trim().length >= 1 &&
+                      cleanNoRumahInput.length >= 1 &&
                       !duplicateAddressMatch &&
                       (parseInt(formJiwa, 10) || 0) >= 1
                     );
@@ -5257,19 +5257,17 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                           {/* LANGKAH 2: ALAMAT RUMAH & HUNIAN */}
                           {formStep === 2 && (
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 animate-in fade-in duration-150">
-                              {/* 4. Blok (A-Z), No. Blok, & No. Rumah */}
-                              <div className="grid grid-cols-3 gap-2">
+                              {/* 4. Blok & No. Rumah (Sederhana & Jelas 2 Kolom) */}
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <div>
-                                  <div className="flex items-center justify-between mb-1.5 h-4">
-                                    <label className="font-extrabold text-stone-700 dark:text-stone-200 text-xs">
-                                      Blok (A–Z) *
-                                    </label>
-                                  </div>
+                                  <label className="font-extrabold text-stone-700 dark:text-stone-200 text-xs block mb-1.5">
+                                    Pilih Blok *
+                                  </label>
                                   <CustomSelect
-                                    buttonClassName="h-11 px-3 rounded-2xl font-bold bg-[#FBFBFA] dark:bg-stone-800/90 border border-stone-200/90 dark:border-stone-700 text-xs text-[#1C221E] dark:text-white"
+                                    buttonClassName="h-11 px-3.5 rounded-2xl font-bold bg-[#FBFBFA] dark:bg-stone-800/90 border border-stone-200/90 dark:border-stone-700 text-xs text-[#1C221E] dark:text-white"
                                     searchable={true}
                                     dropUp={true}
-                                    placeholder="Pilih..."
+                                    placeholder="Pilih Blok..."
                                     value={formBlok}
                                     onChange={(val) => {
                                       setFormBlok(val);
@@ -5279,43 +5277,21 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                                   />
                                 </div>
                                 <div>
-                                  <div className="flex items-center justify-between mb-1.5 h-4">
-                                    <label className="font-extrabold text-stone-700 dark:text-stone-200 text-xs">
-                                      No. Blok *
-                                    </label>
-                                  </div>
+                                  <label className="font-extrabold text-stone-700 dark:text-stone-200 text-xs block mb-1.5">
+                                    Nomor Rumah *
+                                  </label>
                                   <input
                                     type="text"
                                     required
-                                    value={formNoBlok}
+                                    value={formNoRumah || formNoBlok}
                                     onChange={(e) => {
-                                      setFormNoBlok(e.target.value.replace(/\D/g, ''));
+                                      const val = e.target.value.replace(/\D/g, '');
+                                      setFormNoRumah(val);
+                                      setFormNoBlok(val);
                                       setFormWargaError('');
                                     }}
-                                    placeholder="Cth: 8"
-                                    className={`w-full h-11 px-3 rounded-2xl border text-xs font-bold transition-all focus:outline-none ${
-                                      duplicateAddressMatch
-                                        ? 'bg-rose-50/25 border-rose-400 focus:border-rose-500 text-rose-900 dark:text-rose-200'
-                                        : 'bg-[#FBFBFA] dark:bg-stone-800/90 border-stone-200/90 dark:border-stone-700 text-[#1C221E] dark:text-white focus:border-[#0B484C] focus:bg-white'
-                                    }`}
-                                  />
-                                </div>
-                                <div>
-                                  <div className="flex items-center justify-between mb-1.5 h-4">
-                                    <label className="font-extrabold text-stone-700 dark:text-stone-200 text-xs">
-                                      No. Rumah *
-                                    </label>
-                                  </div>
-                                  <input
-                                    type="text"
-                                    required
-                                    value={formNoRumah}
-                                    onChange={(e) => {
-                                      setFormNoRumah(e.target.value.replace(/\D/g, ''));
-                                      setFormWargaError('');
-                                    }}
-                                    placeholder="Cth: 12"
-                                    className={`w-full h-11 px-3 rounded-2xl border text-xs font-bold transition-all focus:outline-none ${
+                                    placeholder="Contoh: 8, 12, 15, 21"
+                                    className={`w-full h-11 px-3.5 rounded-2xl border text-xs font-bold transition-all focus:outline-none ${
                                       duplicateAddressMatch
                                         ? 'bg-rose-50/25 border-rose-400 focus:border-rose-500 text-rose-900 dark:text-rose-200'
                                         : 'bg-[#FBFBFA] dark:bg-stone-800/90 border-stone-200/90 dark:border-stone-700 text-[#1C221E] dark:text-white focus:border-[#0B484C] focus:bg-white'
@@ -5326,11 +5302,9 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
 
                               {/* 5. Status Hunian */}
                               <div>
-                                <div className="flex items-center justify-between mb-1.5 h-4">
-                                  <label className="font-extrabold text-stone-700 dark:text-stone-200 text-xs">
-                                    Status Hunian Rumah *
-                                  </label>
-                                </div>
+                                <label className="font-extrabold text-stone-700 dark:text-stone-200 text-xs block mb-1.5">
+                                  Status Hunian Rumah *
+                                </label>
                                 <CustomSelect
                                   buttonClassName="h-11 px-4 rounded-2xl font-bold bg-[#FBFBFA] dark:bg-stone-800/90 border border-stone-200/90 dark:border-stone-700 text-xs text-[#1C221E] dark:text-white"
                                   searchable={false}
@@ -5347,11 +5321,9 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                               {/* 6. Jml Jiwa & Pekerjaan */}
                               <div className="grid grid-cols-2 gap-2">
                                 <div>
-                                  <div className="flex items-center justify-between mb-1.5 h-4">
-                                    <label className="font-extrabold text-stone-700 dark:text-stone-200 text-xs">
-                                      Jml Jiwa (KK) *
-                                    </label>
-                                  </div>
+                                  <label className="font-extrabold text-stone-700 dark:text-stone-200 text-xs block mb-1.5">
+                                    Jml Jiwa (KK) *
+                                  </label>
                                   <div className="h-11 p-1 rounded-2xl bg-[#FBFBFA] dark:bg-stone-800/90 border border-stone-200/90 dark:border-stone-700 flex items-center justify-between">
                                     <button
                                       type="button"
@@ -5374,11 +5346,9 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                                 </div>
 
                                 <div>
-                                  <div className="flex items-center justify-between mb-1.5 h-4">
-                                    <label className="font-extrabold text-stone-700 dark:text-stone-200 text-xs">
-                                      Pekerjaan
-                                    </label>
-                                  </div>
+                                  <label className="font-extrabold text-stone-700 dark:text-stone-200 text-xs block mb-1.5">
+                                    Pekerjaan
+                                  </label>
                                   <input
                                     type="text"
                                     value={formPekerjaan}
@@ -5390,14 +5360,14 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                               </div>
                               {/* 7. Anggota Keluarga Tambahan (Kolom O di Google Sheets) */}
                               <div className="col-span-1 md:col-span-3">
-                                <div className="flex items-center justify-between mb-1.5 h-4">
-                                  <div className="flex items-center gap-1">
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2">
+                                  <div className="flex flex-wrap items-center gap-1.5">
                                     <label className="font-extrabold text-stone-700 dark:text-stone-200 text-xs">
-                                      Anggota Keluarga Tambahan (Istri, Anak, Orang Tua, dll.)
+                                      Anggota Keluarga Tambahan
                                     </label>
                                     <span className="text-[10px] text-stone-400 font-bold">
                                       {parseInt(formJiwa, 10) > 1
-                                        ? `(${parseInt(formJiwa, 10) - 1} jiwa selain Kepala Keluarga)`
+                                        ? `(${parseInt(formJiwa, 10) - 1} jiwa selain KK)`
                                         : '(Opsional)'}
                                     </span>
                                   </div>
