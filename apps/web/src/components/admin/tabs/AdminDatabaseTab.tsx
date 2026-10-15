@@ -652,29 +652,6 @@ export const AdminDatabaseTab: React.FC<AdminDatabaseTabProps> = ({
               </div>
             )}
 
-            {/* Banner Sukses Pemindahan */}
-            {migrationSuccessData && (
-              <div className="p-3.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border-2 border-emerald-500 text-xs space-y-2">
-                <div className="flex items-center gap-2 font-black text-emerald-800 dark:text-emerald-300">
-                  <ShieldCheck className="w-5 h-5 text-emerald-600" />
-                  <span>Database Berhasil Dipindahkan 100%!</span>
-                </div>
-                <ul className="text-[11px] text-emerald-700 dark:text-emerald-300 space-y-0.5">
-                  <li>✓ {migrationSuccessData.wargaCount} Data Warga berhasil disalin.</li>
-                  <li>✓ {migrationSuccessData.iplCount} Transaksi IPL tercatat.</li>
-                  <li>✓ {migrationSuccessData.expenseCount} Pengeluaran Kas disinkronkan.</li>
-                  <li>✓ {migrationSuccessData.urunanCount} Donatur PJU dipetakan.</li>
-                </ul>
-                <button
-                  type="button"
-                  onClick={() => window.location.reload()}
-                  className="w-full mt-2 py-2 rounded-lg bg-emerald-600 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-xs"
-                >
-                  <span>Muat Ulang Dashboard Baru</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            )}
 
             {/* Tombol Utama Kloning & Pindahkan */}
             {/* LANGKAH 3: EKSEKUSI PEMINDAHAN DATABASE */}
@@ -867,6 +844,105 @@ export const AdminDatabaseTab: React.FC<AdminDatabaseTabProps> = ({
               >
                 <RotateCcw className="w-4 h-4" />
                 <span>Ya, Reset ke DB Asli</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* =================================================================== */}
+      {/* MODAL KUSTOM: SUKSES BESAR PEMINDAHAN DATABASE (DESAIN MEWAH & RAPI) */}
+      {/* =================================================================== */}
+      {migrationSuccessData && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#041E20]/80 backdrop-blur-md animate-in fade-in duration-200 select-none">
+          <div className="relative w-full max-w-lg bg-white dark:bg-[#072426] rounded-3xl border-2 border-emerald-500 shadow-2xl p-6 sm:p-7 space-y-4 animate-in zoom-in-95 duration-200 text-center">
+            {/* Celebration Icon */}
+            <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-emerald-600 to-teal-700 text-white flex items-center justify-center mx-auto shadow-lg shadow-emerald-900/30 ring-4 ring-emerald-400/20">
+              <CheckCircle2 className="w-8 h-8 text-[#F3D37A]" />
+            </div>
+
+            <div className="space-y-1">
+              <span className="text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700">
+                🎉 Kloning Database Berhasil 100%
+              </span>
+              <h3 className="text-xl sm:text-2xl font-black text-[#1C221E] dark:text-white pt-1">
+                Database Sukses Dipindahkan!
+              </h3>
+              <p className="text-xs text-stone-500 dark:text-stone-300 max-w-md mx-auto">
+                Seluruh data aktif telah disalin dan website resmi mulai saat ini tersambung ke Google Sheets baru Anda.
+              </p>
+            </div>
+
+            {/* Live Stats Breakdown */}
+            <div className="grid grid-cols-2 gap-2.5 text-xs text-left pt-1">
+              <div className="p-3 rounded-2xl bg-[#F8F8F6] dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 flex items-center gap-2.5">
+                <Users className="w-5 h-5 text-[#0B484C] dark:text-[#F3D37A] flex-shrink-0" />
+                <div>
+                  <span className="text-sm font-black text-[#1C221E] dark:text-white block">
+                    {migrationSuccessData.wargaCount} KK Warga
+                  </span>
+                  <span className="text-[10px] text-stone-400">Masuk di DATA_WARGA</span>
+                </div>
+              </div>
+
+              <div className="p-3 rounded-2xl bg-[#F8F8F6] dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 flex items-center gap-2.5">
+                <CreditCard className="w-5 h-5 text-emerald-600 flex-shrink-0" />
+                <div>
+                  <span className="text-sm font-black text-[#1C221E] dark:text-white block">
+                    {migrationSuccessData.iplCount} Transaksi
+                  </span>
+                  <span className="text-[10px] text-stone-400">Tercatat di PEMBAYARAN_IPL</span>
+                </div>
+              </div>
+
+              <div className="p-3 rounded-2xl bg-[#F8F8F6] dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 flex items-center gap-2.5">
+                <FileSpreadsheet className="w-5 h-5 text-rose-600 flex-shrink-0" />
+                <div>
+                  <span className="text-sm font-black text-[#1C221E] dark:text-white block">
+                    {migrationSuccessData.expenseCount} Belanja Kas
+                  </span>
+                  <span className="text-[10px] text-stone-400">Tercatat di PENGELUARAN_KAS</span>
+                </div>
+              </div>
+
+              <div className="p-3 rounded-2xl bg-[#F8F8F6] dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 flex items-center gap-2.5">
+                <Sparkles className="w-5 h-5 text-amber-500 flex-shrink-0" />
+                <div>
+                  <span className="text-sm font-black text-[#1C221E] dark:text-white block">
+                    {migrationSuccessData.urunanCount} Donatur
+                  </span>
+                  <span className="text-[10px] text-stone-400">Masuk di URUNAN_PJU</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Target Sheet Link */}
+            <div className="p-3 rounded-2xl bg-stone-50 dark:bg-stone-900 border border-stone-200/70 dark:border-stone-800 flex items-center justify-between gap-3 text-xs">
+              <div className="text-left truncate">
+                <span className="text-[10px] text-stone-400 block font-bold">Google Sheets Baru Anda:</span>
+                <span className="font-mono text-[11px] text-[#0B484C] dark:text-[#F3D37A] font-bold truncate block">
+                  ID: {cleanTargetSheetId}
+                </span>
+              </div>
+              <a
+                href={`https://docs.google.com/spreadsheets/d/${cleanTargetSheetId}/edit`}
+                target="_blank"
+                rel="noreferrer"
+                className="px-3 py-1.5 rounded-xl bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-xs font-bold text-[#0B484C] dark:text-[#F3D37A] hover:bg-stone-100 flex items-center gap-1.5 shadow-2xs flex-shrink-0"
+              >
+                <span>Buka Sheet</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+
+            {/* Action Reload */}
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => window.location.reload()}
+                className="w-full py-3.5 px-5 rounded-2xl carlic-sage-btn text-[#F3D37A] font-black text-sm flex items-center justify-center gap-2 shadow-lg transition-all active:scale-98"
+              >
+                <span>✨ Buka Dashboard dengan Database Baru</span>
+                <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>

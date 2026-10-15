@@ -623,9 +623,7 @@ export const DashboardAdmin: React.FC<DashboardAdminProps> = ({
               transaksiList={transaksiList}
               pengeluaranList={pengeluaranList}
               urunanList={urunanList}
-              onMigrateSuccess={() => {
-                alert('Database berhasil dialihkan ke Google Sheets baru!');
-              }}
+              onMigrateSuccess={() => {}}
             />
           )}
         </main>
