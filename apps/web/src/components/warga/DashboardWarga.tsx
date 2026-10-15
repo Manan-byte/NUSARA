@@ -405,6 +405,331 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
     URL.revokeObjectURL(url);
   };
 
+  const [isPrintingKwitansi, setIsPrintingKwitansi] = useState<boolean>(false);
+
+  const handlePrintKwitansiPdf = (k: NonNullable<typeof kwitansiModal>) => {
+    setIsPrintingKwitansi(true);
+    const htmlContent = `<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Kwitansi_${k.type.toUpperCase()}_${k.namaWarga.replace(/\\s+/g, '_')}</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 12mm 15mm;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      margin: 0;
+      padding: 24px;
+      background: #FFFFFF;
+      color: #1C221E;
+      line-height: 1.4;
+      font-size: 13px;
+    }
+    .kwitansi-box {
+      max-width: 680px;
+      margin: 0 auto;
+      border: 2px solid #D9B352;
+      border-radius: 16px;
+      padding: 26px 28px;
+      background: #FFFFFF;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      position: relative;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding-bottom: 14px;
+      margin-bottom: 16px;
+      border-bottom: 2px solid #D9B352;
+    }
+    .logo-container {
+      width: 54px;
+      height: 54px;
+      border-radius: 12px;
+      background: #0B484C;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+      border: 2px solid #D9B352;
+    }
+    .logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .header-text h2 {
+      margin: 0;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #9A7018;
+      font-weight: 800;
+    }
+    .header-text h1 {
+      margin: 3px 0 2px 0;
+      font-size: 17px;
+      font-weight: 900;
+      color: #0B484C;
+      letter-spacing: -0.3px;
+    }
+    .header-text p {
+      margin: 0;
+      font-size: 11px;
+      color: #64748B;
+    }
+    .resi-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      padding: 10px 16px;
+      margin-bottom: 16px;
+    }
+    .resi-no {
+      font-family: monospace;
+      font-weight: 800;
+      font-size: 13px;
+      color: #0B484C;
+    }
+    .badge-lunas {
+      display: inline-block;
+      background: #ECFDF5;
+      color: #065F46;
+      border: 1px solid #A7F3D0;
+      padding: 3px 12px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+    .table-details {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 16px;
+    }
+    .table-details tr {
+      border-bottom: 1px solid #F1F5F9;
+    }
+    .table-details td {
+      padding: 9px 4px;
+      vertical-align: middle;
+    }
+    .td-label {
+      color: #64748B;
+      width: 38%;
+    }
+    .td-value {
+      font-weight: 700;
+      color: #0F172A;
+      text-align: right;
+    }
+    .total-box {
+      background: #FEF9EB;
+      border: 1.5px solid #D9B352;
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    .total-nominal {
+      font-size: 18px;
+      font-weight: 900;
+      color: #0B484C;
+    }
+    .total-terbilang {
+      font-size: 11px;
+      color: #78350F;
+      font-style: italic;
+      margin-top: 2px;
+    }
+    .auth-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-top: 12px;
+    }
+    .stamp-badge {
+      display: inline-block;
+      border: 2px solid #E11D48;
+      color: #E11D48;
+      font-size: 9px;
+      font-weight: 900;
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      transform: rotate(-3deg);
+      box-shadow: 0 1px 3px rgba(225, 29, 72, 0.2);
+    }
+    .footer-note {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 10px;
+      color: #94A3B8;
+      line-height: 1.5;
+    }
+    @media print {
+      body {
+        padding: 0;
+        background: #FFF !important;
+      }
+      .kwitansi-box {
+        border: 2px solid #D9B352 !important;
+        box-shadow: none !important;
+        max-width: 100% !important;
+        padding: 20px !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="kwitansi-box">
+    <div class="header">
+      <div class="logo-container">
+        <img class="logo-img" src="/logo-pesona-kahuripan.png" alt="Logo">
+      </div>
+      <div class="header-text">
+        <h2>Paguyuban Warga Pesona Kahuripan 8 Tahap 2 • RT 08</h2>
+        <h1>${k.type === 'ipl' ? 'KWITANSI RESMI PELUNASAN IURAN IPL' : 'KWITANSI RESMI SETORAN URUNAN PJU'}</h1>
+        <p>Surat Bukti Pelunasan Keuangan Sah Terverifikasi Bendahara Paguyuban</p>
+      </div>
+    </div>
+
+    <div class="resi-bar">
+      <div>
+        <div style="font-size: 9px; font-weight: 800; color: #64748B; text-transform: uppercase; letter-spacing: 1px;">Nomor Kwitansi / Resi</div>
+        <div class="resi-no">${k.resiNo}</div>
+      </div>
+      <div style="text-align: right;">
+        <span class="badge-lunas">✓ LUNAS TERVERIFIKASI</span>
+      </div>
+    </div>
+
+    <table class="table-details">
+      <tr>
+        <td class="td-label">Nama Kepala Keluarga</td>
+        <td class="td-value" style="font-size: 14px;">${k.namaWarga}</td>
+      </tr>
+      <tr>
+        <td class="td-label">Alamat Rumah / Blok</td>
+        <td class="td-value" style="color: #0B484C;">${k.blokRumah}</td>
+      </tr>
+      <tr>
+        <td class="td-label">Pos Pembayaran Kas</td>
+        <td class="td-value">${k.kategori}</td>
+      </tr>
+      <tr>
+        <td class="td-label">Rincian Durasi / Program</td>
+        <td class="td-value">${k.rincian}</td>
+      </tr>
+      <tr>
+        <td class="td-label">Masa Aktif / Periode</td>
+        <td class="td-value" style="color: #065F46;">${k.masaAktif}</td>
+      </tr>
+      <tr>
+        <td class="td-label">Metode Penyetoran</td>
+        <td class="td-value">${k.metode}</td>
+      </tr>
+    </table>
+
+    <div class="total-box">
+      <div>
+        <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #9A7018;">Total Jumlah Lunas</div>
+        <div class="total-terbilang">Terbilang: &ldquo;${k.terbilang}&rdquo;</div>
+      </div>
+      <div class="total-nominal">
+        Rp ${k.nominal.toLocaleString('id-ID')}
+      </div>
+    </div>
+
+    <div class="auth-section">
+      <div>
+        <div style="font-size: 9px; font-weight: 800; color: #9A7018; text-transform: uppercase; letter-spacing: 1px;">Pengesahan &amp; Verifikasi</div>
+        <div style="font-size: 12px; font-weight: 800; color: #0F172A; margin: 2px 0;">${k.verifiedBy}</div>
+        <div style="font-size: 10px; color: #94A3B8; font-family: monospace;">VALID-PK8-${k.type.toUpperCase()}-${k.resiNo.replace(/\\D/g, '') || '2026'}</div>
+      </div>
+      <div style="text-align: right;">
+        <div class="stamp-badge">STEMPEL DIGITAL SAH • PK8</div>
+        <div style="font-size: 9px; color: #64748B; margin-top: 4px; font-weight: 600;">Tercatat Resmi di Google Sheets</div>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      * Dokumen ini merupakan bukti pembayaran resmi yang sah dan tercatat pada kas Paguyuban Pesona Kahuripan 8 Tahap 2.<br>
+      Dicetak secara digital pada ${new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}.
+    </div>
+  </div>
+
+  <script>
+    window.onload = function() {
+      setTimeout(function() {
+        window.print();
+      }, 350);
+    };
+  </script>
+</body>
+</html>`;
+
+    // Priority: Hidden iframe print avoids popup blockers and is completely immune to page overflow clipping
+    const iframe = document.createElement('iframe');
+    iframe.style.position = 'fixed';
+    iframe.style.right = '0';
+    iframe.style.bottom = '0';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = '0';
+    iframe.id = 'kwitansi-print-frame';
+    document.body.appendChild(iframe);
+
+    const frameDoc = iframe.contentWindow?.document;
+    if (frameDoc) {
+      frameDoc.open();
+      frameDoc.write(htmlContent);
+      frameDoc.close();
+      setTimeout(() => {
+        try {
+          iframe.contentWindow?.focus();
+          iframe.contentWindow?.print();
+        } catch {
+          const printWin = window.open('', '_blank');
+          if (printWin) {
+            printWin.document.open();
+            printWin.document.write(htmlContent);
+            printWin.document.close();
+          }
+        }
+        setTimeout(() => {
+          try {
+            document.body.removeChild(iframe);
+          } catch {}
+          setIsPrintingKwitansi(false);
+        }, 1200);
+      }, 400);
+    } else {
+      const printWin = window.open('', '_blank');
+      if (printWin) {
+        printWin.document.open();
+        printWin.document.write(htmlContent);
+        printWin.document.close();
+      }
+      setTimeout(() => setIsPrintingKwitansi(false), 1000);
+    }
+  };
   const handleOpenKwitansiIpl = (w: WargaRecord) => {
     const acc = getWargaIplAccumulated(w);
     const nominal = acc.nominalTotal || w.nominalIpl || tarifIpl;
@@ -7103,11 +7428,21 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
               </button>
               <button
                 type="button"
-                onClick={() => window.print()}
-                className="carlic-sage-btn text-[#F3D37A] font-extrabold py-2 px-2.5 rounded-xl flex items-center justify-center gap-1.5 shadow-xs"
+                disabled={isPrintingKwitansi}
+                onClick={() => handlePrintKwitansiPdf(kwitansiModal)}
+                className="carlic-sage-btn text-[#F3D37A] font-extrabold py-2 px-2.5 rounded-xl flex items-center justify-center gap-1.5 shadow-xs disabled:opacity-60 transition-all"
               >
-                <Printer className="w-3.5 h-3.5" />
-                <span>Cetak / Simpan PDF</span>
+                {isPrintingKwitansi ? (
+                  <>
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin text-[#F3D37A]" />
+                    <span>Menyiapkan Lembar Cetak...</span>
+                  </>
+                ) : (
+                  <>
+                    <Printer className="w-3.5 h-3.5" />
+                    <span>Cetak / Simpan PDF</span>
+                  </>
+                )}
               </button>
               <button
                 type="button"

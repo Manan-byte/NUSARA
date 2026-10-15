@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TransaksiIPL, ItemUrunanWarga } from '@sim-warga/types';
-import { X, ExternalLink, Printer, FileText, CheckCircle2 } from 'lucide-react';
+import { X, ExternalLink, Printer, FileText, CheckCircle2, RefreshCw } from 'lucide-react';
 
 interface ProofPreviewModalProps {
   item: TransaksiIPL | ItemUrunanWarga;
@@ -69,12 +69,258 @@ export const ProofPreviewModal: React.FC<ProofPreviewModalProps> = ({
   const isPdf = rawBuktiUrl && (rawBuktiUrl.toLowerCase().includes('.pdf') || rawBuktiUrl.toLowerCase().includes('slip'));
   const [imageSrc, setImageSrc] = useState<string>(() => resolveDirectImageUrl(rawBuktiUrl));
   const [hasFallbackLoaded, setHasFallbackLoaded] = useState<boolean>(false);
+  const [isImageLoading, setIsImageLoading] = useState<boolean>(true);
+  const [isPrinting, setIsPrinting] = useState<boolean>(false);
 
   const handleImageError = () => {
     const fallback = getFallbackReceiptUrl(metode, isIpl);
     if (imageSrc !== fallback) {
       setImageSrc(fallback);
       setHasFallbackLoaded(true);
+    }
+    setIsImageLoading(false);
+  };
+
+  const handlePrintReceipt = () => {
+    setIsPrinting(true);
+    const htmlContent = `<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Resi_Bukti_${noId}</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 15mm;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #FFF;
+      color: #1C221E;
+      line-height: 1.4;
+      font-size: 13px;
+    }
+    .voucher-card {
+      max-width: 650px;
+      margin: 0 auto;
+      border: 2px solid #0B484C;
+      border-radius: 16px;
+      padding: 24px 28px;
+      background: #FFFFFF;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #E2E8F0;
+      padding-bottom: 14px;
+      margin-bottom: 16px;
+    }
+    .brand h2 {
+      margin: 0;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #0B484C;
+      font-weight: 800;
+    }
+    .brand h1 {
+      margin: 3px 0 0 0;
+      font-size: 17px;
+      font-weight: 900;
+      color: #0F172A;
+    }
+    .badge {
+      background: #ECFDF5;
+      color: #065F46;
+      border: 1.5px solid #A7F3D0;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-weight: 800;
+      font-size: 11px;
+      text-align: right;
+    }
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 16px;
+    }
+    .info-table td {
+      padding: 8px 4px;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    .info-label {
+      color: #64748B;
+      font-size: 12px;
+      width: 38%;
+    }
+    .info-val {
+      font-weight: 700;
+      color: #0F172A;
+      text-align: right;
+    }
+    .amount-box {
+      background: #FEF9EB;
+      border: 1.5px solid #D9B352;
+      border-radius: 12px;
+      padding: 12px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    .amount-val {
+      font-size: 20px;
+      font-weight: 900;
+      color: #0B484C;
+    }
+    .proof-box {
+      border: 1px solid #CBD5E1;
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+      background: #F8FAFC;
+      margin-bottom: 16px;
+    }
+    .proof-img {
+      max-height: 280px;
+      max-width: 100%;
+      object-fit: contain;
+      border-radius: 8px;
+      border: 1px solid #E2E8F0;
+    }
+    .footer-stamp {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 10px;
+      border-top: 1px solid #E2E8F0;
+      font-size: 11px;
+      color: #64748B;
+    }
+    .stamp {
+      border: 2px solid #E11D48;
+      color: #E11D48;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 900;
+      font-size: 9px;
+      letter-spacing: 1px;
+    }
+    @media print {
+      body { padding: 0; background: #FFF !important; }
+      .voucher-card { box-shadow: none !important; border-color: #0B484C !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="voucher-card">
+    <div class="header">
+      <div class="brand">
+        <h2>Paguyuban Warga Pesona Kahuripan 8 Tahap 2 • RT 08</h2>
+        <h1>Lembar Bukti Setoran: ${isIpl ? 'Iuran IPL' : 'Urunan Warga'}</h1>
+      </div>
+      <div class="badge">
+        ID: ${noId}<br>
+        <span style="font-size: 10px; color: #059669;">${status}</span>
+      </div>
+    </div>
+
+    <table class="info-table">
+      <tr>
+        <td class="info-label">Nama Pengirim / Kepala Keluarga</td>
+        <td class="info-val" style="font-size: 14px;">${namaWarga}</td>
+      </tr>
+      <tr>
+        <td class="info-label">Alamat Rumah / Blok</td>
+        <td class="info-val" style="color: #0B484C;">${lokasi}</td>
+      </tr>
+      ${isIpl && ipl ? `
+      <tr>
+        <td class="info-label">Durasi Paket Tercover</td>
+        <td class="info-val">${formatCleanDurasi(ipl.durasiPaket, ipl.periodeTercover)}</td>
+      </tr>` : ''}
+      <tr>
+        <td class="info-label">Metode Penyetoran</td>
+        <td class="info-val">${metode}</td>
+      </tr>
+    </table>
+
+    <div class="amount-box">
+      <span style="font-size: 11px; font-weight: 800; color: #9A7018; text-transform: uppercase;">Total Nominal</span>
+      <span class="amount-val">Rp ${nominal.toLocaleString('id-ID')}</span>
+    </div>
+
+    <div class="proof-box">
+      <div style="font-size: 10px; font-weight: 800; color: #64748B; margin-bottom: 8px; text-transform: uppercase;">
+        Lampiran Struk Transfer Terverifikasi
+      </div>
+      <img class="proof-img" src="${imageSrc}" alt="Bukti Transfer">
+    </div>
+
+    <div class="footer-stamp">
+      <div>
+        * Terverifikasi pada basis data Google Sheets Paguyuban PK8 RT 08.<br>
+        Dicetak: ${new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
+      </div>
+      <div class="stamp">STEMPEL DIGITAL SAH • PK8</div>
+    </div>
+  </div>
+
+  <script>
+    window.onload = function() {
+      setTimeout(function() {
+        window.print();
+      }, 350);
+    };
+  </script>
+</body>
+</html>`;
+
+    const iframe = document.createElement('iframe');
+    iframe.style.position = 'fixed';
+    iframe.style.right = '0';
+    iframe.style.bottom = '0';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = '0';
+    document.body.appendChild(iframe);
+
+    const frameDoc = iframe.contentWindow?.document;
+    if (frameDoc) {
+      frameDoc.open();
+      frameDoc.write(htmlContent);
+      frameDoc.close();
+      setTimeout(() => {
+        try {
+          iframe.contentWindow?.focus();
+          iframe.contentWindow?.print();
+        } catch {
+          const printWin = window.open('', '_blank');
+          if (printWin) {
+            printWin.document.open();
+            printWin.document.write(htmlContent);
+            printWin.document.close();
+          }
+        }
+        setTimeout(() => {
+          try {
+            document.body.removeChild(iframe);
+          } catch {}
+          setIsPrinting(false);
+        }, 1200);
+      }, 400);
+    } else {
+      const printWin = window.open('', '_blank');
+      if (printWin) {
+        printWin.document.open();
+        printWin.document.write(htmlContent);
+        printWin.document.close();
+      }
+      setTimeout(() => setIsPrinting(false), 1000);
     }
   };
 
@@ -185,15 +431,30 @@ export const ProofPreviewModal: React.FC<ProofPreviewModalProps> = ({
                 />
               </div>
             ) : (
-              /* IMAGE STRUK DISPLAY */
-              <img
-                src={imageSrc}
-                alt="Bukti Transfer Warga"
-                onError={handleImageError}
-                className="max-h-72 w-auto object-contain rounded-xl border border-stone-200 dark:border-stone-700 shadow-xs bg-white dark:bg-stone-800"
-              />
+              /* IMAGE STRUK DISPLAY WITH DELAY ANIMATION */
+              <>
+                {isImageLoading && (
+                  <div className="w-full h-44 flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#0B484C]/30 dark:border-[#F3D37A]/30 bg-white/70 dark:bg-stone-800/50 animate-pulse my-2">
+                    <div className="w-7 h-7 rounded-full border-2 border-[#0B484C]/20 border-t-[#0B484C] dark:border-[#F3D37A]/20 dark:border-t-[#F3D37A] animate-spin" />
+                    <span className="text-xs font-bold text-stone-600 dark:text-stone-300">
+                      Memuat pratinjau bukti transfer...
+                    </span>
+                    <span className="text-[10px] text-stone-400">
+                      Mohon tunggu sebentar
+                    </span>
+                  </div>
+                )}
+                <img
+                  src={imageSrc}
+                  alt="Bukti Transfer Warga"
+                  onLoad={() => setIsImageLoading(false)}
+                  onError={handleImageError}
+                  className={`max-h-72 w-auto object-contain rounded-xl border border-stone-200 dark:border-stone-700 shadow-xs bg-white dark:bg-stone-800 transition-opacity duration-300 ${
+                    isImageLoading ? 'hidden' : 'block'
+                  }`}
+                />
+              </>
             )}
-
             {rawBuktiUrl && rawBuktiUrl !== '-' && (
               <a
                 href={rawBuktiUrl}
@@ -212,11 +473,21 @@ export const ProofPreviewModal: React.FC<ProofPreviewModalProps> = ({
         <div className="flex justify-between items-center pt-3 border-t-2 border-stone-200 dark:border-stone-700">
           <button
             type="button"
-            onClick={() => window.print()}
-            className="px-4 py-2 rounded-xl border-2 border-stone-300 dark:border-stone-600 text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 font-bold text-xs flex items-center gap-1.5 transition-all"
+            disabled={isPrinting}
+            onClick={handlePrintReceipt}
+            className="px-4 py-2 rounded-xl border-2 border-stone-300 dark:border-stone-600 text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 font-bold text-xs flex items-center gap-1.5 transition-all disabled:opacity-60"
           >
-            <Printer className="w-3.5 h-3.5" />
-            <span>Cetak Resi</span>
+            {isPrinting ? (
+              <>
+                <RefreshCw className="w-3.5 h-3.5 animate-spin text-[#0B484C] dark:text-[#F3D37A]" />
+                <span>Menyiapkan Resi...</span>
+              </>
+            ) : (
+              <>
+                <Printer className="w-3.5 h-3.5" />
+                <span>Cetak Resi</span>
+              </>
+            )}
           </button>
           <button
             type="button"
