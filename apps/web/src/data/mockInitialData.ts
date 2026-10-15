@@ -162,7 +162,7 @@ Setiap rupiah dan tenaga yang Anda dedikasikan adalah investasi sosial yang sang
 #Guyub #Asri ber#Sinergi #GASS`,
     author: 'Panitia HUT RI & Pengurus Paguyuban',
     status: 'PUBLISHED',
-    gambarBanner: '/kegiatan/spanduk_donatur_hut_ri.jpg',
+    gambarBanner: '/kegiatan/beranda_3.jpg',
     createdAt: '17 Agustus 2026'
   },
   {

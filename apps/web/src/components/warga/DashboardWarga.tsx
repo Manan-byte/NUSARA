@@ -6003,13 +6003,13 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                           {/* TOP MEDIA IMAGE */}
                           <div className="relative h-36 lg:h-36 w-full overflow-hidden flex-shrink-0">
                             <img
-                              src={p.gambarBanner || theme.bannerDefault}
+                              src={p.gambarBanner || '/kegiatan/beranda_1.jpg'}
                               alt={p.judul}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                               onError={(e) => {
                                 const target = e.currentTarget;
-                                if (target.src !== window.location.origin + theme.bannerDefault && target.src !== theme.bannerDefault) {
-                                  target.src = theme.bannerDefault;
+                                if (!target.src.includes('beranda_1.jpg')) {
+                                  target.src = '/kegiatan/beranda_1.jpg';
                                 }
                               }}
                             />
@@ -6115,24 +6115,25 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
               </button>
 
               {/* Top Hero Banner Image */}
-              <div className="rounded-2xl overflow-hidden h-44 sm:h-52 w-full relative border border-stone-200/80 dark:border-stone-700/80 shadow-md flex-shrink-0 mb-3 group">
+              {/* Top Hero Banner Image - Object contain so never cropped */}
+              <div className="rounded-2xl overflow-hidden w-full relative border border-stone-200/80 dark:border-stone-700/80 shadow-md flex-shrink-0 mb-3 bg-stone-900 flex items-center justify-center min-h-[180px] max-h-[300px] group">
                 <img
-                  src={detailPengumuman.gambarBanner || '/kegiatan/informasi_4.jpg'}
+                  src={detailPengumuman.gambarBanner || '/kegiatan/beranda_1.jpg'}
                   alt={detailPengumuman.judul}
-                  className="w-full h-full object-cover"
+                  className="w-full max-h-[300px] object-contain"
                   onError={(e) => {
                     const target = e.currentTarget;
-                    if (!target.src.includes('informasi_4.jpg')) {
-                      target.src = '/kegiatan/informasi_4.jpg';
+                    if (!target.src.includes('beranda_1.jpg')) {
+                      target.src = '/kegiatan/beranda_1.jpg';
                     }
                   }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none" />
-                <div className="absolute bottom-2.5 left-3.5 right-3.5 flex items-center justify-between text-white text-[11px] font-bold">
-                  <span className="px-2.5 py-0.5 rounded-full bg-black/50 backdrop-blur-md border border-white/20">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+                <div className="absolute bottom-2.5 left-3.5 right-3.5 flex items-center justify-between text-white text-[11px] font-bold pointer-events-none">
+                  <span className="px-2.5 py-0.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20">
                     📸 Dokumentasi Resmi PK8-2
                   </span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-black/50 backdrop-blur-md border border-white/20">
+                  <span className="px-2.5 py-0.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20">
                     {detailPengumuman.tanggalAcara}
                   </span>
                 </div>
