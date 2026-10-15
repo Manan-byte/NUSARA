@@ -490,19 +490,29 @@ export const App: React.FC = () => {
             pinHash: w.pinHash || (w.pin ? await hashPasswordSha256(w.pin) : undefined),
           }))
         );
-        setWargaList(wargaWithHashes);
-        setTransaksiList(liveData.transaksiList || []);
-        setPengeluaranList(liveData.pengeluaranList || []);
-        setUrunanList(liveData.urunanList || []);
+        if (wargaWithHashes && wargaWithHashes.length > 0) {
+          setWargaList(wargaWithHashes);
+        }
+        if (liveData.transaksiList && liveData.transaksiList.length > 0) {
+          setTransaksiList(liveData.transaksiList);
+        }
+        if (liveData.pengeluaranList && liveData.pengeluaranList.length > 0) {
+          setPengeluaranList(liveData.pengeluaranList);
+        }
+        if (liveData.urunanList && liveData.urunanList.length > 0) {
+          setUrunanList(liveData.urunanList);
+        }
+        const effectiveWarga = wargaWithHashes && wargaWithHashes.length > 0 ? wargaWithHashes : initialWargaList;
+        const effectiveTrx = liveData.transaksiList && liveData.transaksiList.length > 0 ? liveData.transaksiList : initialTransaksiIplList;
+        const effectiveExp = liveData.pengeluaranList && liveData.pengeluaranList.length > 0 ? liveData.pengeluaranList : initialPengeluaranKasList;
         const newSummary = computeSummary(
-          wargaWithHashes,
-          liveData.transaksiList || [],
-          liveData.pengeluaranList || [],
+          effectiveWarga,
+          effectiveTrx,
+          effectiveExp,
           tarifIplPerBulan,
           saldoAwalKas
         );
         setDashboardSummary(newSummary);
-
         if (!silent) {
           showToast(`Data berhasil disinkronkan langsung dari Google Sheets! (${wargaWithHashes.length} warga terdata)`);
         }
