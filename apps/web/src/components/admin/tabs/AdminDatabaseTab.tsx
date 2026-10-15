@@ -376,7 +376,7 @@ export const AdminDatabaseTab: React.FC<AdminDatabaseTabProps> = ({
 
       {/* 2. BODY CONTENT: 2-COLUMN LAYOUT */}
       {/* 2. BODY CONTENT: 2-COLUMN LAYOUT (COMPACT ON DESKTOP 100% ZOOM TO PREVENT SCROLL) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-2.5 lg:gap-3 flex-1 min-h-0 overflow-y-auto lg:overflow-hidden pr-0.5 items-stretch">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-2.5 lg:gap-3 flex-1 min-h-0 w-full max-w-full overflow-x-hidden overflow-y-auto lg:overflow-hidden pr-0.5 items-stretch">
         {/* KOLOM KIRI (7 COLS): PANDUAN AI & GENERATOR KODE SCRIPT */}
         <div className="lg:col-span-7 space-y-2.5">
           {/* CARD A: STATUS KONEKSI AKTIF */}
@@ -426,7 +426,7 @@ export const AdminDatabaseTab: React.FC<AdminDatabaseTabProps> = ({
             </div>
 
             <div className="space-y-1 text-xs">
-              <div className="flex items-center justify-between text-[11px] text-stone-400 font-mono bg-stone-50 dark:bg-stone-900/60 p-2 rounded-xl border border-stone-100 dark:border-stone-800">
+              <div className="flex items-center justify-between text-[11px] text-stone-400 font-mono bg-stone-50 dark:bg-stone-900/60 p-2 rounded-xl border border-stone-100 dark:border-stone-800 min-w-0 max-w-full overflow-hidden">
                 <span className="truncate pr-2">ID: {currentSheetId}</span>
                 <button
                   type="button"
@@ -487,7 +487,7 @@ export const AdminDatabaseTab: React.FC<AdminDatabaseTabProps> = ({
                   <p>
                     Salin seluruh skrip di bawah ini lalu <strong>Paste</strong> ke editor Apps Script Anda:
                   </p>
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                  <div className="flex flex-col xl:flex-row xl:items-center gap-2 w-full max-w-full">
                     <input
                       type="text"
                       value={scriptCustomId}

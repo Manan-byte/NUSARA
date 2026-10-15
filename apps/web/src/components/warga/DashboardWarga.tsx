@@ -5680,7 +5680,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                               <span className="w-4 h-4 rounded-full bg-[#0B484C]/10 text-[#0B484C] dark:bg-[#F3D37A]/20 dark:text-[#F3D37A] text-[10px] font-black flex items-center justify-center cursor-help">
                                 ?
                               </span>
-                              <div className="pointer-events-none opacity-0 group-hover/tip:opacity-100 transition-opacity duration-150 absolute left-0 top-[calc(100%+8px)] w-72 p-3.5 rounded-2xl bg-[#092C2E] text-white border border-[#D9B352]/70 shadow-2xl z-[9999] text-[11px] leading-relaxed">
+                              <div className="pointer-events-none opacity-0 group-hover/tip:opacity-100 transition-opacity duration-150 absolute left-1/2 -translate-x-1/2 top-[calc(100%+8px)] w-60 sm:w-64 p-3 rounded-2xl bg-[#092C2E] text-white border border-[#D9B352]/70 shadow-2xl z-[9999] text-[11px] leading-relaxed break-words">
                                 <p className="font-extrabold text-[#F3D37A] mb-1.5">
                                   🛡️ Ketentuan Ronda Malam Paguyuban:
                                 </p>
