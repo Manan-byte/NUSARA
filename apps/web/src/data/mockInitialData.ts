@@ -541,5 +541,213 @@ Fungsi Kantor Sekretariat:
     status: 'PUBLISHED',
     gambarBanner: '/kegiatan/kegiatan_10.jpg',
     createdAt: '14 Juni 2026'
+  },
+  {
+    id: 'PGM-019',
+    judul: 'Daftar Pemenang Resmi Perlombaan Anak-Anak Semarak HUT RI ke-81',
+    kategori: 'Info Warga & Fasum',
+    tanggalAcara: '16 Agustus 2026',
+    waktu: 'Pesta Rakyat Kemerdekaan',
+    lokasi: 'Fasum Utama Lapangan PK8-2',
+    deskripsi: `🏆 DAFTAR RESMI PEMENANG LOMBA ANAK-ANAK HUT RI KE-81
+Perayaan Kemerdekaan Perdana Pesona Kahuripan 8 Tahap 2
+
+Selamat kepada putra-putri berprestasi lingkungan kita:
+
+🎨 1. LOMBA MEWARNAI (KATEGORI A: 3–7 TAHUN):
+• Juara 1 : ABRAM (Hadiah diserahkan Bpk. Rachmat / Ketua Paguyuban)
+• Juara 2 : SAKURA (Hadiah diserahkan Uni Mamah Laila / Ketua HUT RI)
+• Juara 3 : DIAR (Hadiah diserahkan Mama Anggi / Bendahara HUT RI)
+
+🎨 2. LOMBA MEWARNAI (KATEGORI B: 8–14 TAHUN):
+• Juara 1 : INARA (Hadiah diserahkan Bpk. Rachmat / Ketua Paguyuban)
+• Juara 2 : ALULA (Hadiah diserahkan Uni Mamah Laila / Ketua HUT RI)
+• Juara 3 : SHAKILA (Hadiah diserahkan Mama Anggi / Bendahara HUT RI)
+
+🍘 3. LOMBA MAKAN KERUPUK (TIM A & TIM B):
+• Tim A Juara 1 : AINUHA (Diserahkan Bu Della / Sekretaris HUT RI)
+• Tim A Juara 2 : Ananda Juara 2 (Diserahkan Uni Mamah Laila)
+• Tim A Juara 3 : ABIDZAR
+• Tim B Juara 1 : Ananda Juara 1 (Diserahkan Bu Santi)
+• Tim B Juara 2 : Ananda Juara 2 (Diserahkan Bpk. Ujang Piyan / Humas)
+• Tim B Juara 3 : SHAQUEENA (Diserahkan Bpk. Syakur / Koordinator)
+
+⚽ 4. LOMBA PINDAHKAN BOLA (KATEGORI A & B):
+• Kategori A Juara 1 : Diserahkan Pakde Agus
+• Kategori A Juara 2 : Diserahkan Pak Roi
+• Kategori A Juara 3 : AINUHA (Diserahkan Pak Irawan)
+• Kategori B Juara 1 : ABIAN (Diserahkan Bu Santi)
+• Kategori B Juara 2 : RAFFASYA (Diserahkan Pak Syakur)
+• Kategori B Juara 3 : ALULA (Diserahkan Pak Arif)
+
+🚩 5. LOMBA PINDAHKAN BENDERA:
+• Juara 1 : Diserahkan Bpk. Roland (Koordinator Acara)
+• Juara 2 : Diserahkan Bpk. Ardi
+• Juara 3 : Diserahkan Bpk. Yandi
+
+Terima kasih kepada seluruh orang tua yang telah mendampingi adik-adik kita dengan penuh kehangatan!
+#Guyub #Asri ber#Sinergi #GASS`,
+    author: 'Panitia Lomba Anak (Uni Mamah Laila & Bu Della)',
+    status: 'PUBLISHED',
+    gambarBanner: '/kegiatan/lomba_anak_3.jpg',
+    createdAt: '16 Agustus 2026'
+  },
+  {
+    id: 'PGM-020',
+    judul: 'Daftar Pemenang Resmi Perlombaan Dewasa Semarak HUT RI ke-81',
+    kategori: 'Info Warga & Fasum',
+    tanggalAcara: '16 Agustus 2026',
+    waktu: 'Turnamen & Pesta Rakyat',
+    lokasi: 'Balai Warga & Lapangan Utama PK8-2',
+    deskripsi: `🏆 DAFTAR RESMI PEMENANG LOMBA DEWASA HUT RI KE-81
+Paguyuban Pesona Kahuripan 8 Tahap 2
+
+Apresiasi semangat sportivitas dan guyub rukun bapak-bapak & ibu-ibu warga:
+
+♟️ 1. TURNAMEN CATUR DEWASA (Sabtu Malam, 15 Agustus):
+• Juara 1 : Piala + Voucher Bakso (Diserahkan Bpk. Tahya / Sekretaris Paguyuban)
+• Juara 2 : Hadiah + Voucher Bakso (Diserahkan Bpk. Roland / Koordinator Acara)
+• Juara 3 : Hadiah + Voucher Bakso (Diserahkan Bpk. Syakur / Koordinator Acara)
+
+🍚 2. ESTAFET TEPUNG ANTAR GANG:
+• Juara 1 : Regu Juara 1 (Diserahkan Bpk. Rachmat / Ketua Paguyuban)
+• Juara 2 : Regu Juara 2 (Diserahkan Bpk. Bayu / Humas Paguyuban)
+• Juara 3 : Regu Juara 3 (Diserahkan Bpk. Tahya / Sekretaris Paguyuban)
+
+🎈 3. GOYANG BALON BERPASANGAN IBU-IBU:
+• Juara 1 : Diserahkan Bu Alfi
+• Juara 2 : Diserahkan Bu Putri
+• Juara 3 : Diserahkan Bu Devi
+
+⚽ 4. FUTSAL DASTER BAPAK-BAPAK:
+• Juara 1 : Diserahkan Bpk. Rachmat (Ketua Paguyuban)
+• Juara 2 : Diserahkan Panitia
+• Juara 3 : Diserahkan Bpk. Bayu (Humas Paguyuban)
+
+🍌 5. LOMBA MAKAN PISANG BERPASANGAN:
+• Juara 1 : Diserahkan Bpk. Roland
+• Juara 2 : Diserahkan Mama Anggi (Bendahara HUT RI)
+• Juara 3 : Diserahkan Bpk. Ujang (Humas Paguyuban)
+
+⚽ 6. GOYANG BOLA BAPAK-BAPAK & IBU-IBU:
+• Juara 1 Ibu-Ibu : Diserahkan Bpk. Dwi Saputra (Bendahara Paguyuban)
+• Juara 2 Ibu-Ibu : Diserahkan Bpk. Ujang (Humas Paguyuban)
+• Juara 3 Ibu-Ibu : Diserahkan Uni Mamah Laila (Ketua HUT RI)
+• Juara Bapak-Bapak : Diserahkan Bpk. Rachmat, Bpk. Tahya, dan Bpk. Sakur.
+
+Semoga keakraban antar tetangga semakin erat dan membawa keberkahan bagi lingkungan kita.
+#Guyub #Asri ber#Sinergi #GASS`,
+    author: 'Panitia Lomba Dewasa (Bpk. Roland & Bpk. Syakur)',
+    status: 'PUBLISHED',
+    gambarBanner: '/kegiatan/lomba_dewasa_3.jpg',
+    createdAt: '16 Agustus 2026'
+  },
+  {
+    id: 'PGM-021',
+    judul: 'Dokumentasi Persiapan Panitia & Rapat Logistik Kemerdekaan 17 Agustus',
+    kategori: 'Rapat Warga',
+    tanggalAcara: '14 Juli 2026',
+    waktu: '20:00 – 23:00 WIB',
+    lokasi: 'Sekretariat Panitia & Fasum Utama',
+    deskripsi: `📋 DOKUMENTASI PERSIAPAN LOGISTIK & RAPAT PANITIA
+Pelaksanaan : Ahad 12 Juli & Selasa 14 Juli 2026
+Tempat      : Sekretariat Panitia & Lapangan Fasum PK8-2
+
+Laporan Progres Kerja Panitia Kemerdekaan:
+1. Pengadaan Perlengkapan Lomba:
+   Panitia telah menyelesaikan pembelanjaan logistik (karung, tepung, balon, paku, botol, tali tambang, kelereng, kertas mewarnai, serta sound system).
+
+2. Pemasangan Panggung & Tenda Utama:
+   Penetapan tata letak tenda warga dan panggung utama malam puncak peringatan HUT RI ke-81.
+
+3. Tata Kelola Donasi Satu Pintu:
+   Rekapitulasi donasi masuk dari para donatur dan penyusunan nomor undian doorprize warga.
+
+Apresiasi untuk dedikasi panitia yang telah bekerja keras mempersiapkan pesta rakyat perdana di komplek kita!
+#Guyub #Asri ber#Sinergi #GASS`,
+    author: 'Sekretariat Panitia HUT RI',
+    status: 'PUBLISHED',
+    gambarBanner: '/kegiatan/persiapan_hut_1.jpg',
+    createdAt: '14 Juli 2026'
+  },
+  {
+    id: 'PGM-022',
+    judul: 'Karnaval Sepeda Hias & Yel-Yel Kemerdekaan Anak-Anak PK8-2',
+    kategori: 'Info Warga & Fasum',
+    tanggalAcara: '16 Agustus 2026',
+    waktu: '07:30 – 09:30 WIB',
+    lokasi: 'Keliling Jalur Utama Blok D & Blok E',
+    deskripsi: `🚲 DOKUMENTASI PAWAI SEPEDA HIAS & YEL-YEL ANAK PK8-2
+Pesta Rakyat Kemerdekaan Republik Indonesia ke-81
+
+Rangkaian Kegiatan:
+• Puluhan sepeda anak dihias bertema merah putih berkumpul di lapangan fasum utama.
+• Pawai sepeda mengelilingi seluruh gang Blok D dan Blok E diiringi lagu perjuangan nasional dan sorak yel-yel warga.
+• Penjurian sepeda hias terunik dan terfavorit dilakukan oleh dewan juri panitia kemerdekaan.
+
+Keceriaan dan kebersamaan anak-anak menjadi warna paling indah di pagi hari kemerdekaan!
+#Guyub #Asri ber#Sinergi #GASS`,
+    author: 'Koordinator Acara (Bpk. Roland & Bpk. Syakur)',
+    status: 'PUBLISHED',
+    gambarBanner: '/kegiatan/sepeda_hias_1.jpg',
+    createdAt: '16 Agustus 2026'
+  },
+  {
+    id: 'PGM-023',
+    judul: 'Laporan Gotong Royong Tanggul & Polisi Tidur Gang Blok D & E',
+    kategori: 'Sosial & Kerja Bakti',
+    tanggalAcara: '21 Juni 2026',
+    waktu: '07:30 – 11:30 WIB',
+    lokasi: 'Persimpangan Utama Gang Blok D & Blok E',
+    deskripsi: `🚧 LAPORAN SELESAI PENGERJAAN POLISI TIDUR & TANGGUL
+Inisiatif Swadaya Warga Paguyuban PK8 Tahap 2
+
+Rincian Pekerjaan Fisik Gotong Royong:
+1. Pemasangan Polisi Tidur di Titik Rawan:
+   Pemasangan tanggul semen di persimpangan utama untuk meredam laju kendaraan bermotor demi keamanan anak-anak dan warga.
+
+2. Pengecatan Marka Garis Kejut:
+   Pengecatan garis marka hitam-putih reflektif agar terlihat jelas saat malam hari.
+
+3. Pembersihan Saluran Air & Drainase:
+   Pembersihan sedimen pasir dan sisa material agar aliran air lancar saat musim hujan.
+
+Terima kasih untuk seluruh warga yang telah meluangkan tenaga dan alat kerjanya!
+#Guyub #Asri ber#Sinergi #GASS`,
+    author: 'Seksi Keamanan & Ketertiban Lingkungan',
+    status: 'PUBLISHED',
+    gambarBanner: '/kegiatan/polisi_tidur_3.jpg',
+    createdAt: '21 Juni 2026'
+  },
+  {
+    id: 'PGM-024',
+    judul: 'Informasi Lokasi Fasum & Jam Operasional Layanan Pengurus RT 08',
+    kategori: 'Info Warga & Fasum',
+    tanggalAcara: 'Juli 2026',
+    waktu: 'Jadwal Layanan Resmi',
+    lokasi: 'Kantor Sekretariat & Fasum Utama PK8-2',
+    deskripsi: `📍 INFORMASI FASUM & JAM PELAYANAN PENGURUS
+Paguyuban Pesona Kahuripan 8 Tahap 2 (RT 08 / RW 08)
+
+Fasilitas Bersama Warga:
+• Lokasi Fasum di Google Maps : [-6.409555, 107.028834] (Balai Pertemuan & Pos Keamanan Utama)
+• Email Resmi Paguyuban        : pesonakahuripan8.tahap2@gmail.com
+• Hotline Pengurus / WA       : Bpk. Ketua Umum Rachmatullah Tiflen & Jajaran Pengurus
+
+JADWAL OPERASIONAL PENGURUS (AKTIF):
+• Senin  : 19:30 – 00:00 WIB
+• Rabu   : 19:30 – 00:00 WIB
+• Jumat  : 19:30 – 00:00 WIB
+• Sabtu  : 19:30 – 00:00 WIB (Ronda Bersama & Koordinasi Warga)
+
+Kami hadir untuk melayani kebutuhan administrasi, surat pengantar, serta menjaga ketenteraman dan keasrian komplek kita tercinta.
+
+Salam guyub rukun,
+Pengurus Paguyuban Pesona Kahuripan 8 Tahap 2
+#Guyub #Asri ber#Sinergi #GASS`,
+    author: 'BPH Paguyuban Pesona Kahuripan 8 Tahap 2',
+    status: 'PUBLISHED',
+    gambarBanner: '/kegiatan/informasi_3.jpg',
+    createdAt: '01 Juli 2026'
   }
 ];
