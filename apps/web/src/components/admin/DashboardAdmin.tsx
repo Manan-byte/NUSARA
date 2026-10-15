@@ -469,27 +469,36 @@ export const DashboardAdmin: React.FC<DashboardAdminProps> = ({
               const isActive = activeHub === hub.id;
 
               return (
-                <button
-                  key={hub.id}
-                  type="button"
-                  onClick={() => onSelectTab(hub.id)}
-                  title={hub.tooltip}
-                  className={`w-full px-3.5 py-3 rounded-2xl flex items-center justify-between text-xs font-extrabold transition-all ${
-                    isActive
-                      ? 'bg-[#0B484C] text-[#F3D37A] shadow-md shadow-[#0B484C]/20 scale-[1.02]'
-                      : 'text-stone-600 dark:text-stone-400 hover:text-[#0B484C] hover:bg-stone-100/80 dark:hover:bg-stone-800'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <Icon className="w-4 h-4" />
-                    <span>{hub.label}</span>
+                <div key={hub.id} className="relative group/nav-tip w-full flex-shrink-0 md:flex-shrink">
+                  <button
+                    type="button"
+                    onClick={() => onSelectTab(hub.id)}
+                    className={`w-full px-3.5 py-2.5 md:py-3 rounded-2xl flex items-center justify-between text-xs font-extrabold transition-all ${
+                      isActive
+                        ? 'bg-[#0B484C] text-[#F3D37A] shadow-md shadow-[#0B484C]/20 scale-[1.02]'
+                        : 'text-stone-600 dark:text-stone-400 hover:text-[#0B484C] hover:bg-stone-100/80 dark:hover:bg-stone-800'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <Icon className="w-4 h-4 flex-shrink-0" />
+                      <span>{hub.label}</span>
+                    </div>
+                    {hub.badge > 0 ? (
+                      <span className="min-w-[18px] h-[18px] px-1 rounded-full bg-amber-500 text-stone-950 font-black text-[10px] flex items-center justify-center shadow-xs">
+                        {hub.badge}
+                      </span>
+                    ) : null}
+                  </button>
+
+                  {/* Floating Interactive Tooltip for each Admin Hub */}
+                  <div className="pointer-events-none opacity-0 group-hover/nav-tip:opacity-100 transition-all duration-150 absolute left-[calc(100%+8px)] top-1/2 -translate-y-1/2 w-72 p-3 rounded-2xl bg-[#092C2E] text-white border border-[#D9B352]/70 shadow-2xl z-[90] text-[11px] leading-relaxed hidden md:block">
+                    <div className="flex items-center gap-1.5 font-extrabold text-[#F3D37A] mb-1">
+                      <Icon className="w-3.5 h-3.5 text-[#F3D37A] flex-shrink-0" />
+                      <span>{hub.label}</span>
+                    </div>
+                    <p className="text-stone-200">{hub.tooltip}</p>
                   </div>
-                  {hub.badge > 0 ? (
-                    <span className="min-w-[18px] h-[18px] px-1 rounded-full bg-amber-500 text-stone-950 font-black text-[10px] flex items-center justify-center shadow-xs">
-                      {hub.badge}
-                    </span>
-                  ) : null}
-                </button>
+                </div>
               );
             })}
           </nav>

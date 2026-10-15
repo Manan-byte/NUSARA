@@ -338,28 +338,49 @@ export const AdminDatabaseTab: React.FC<AdminDatabaseTabProps> = ({
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={handleRollbackDefault}
-          disabled={isUsingDefault}
-          title={isUsingDefault ? 'Sedang menggunakan Spreadsheet resmi RT 08' : 'Kembalikan ke spreadsheet asli RT 08'}
-          className={`h-9 px-3.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border shadow-2xs ${
-            isUsingDefault
-              ? 'bg-stone-100 dark:bg-stone-800/60 text-stone-400 border-stone-200 dark:border-stone-700 cursor-default opacity-60'
-              : 'bg-amber-50 hover:bg-amber-100 text-amber-900 border-amber-300 dark:bg-amber-950 dark:text-amber-200 cursor-pointer'
-          }`}
-        >
-          <RotateCcw className="w-3.5 h-3.5" />
-          <span>{isUsingDefault ? 'Menggunakan DB Master PK8' : 'Reset ke DB Asli PK8'}</span>
-        </button>
+        <div className="relative group/tip inline-flex flex-shrink-0">
+          <button
+            type="button"
+            onClick={handleRollbackDefault}
+            disabled={isUsingDefault}
+            className={`h-9 px-3.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border shadow-2xs ${
+              isUsingDefault
+                ? 'bg-stone-100 dark:bg-stone-800/60 text-stone-400 border-stone-200 dark:border-stone-700 cursor-default opacity-60'
+                : 'bg-amber-50 hover:bg-amber-100 text-amber-900 border-amber-300 dark:bg-amber-950 dark:text-amber-200 cursor-pointer'
+            }`}
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            <span>{isUsingDefault ? 'Menggunakan DB Master PK8' : 'Reset ke DB Asli PK8'}</span>
+          </button>
+
+          {/* Floating Tooltip Edukatif & Rinci */}
+          <div className="pointer-events-none opacity-0 group-hover/tip:opacity-100 transition-opacity duration-150 absolute right-0 top-[calc(100%+8px)] w-80 p-3.5 rounded-2xl bg-[#092C2E] text-white border border-[#D9B352]/70 shadow-2xl z-50 text-[11px] leading-relaxed">
+            <div className="flex items-center gap-1.5 font-extrabold text-[#F3D37A] mb-1.5">
+              <RotateCcw className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+              <span>Fungsi &amp; Cara Kerja Reset DB Asli:</span>
+            </div>
+            <ul className="space-y-1.5 text-stone-200">
+              <li>
+                • <strong>Buat Apa?</strong> Tombol penyelamat darurat jika Google Sheets baru bermasalah atau Anda ingin mengembalikan koneksi website ke spreadsheet asli RT 08.
+              </li>
+              <li>
+                • <strong>Bagaimana Cara Kerjanya?</strong> Website seketika memutuskan koneksi spreadsheet baru dan kembali membaca Google Sheets master RT 08 semula.
+              </li>
+              <li>
+                • <strong>Apakah Data Hilang?</strong> 100% AMAN. Spreadsheet baru di akun Google Anda tetap utuh di Google Drive dan tidak akan dihapus.
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
 
       {/* 2. BODY CONTENT: 2-COLUMN LAYOUT */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-1 min-h-0 overflow-y-auto pr-0.5 items-start">
+      {/* 2. BODY CONTENT: 2-COLUMN LAYOUT (COMPACT ON DESKTOP 100% ZOOM TO PREVENT SCROLL) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-2.5 lg:gap-3 flex-1 min-h-0 overflow-y-auto lg:overflow-hidden pr-0.5 items-stretch">
         {/* KOLOM KIRI (7 COLS): PANDUAN AI & GENERATOR KODE SCRIPT */}
-        <div className="lg:col-span-7 space-y-3">
+        <div className="lg:col-span-7 space-y-2.5">
           {/* CARD A: STATUS KONEKSI AKTIF */}
-          <div className="p-4 rounded-2xl bg-white dark:bg-[#072B2E] border border-stone-200/80 dark:border-[#D9B352]/30 shadow-2xs space-y-3">
+          <div className="p-3 lg:p-3 rounded-2xl bg-white dark:bg-[#072B2E] border border-stone-200/80 dark:border-[#D9B352]/30 shadow-2xs space-y-2">
             <div className="flex items-center justify-between border-b border-stone-100 dark:border-stone-800 pb-2.5">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-xl bg-[#0B484C] text-[#F3D37A] flex items-center justify-center font-extrabold text-xs">
@@ -424,7 +445,7 @@ export const AdminDatabaseTab: React.FC<AdminDatabaseTabProps> = ({
           </div>
 
           {/* CARD B: ASISTEN AI & PANDUAN PEMINDAHAN SCRIPT */}
-          <div className="p-4 rounded-2xl bg-white dark:bg-[#072B2E] border border-stone-200/80 dark:border-[#D9B352]/30 shadow-2xs space-y-3">
+          <div className="p-3 lg:p-3 rounded-2xl bg-white dark:bg-[#072B2E] border border-stone-200/80 dark:border-[#D9B352]/30 shadow-2xs space-y-2">
             <div className="flex items-center gap-2 pb-2 border-b border-stone-100 dark:border-stone-800">
               <div className="w-8 h-8 rounded-xl bg-amber-500 text-stone-950 flex items-center justify-center font-extrabold text-xs">
                 <Sparkles className="w-4 h-4" />
@@ -499,8 +520,8 @@ export const AdminDatabaseTab: React.FC<AdminDatabaseTabProps> = ({
         </div>
 
         {/* KOLOM KANAN (5 COLS): FORM MIGRASI 1-KLIK & AI DOCTOR */}
-        <div className="lg:col-span-5 space-y-3">
-          <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#072B2E] border-2 border-[#D9B352]/50 shadow-sm space-y-4">
+        <div className="lg:col-span-5 space-y-2.5">
+          <div className="p-3.5 lg:p-3.5 rounded-2xl bg-white dark:bg-[#072B2E] border-2 border-[#D9B352]/50 shadow-sm space-y-2.5">
             <div className="flex items-center gap-2.5 pb-2 border-b border-stone-100 dark:border-stone-800">
               <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#0B484C] to-emerald-700 text-white flex items-center justify-center">
                 <Send className="w-4 h-4 text-[#F3D37A]" />
@@ -530,7 +551,7 @@ export const AdminDatabaseTab: React.FC<AdminDatabaseTabProps> = ({
                 value={targetSheetInput}
                 onChange={(e) => setTargetSheetInput(e.target.value)}
                 placeholder="Tempel link https://docs.google.com/spreadsheets/d/.../edit"
-                className="w-full h-10 px-3.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-[#F8F8F6] dark:bg-stone-900 text-xs font-bold text-[#1C221E] dark:text-white focus:outline-none focus:border-[#0B484C]"
+                className="w-full h-9 px-3.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-[#F8F8F6] dark:bg-stone-900 text-xs font-bold text-[#1C221E] dark:text-white focus:outline-none focus:border-[#0B484C]"
               />
               <span className="text-[10px] text-stone-400 block">
                 * Cukup paste link dari address bar browser, sistem akan mengekstrak ID-nya otomatis.
@@ -547,7 +568,7 @@ export const AdminDatabaseTab: React.FC<AdminDatabaseTabProps> = ({
                 value={targetGasUrlInput}
                 onChange={(e) => setTargetGasUrlInput(e.target.value)}
                 placeholder="https://script.google.com/macros/s/.../exec"
-                className="w-full h-10 px-3.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-[#F8F8F6] dark:bg-stone-900 text-xs font-bold text-[#1C221E] dark:text-white focus:outline-none focus:border-[#0B484C]"
+                className="w-full h-9 px-3.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-[#F8F8F6] dark:bg-stone-900 text-xs font-bold text-[#1C221E] dark:text-white focus:outline-none focus:border-[#0B484C]"
               />
             </div>
 
@@ -565,7 +586,7 @@ export const AdminDatabaseTab: React.FC<AdminDatabaseTabProps> = ({
                 type="button"
                 onClick={handleTestConnection}
                 disabled={testingConnection || !cleanTargetSheetId || !targetGasUrlInput.trim()}
-                className={`w-full py-2.5 px-3 rounded-xl font-extrabold text-xs flex items-center justify-center gap-2 transition-all shadow-xs ${
+                className={`w-full py-2 px-3 rounded-xl font-extrabold text-xs flex items-center justify-center gap-2 transition-all shadow-xs ${
                   connectionVerified
                     ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
                     : 'bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 text-stone-800 dark:text-stone-200 border-2 border-stone-300 dark:border-stone-600'
@@ -673,7 +694,7 @@ export const AdminDatabaseTab: React.FC<AdminDatabaseTabProps> = ({
                 type="button"
                 disabled={migrating || !cleanTargetSheetId || !targetGasUrlInput.trim()}
                 onClick={handleMigrateDatabase}
-                className={`w-full py-3.5 px-4 rounded-xl font-black text-xs sm:text-sm tracking-wide flex items-center justify-center gap-2 shadow-md transition-all ${
+                className={`w-full py-2.5 px-4 rounded-xl font-black text-xs sm:text-sm tracking-wide flex items-center justify-center gap-2 shadow-md transition-all ${
                   connectionVerified
                     ? 'carlic-sage-btn text-[#F3D37A] ring-2 ring-[#D9B352]/70'
                     : 'bg-stone-200 dark:bg-stone-800 text-stone-500 dark:text-stone-400 hover:bg-stone-300'
