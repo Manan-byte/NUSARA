@@ -46,16 +46,13 @@ const DEFAULT_ADMINS: AdminAccount[] = [
   },
 ];
 if (typeof window !== 'undefined') {
-  if (!localStorage.getItem('SIM_WARGA_WIPED_CLEAN_DATA_ONLY_V1')) {
-    localStorage.removeItem('SIM_WARGA_DATA_WARGA');
-    localStorage.removeItem('SIM_WARGA_TRANSAKSI_IPL');
-    localStorage.removeItem('SIM_WARGA_PENGELUARAN_KAS');
-    localStorage.removeItem('SIM_WARGA_URUNAN_LIST');
-    localStorage.removeItem('SIM_WARGA_PENGUMUMAN_LIST');
-    localStorage.removeItem('SIM_WARGA_OWNED_WARGA_KEYS');
-    localStorage.removeItem('SIM_WARGA_MY_OWNED_RECORDS_V3');
-    localStorage.setItem('SIM_WARGA_WIPED_CLEAN_DATA_ONLY_V1', 'true');
-  }
+  localStorage.removeItem('SIM_WARGA_DATA_WARGA');
+  localStorage.removeItem('SIM_WARGA_TRANSAKSI_IPL');
+  localStorage.removeItem('SIM_WARGA_PENGELUARAN_KAS');
+  localStorage.removeItem('SIM_WARGA_URUNAN_LIST');
+  localStorage.removeItem('SIM_WARGA_PENGUMUMAN_LIST');
+  localStorage.removeItem('SIM_WARGA_OWNED_WARGA_KEYS');
+  localStorage.removeItem('SIM_WARGA_MY_OWNED_RECORDS_V3');
 }
 
 export const App: React.FC = () => {
@@ -486,34 +483,29 @@ export const App: React.FC = () => {
       const liveData = await fetchLiveSheetData();
       // GOOGLE SHEETS ADALAH SOURCE OF TRUTH (BASE RESMI DARI GOOGLE SHEETS):
       // Jika Google Sheets memiliki data warga (> 0), SELALU prioritaskan data Google Sheets!
-      if (liveData && liveData.wargaList && liveData.wargaList.length > 0) {
+      if (liveData) {
         const wargaWithHashes = await Promise.all(
-          liveData.wargaList.map(async (w) => ({
+          (liveData.wargaList || []).map(async (w) => ({
             ...w,
             pinHash: w.pinHash || (w.pin ? await hashPasswordSha256(w.pin) : undefined),
           }))
         );
         setWargaList(wargaWithHashes);
-        setTransaksiList(liveData.transaksiList);
-        setPengeluaranList(liveData.pengeluaranList);
-        if (liveData.urunanList && liveData.urunanList.length > 0) {
-          setUrunanList(liveData.urunanList);
-        }
+        setTransaksiList(liveData.transaksiList || []);
+        setPengeluaranList(liveData.pengeluaranList || []);
+        setUrunanList(liveData.urunanList || []);
         const newSummary = computeSummary(
-          liveData.wargaList,
-          liveData.transaksiList,
-          liveData.pengeluaranList,
+          wargaWithHashes,
+          liveData.transaksiList || [],
+          liveData.pengeluaranList || [],
           tarifIplPerBulan,
           saldoAwalKas
         );
         setDashboardSummary(newSummary);
 
         if (!silent) {
-          showToast(`Data berhasil disinkronkan langsung dari Google Sheets! (${liveData.wargaList.length} warga terdata)`);
+          showToast(`Data berhasil disinkronkan langsung dari Google Sheets! (${wargaWithHashes.length} warga terdata)`);
         }
-      } else {
-        // Jangan kosongkan state jika respons Google Sheets belum termuat, pertahankan data master lokal!
-        console.warn('Data Google Sheets belum tersedia, mempertahankan data lokal.');
       }
     } catch (e) {
       console.warn('Gagal sync live dari Google Sheets:', e);
