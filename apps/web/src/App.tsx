@@ -45,6 +45,18 @@ const DEFAULT_ADMINS: AdminAccount[] = [
     createdAt: '09 Okt 2026',
   },
 ];
+if (typeof window !== 'undefined') {
+  if (!localStorage.getItem('SIM_WARGA_WIPED_CLEAN_DATA_ONLY_V1')) {
+    localStorage.removeItem('SIM_WARGA_DATA_WARGA');
+    localStorage.removeItem('SIM_WARGA_TRANSAKSI_IPL');
+    localStorage.removeItem('SIM_WARGA_PENGELUARAN_KAS');
+    localStorage.removeItem('SIM_WARGA_URUNAN_LIST');
+    localStorage.removeItem('SIM_WARGA_PENGUMUMAN_LIST');
+    localStorage.removeItem('SIM_WARGA_OWNED_WARGA_KEYS');
+    localStorage.removeItem('SIM_WARGA_MY_OWNED_RECORDS_V3');
+    localStorage.setItem('SIM_WARGA_WIPED_CLEAN_DATA_ONLY_V1', 'true');
+  }
+}
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('beranda');
