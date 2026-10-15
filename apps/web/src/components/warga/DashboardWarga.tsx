@@ -6610,7 +6610,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                                   setVerifyWaError('');
                                 }}
                                 placeholder={activeLockoutSecs > 0 ? 'Akses dibekukan...' : 'Ketik password rumah...'}
-                                className={`w-full px-3 pr-9 py-2 rounded-xl border text-xs font-extrabold text-[#1C221E] dark:text-white focus:outline-none focus:border-[#0B484C] ${
+                                className={`w-full px-9 py-2 rounded-xl border text-xs font-extrabold text-center tracking-wider text-[#1C221E] dark:text-white focus:outline-none focus:border-[#0B484C] ${
                                   activeLockoutSecs > 0
                                     ? 'bg-stone-100 dark:bg-stone-800 border-stone-200 opacity-60 cursor-not-allowed'
                                     : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-700'
@@ -7063,7 +7063,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                       setIplGateError('');
                     }}
                     placeholder={activeLockoutSecs > 0 ? 'Akses dibekukan...' : 'Ketik password rumah...'}
-                    className={`w-full h-10 pl-3.5 pr-10 rounded-xl border text-xs font-extrabold text-[#1C221E] dark:text-white focus:outline-none focus:border-[#0B484C] ${
+                    className={`w-full h-10 px-10 rounded-xl border text-xs font-extrabold text-center tracking-wider text-[#1C221E] dark:text-white focus:outline-none focus:border-[#0B484C] ${
                       activeLockoutSecs > 0
                         ? 'bg-stone-100 dark:bg-stone-800 border-stone-200 opacity-60 cursor-not-allowed'
                         : 'bg-[#F8F8F6] dark:bg-stone-800 border-stone-200 dark:border-stone-700'
