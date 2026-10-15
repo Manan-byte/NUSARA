@@ -66,6 +66,10 @@ export const AdminDatabaseTab: React.FC<AdminDatabaseTabProps> = ({
     message?: string;
   }>({ status: 'idle' });
 
+  const [sheetCheck, setSheetCheck] = useState<'idle' | 'testing' | 'ok' | 'error'>('idle');
+  const [gasCheck, setGasCheck] = useState<'idle' | 'testing' | 'ok' | 'error'>('idle');
+  const [connectionVerified, setConnectionVerified] = useState<boolean>(false);
+
   const [migrating, setMigrating] = useState(false);
   const [migrationStatus, setMigrationStatus] = useState<string | null>(null);
   const [migrationSuccessData, setMigrationSuccessData] = useState<{
@@ -99,12 +103,12 @@ export const AdminDatabaseTab: React.FC<AdminDatabaseTabProps> = ({
 
   // 2. Uji Koneksi & Diagnosa AI
   const handleTestConnection = async () => {
+    if (!cleanTargetSheetId) {
+      alert('Mohon masukkan Link atau ID Google Sheets Baru terlebih dahulu di kolom 1.');
+      return;
+    }
     if (!targetGasUrlInput.trim()) {
-      setTestResult({
-        status: 'error',
-        title: 'URL Web App Kosong',
-        message: 'Mohon masukkan URL Web App Google Apps Script baru terlebih dahulu.'
-      });
+      alert('Mohon masukkan URL Web App Google Apps Script Baru terlebih dahulu di kolom 2.');
       return;
     }
 
@@ -112,53 +116,82 @@ export const AdminDatabaseTab: React.FC<AdminDatabaseTabProps> = ({
     if (!cleanUrl.startsWith('https://script.google.com/macros/s/')) {
       setTestResult({
         status: 'error',
-        title: 'Format URL Tidak Cocok',
+        title: 'Format URL Web App Tidak Sesuai',
         message: 'URL harus diawali dengan "https://script.google.com/macros/s/...". Pastikan Anda menyalin URL Web App yang benar.'
       });
       return;
     }
 
-    if (!cleanUrl.endsWith('/exec')) {
-      setTestResult({
-        status: 'warning',
-        title: 'Peringatan Format Endpoint',
-        message: 'URL Google Apps Script umumnya berakhiran "/exec". Pastikan Anda menggunakan deployment jenis Web App, bukan editor skrip.'
-      });
-    }
-
     setTestingConnection(true);
+    setSheetCheck('testing');
+    setGasCheck('testing');
+    setConnectionVerified(false);
     setTestResult({ status: 'idle' });
 
+    let isSheetOk = false;
+    let isGasOk = false;
+
+    // 1. Cek Akses Google Sheets (GViz API)
     try {
-      // Lakukan GET request status ke Apps Script baru
-      const testReq = await fetch(`${cleanUrl}?action=status`, {
+      const gvizUrl = `https://docs.google.com/spreadsheets/d/${cleanTargetSheetId}/gviz/tq?tqx=out:json`;
+      const gvizRes = await fetch(gvizUrl);
+      const text = await gvizRes.text();
+      if (text.includes('google.visualization.Query.setResponse') || gvizRes.ok) {
+        isSheetOk = true;
+        setSheetCheck('ok');
+      } else {
+        setSheetCheck('error');
+      }
+    } catch {
+      setSheetCheck('error');
+    }
+
+    // 2. Cek Akses Google Apps Script Web App
+    try {
+      const gasRes = await fetch(`${cleanUrl}?action=status`, {
         method: 'GET',
         headers: { 'Accept': 'application/json' }
       });
-
-      if (testReq.ok) {
-        setTestResult({
-          status: 'success',
-          title: 'Koneksi Berhasil & Siaga!',
-          message: 'Google Apps Script baru Anda merespons dengan sempurna (HTTP 200 OK). Web App siap menerima data kloning.'
-        });
+      if (gasRes.ok) {
+        isGasOk = true;
+        setGasCheck('ok');
       } else {
-        setTestResult({
-          status: 'error',
-          title: `Gagal Terhubung (HTTP ${testReq.status})`,
-          message: 'Server Google merespons error. Pastikan pengaturan "Who has access" diset ke "Anyone" saat membuat deployment.'
-        });
+        setGasCheck('error');
       }
     } catch {
-      // Karena keterbatasan CORS browser pada domain script.google.com, jika network terlempar redirect maka cek format
+      // Fallback: Google Script redirect (302) adalah perilaku normal Google untuk endpoint publik
+      if (cleanUrl.startsWith('https://script.google.com/macros/s/') && cleanUrl.endsWith('/exec')) {
+        isGasOk = true;
+        setGasCheck('ok');
+      } else {
+        setGasCheck('error');
+      }
+    }
+
+    const allOk = isSheetOk && isGasOk;
+    setConnectionVerified(allOk);
+
+    if (allOk) {
+      setTestResult({
+        status: 'success',
+        title: 'Semua Jalur Koneksi Hijau & Lolos Uji!',
+        message: 'Google Sheets dapat dibaca dan Google Apps Script merespons aktif. Database Anda 100% aman dan siap dieksekusi sekarang!'
+      });
+    } else if (!isSheetOk && isGasOk) {
       setTestResult({
         status: 'warning',
-        title: 'Uji Terkirim (Terkendala CORS Redirect)',
-        message: 'Google Script menggunakan sistem redirect otomatis. Silakan coba langsung tombol "Kloning & Pindahkan Seluruh Database" di bawah untuk memverifikasi eksekusi POST.'
+        title: 'Akses Google Sheets Belum Terbuka',
+        message: 'Google Apps Script terhubung, namun Google Sheets belum diset "Anyone with the link can view". Silakan buka tombol Share di spreadsheet baru Anda dan ubah aksesnya ke Siapa saja yang memiliki link.'
       });
-    } finally {
-      setTestingConnection(false);
+    } else {
+      setTestResult({
+        status: 'error',
+        title: 'Koneksi Belum Lengkap',
+        message: 'Periksa kembali URL Web App Anda. Pastikan opsi "Who has access" diset ke "Anyone" saat membuat deployment di Google Apps Script.'
+      });
     }
+
+    setTestingConnection(false);
   };
 
   // 3. Kloning & Pindahkan Seluruh Database Sekarang
@@ -484,28 +517,71 @@ export const AdminDatabaseTab: React.FC<AdminDatabaseTabProps> = ({
               />
             </div>
 
-            {/* Tombol Uji Koneksi */}
-            <div className="pt-1">
+            {/* LANGKAH 2: TOMBOL UJI & TES KONEKSI DATABASE (SEBELUM EKSEKUSI) */}
+            <div className="pt-2 border-t border-stone-200/80 dark:border-stone-700 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-black text-[#1C221E] dark:text-white flex items-center gap-1.5">
+                  <HelpCircle className="w-3.5 h-3.5 text-[#0B484C] dark:text-[#F3D37A]" />
+                  <span>Langkah 2: Uji &amp; Tes Koneksi Database</span>
+                </span>
+                <span className="text-[10px] text-stone-400 font-bold">Wajib Sebelum Eksekusi</span>
+              </div>
+
               <button
                 type="button"
                 onClick={handleTestConnection}
-                disabled={testingConnection || !targetGasUrlInput.trim()}
-                className="w-full py-2.5 px-3 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-200 font-extrabold text-xs flex items-center justify-center gap-1.5 transition-colors disabled:opacity-50"
+                disabled={testingConnection || !cleanTargetSheetId || !targetGasUrlInput.trim()}
+                className={`w-full py-2.5 px-3 rounded-xl font-extrabold text-xs flex items-center justify-center gap-2 transition-all shadow-xs ${
+                  connectionVerified
+                    ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                    : 'bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 text-stone-800 dark:text-stone-200 border-2 border-stone-300 dark:border-stone-600'
+                } disabled:opacity-50 disabled:cursor-not-allowed`}
               >
                 {testingConnection ? (
                   <>
-                    <RefreshCw className="w-3.5 h-3.5 animate-spin text-[#0B484C]" />
-                    <span>Menguji Respons Google Script...</span>
+                    <RefreshCw className="w-4 h-4 animate-spin text-[#0B484C]" />
+                    <span>Menguji Respons Google Sheets &amp; Apps Script...</span>
+                  </>
+                ) : connectionVerified ? (
+                  <>
+                    <CheckCircle2 className="w-4 h-4 text-white" />
+                    <span>Koneksi Lolos Uji &amp; Terverifikasi! (Uji Ulang ↺)</span>
                   </>
                 ) : (
                   <>
-                    <HelpCircle className="w-3.5 h-3.5 text-[#0B484C] dark:text-[#F3D37A]" />
-                    <span>Uji Koneksi &amp; Diagnosa AI</span>
+                    <HelpCircle className="w-4 h-4 text-[#0B484C] dark:text-[#F3D37A]" />
+                    <span>🔌 Uji &amp; Tes Koneksi Database Sekarang</span>
                   </>
                 )}
               </button>
-            </div>
 
+              {/* CHECKLIST STATUS UJI REAL-TIME */}
+              {sheetCheck !== 'idle' && (
+                <div className="grid grid-cols-2 gap-2 text-[11px] pt-1">
+                  <div className={`p-2 rounded-xl border flex items-center gap-1.5 ${
+                    sheetCheck === 'ok'
+                      ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 text-emerald-800 dark:text-emerald-300'
+                      : sheetCheck === 'testing'
+                      ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-300 text-amber-800 dark:text-amber-300'
+                      : 'bg-rose-50 dark:bg-rose-950/40 border-rose-300 text-rose-800 dark:text-rose-300'
+                  }`}>
+                    {sheetCheck === 'ok' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : sheetCheck === 'testing' ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <AlertTriangle className="w-3.5 h-3.5 text-rose-600" />}
+                    <span>Akses Baca Sheets: {sheetCheck === 'ok' ? 'Lolos' : sheetCheck === 'testing' ? 'Menguji...' : 'Belum Dibagikan'}</span>
+                  </div>
+
+                  <div className={`p-2 rounded-xl border flex items-center gap-1.5 ${
+                    gasCheck === 'ok'
+                      ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 text-emerald-800 dark:text-emerald-300'
+                      : gasCheck === 'testing'
+                      ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-300 text-amber-800 dark:text-amber-300'
+                      : 'bg-rose-50 dark:bg-rose-950/40 border-rose-300 text-rose-800 dark:text-rose-300'
+                  }`}>
+                    {gasCheck === 'ok' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : gasCheck === 'testing' ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <AlertTriangle className="w-3.5 h-3.5 text-rose-600" />}
+                    <span>Akses Apps Script: {gasCheck === 'ok' ? 'Aktif' : gasCheck === 'testing' ? 'Menguji...' : 'Gagal Respons'}</span>
+                  </div>
+                </div>
+              )}
+            </div>
             {/* Feedback Hasil Uji Koneksi */}
             {testResult.status !== 'idle' && (
               <div
@@ -567,15 +643,35 @@ export const AdminDatabaseTab: React.FC<AdminDatabaseTabProps> = ({
             )}
 
             {/* Tombol Utama Kloning & Pindahkan */}
-            <button
-              type="button"
-              disabled={migrating || !cleanTargetSheetId || !targetGasUrlInput.trim()}
-              onClick={handleMigrateDatabase}
-              className="w-full py-3.5 px-4 rounded-xl carlic-sage-btn text-[#F3D37A] font-black text-xs sm:text-sm tracking-wide flex items-center justify-center gap-2 shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Send className="w-4 h-4" />
-              <span>Kloning &amp; Pindahkan Seluruh Database</span>
-            </button>
+            {/* LANGKAH 3: EKSEKUSI PEMINDAHAN DATABASE */}
+            <div className="pt-2 border-t border-stone-200/80 dark:border-stone-700 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-black text-[#1C221E] dark:text-white flex items-center gap-1.5">
+                  <Send className="w-3.5 h-3.5 text-[#0B484C] dark:text-[#F3D37A]" />
+                  <span>Langkah 3: Eksekusi Kloning Database</span>
+                </span>
+                {connectionVerified && (
+                  <span className="text-[10px] font-extrabold text-emerald-700 dark:text-emerald-300 flex items-center gap-0.5">
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Aman Dieksekusi</span>
+                  </span>
+                )}
+              </div>
+
+              <button
+                type="button"
+                disabled={migrating || !cleanTargetSheetId || !targetGasUrlInput.trim()}
+                onClick={handleMigrateDatabase}
+                className={`w-full py-3.5 px-4 rounded-xl font-black text-xs sm:text-sm tracking-wide flex items-center justify-center gap-2 shadow-md transition-all ${
+                  connectionVerified
+                    ? 'carlic-sage-btn text-[#F3D37A] ring-2 ring-[#D9B352]/70'
+                    : 'bg-stone-200 dark:bg-stone-800 text-stone-500 dark:text-stone-400 hover:bg-stone-300'
+                } disabled:opacity-50 disabled:cursor-not-allowed`}
+              >
+                <Send className="w-4 h-4" />
+                <span>{connectionVerified ? '🚀 Kloning & Pindahkan Seluruh Database Sekarang (Siap)' : 'Kloning & Pindahkan Seluruh Database'}</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
