@@ -192,7 +192,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
   const [pjuSuccess, setPjuSuccess] = useState(false);
   // Menu 4 (Data Warga & Blok) States
   const [wargaMode, setWargaMode] = useState<'direktori' | 'form'>('direktori');
-  const [blokGroup, setBlokGroup] = useState<'ALL' | 'BLOK-D' | 'BLOK-E1-E6' | 'BLOK-E7-E12'>('ALL');
+  const [blokGroup, setBlokGroup] = useState<string>('ALL');
   const [wargaSearch, setWargaSearch] = useState('');
   const [wargaPage, setWargaPage] = useState(1);
   const [detailWarga, setDetailWarga] = useState<WargaRecord | null>(null);
@@ -4618,18 +4618,26 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
             {/* MENU 4: DATA WARGA & BLOK                                     */}
             {/* ============================================================= */}
             {currentTab === 'warga' && (() => {
+              // Ekstrak blok-blok unik secara dinamis murni dari data warga aktif (Mendukung Blok A s/d Z)
+              const uniqueBlocks = Array.from(
+                new Set(
+                  wargaList
+                    .map((w) => (w.blok ? w.blok.toUpperCase().replace(/^BLOK\s*/i, '').trim() : ''))
+                    .filter((b) => b.length > 0)
+                )
+              ).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+
               const filteredWargaList = wargaList.filter((w) => {
                 const matchSearch = aiFuzzyMatch(
                   wargaSearch,
                   `${w.namaLengkap} ${w.alamatRumah} ${w.blok}`,
                   `${w.pekerjaan} ${w.statusTempatTinggal}`
                 );
-                const b = w.blok.toUpperCase().replace(/^BLOK\s*/i, '').trim();
-                const eNum = b.startsWith('E') ? parseInt(b.slice(1), 10) || 0 : 0;
+                const bClean = w.blok ? w.blok.toUpperCase().replace(/^BLOK\s*/i, '').trim() : '';
                 let matchGroup = true;
-                if (blokGroup === 'BLOK-D') matchGroup = b.startsWith('D');
-                if (blokGroup === 'BLOK-E1-E6') matchGroup = b.startsWith('E') && eNum >= 1 && eNum <= 6;
-                if (blokGroup === 'BLOK-E7-E12') matchGroup = b.startsWith('E') && eNum >= 7 && eNum <= 12;
+                if (blokGroup !== 'ALL') {
+                  matchGroup = bClean === blokGroup || bClean.startsWith(blokGroup);
+                }
                 return matchSearch && matchGroup;
               });
               const pageSize = 9;
@@ -4646,30 +4654,45 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                       <div className="flex flex-col flex-1 min-h-0">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2 flex-shrink-0 max-w-full">
                           <div className="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1 sm:pb-0 scrollbar-none flex-nowrap sm:flex-wrap flex-shrink-0">
-                            {(
-                              [
-                                { id: 'ALL', label: 'Semua Blok' },
-                                { id: 'BLOK-D', label: 'Blok D (D8–D16)' },
-                                { id: 'BLOK-E1-E6', label: 'Blok E1–E6' },
-                                { id: 'BLOK-E7-E12', label: 'Blok E7–E12' },
-                              ] as const
-                            ).map((grp) => (
-                              <button
-                                key={grp.id}
-                                type="button"
-                                onClick={() => {
-                                  setBlokGroup(grp.id);
-                                  setWargaPage(1);
-                                }}
-                                className={`text-xs font-bold px-3.5 py-1.5 rounded-full transition-colors ${
-                                  blokGroup === grp.id
-                                    ? 'bg-[#0B484C] text-[#F3D37A] ring-1 ring-[#D9B352]/50'
-                                    : 'bg-[#F4F4F0] dark:bg-stone-800 text-stone-600 dark:text-stone-300'
-                                }`}
-                              >
-                                {grp.label}
-                              </button>
-                            ))}
+                            {/* Tombol Semua Blok */}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setBlokGroup('ALL');
+                                setWargaPage(1);
+                              }}
+                              className={`text-xs font-bold px-3.5 py-1.5 rounded-full transition-colors ${
+                                blokGroup === 'ALL'
+                                  ? 'bg-[#0B484C] text-[#F3D37A] ring-1 ring-[#D9B352]/50'
+                                  : 'bg-[#F4F4F0] dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:text-[#0B484C] dark:hover:text-white'
+                              }`}
+                            >
+                              Semua Blok {wargaList.length > 0 ? `(${wargaList.length})` : ''}
+                            </button>
+
+                            {/* Tombol Blok Dinamis: Hanya muncul sesuai data warga aktif (Blok A sampai Z) */}
+                            {uniqueBlocks.map((blk) => {
+                              const countInBlock = wargaList.filter(
+                                (w) => (w.blok ? w.blok.toUpperCase().replace(/^BLOK\s*/i, '').trim() : '') === blk
+                              ).length;
+                              return (
+                                <button
+                                  key={blk}
+                                  type="button"
+                                  onClick={() => {
+                                    setBlokGroup(blk);
+                                    setWargaPage(1);
+                                  }}
+                                  className={`text-xs font-bold px-3.5 py-1.5 rounded-full transition-colors ${
+                                    blokGroup === blk
+                                      ? 'bg-[#0B484C] text-[#F3D37A] ring-1 ring-[#D9B352]/50'
+                                      : 'bg-[#F4F4F0] dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:text-[#0B484C] dark:hover:text-white'
+                                  }`}
+                                >
+                                  Blok {blk} ({countInBlock})
+                                </button>
+                              );
+                            })}
                           </div>
 
                           <div className="flex items-center gap-2 justify-between sm:justify-end w-full sm:w-auto flex-shrink-0">
