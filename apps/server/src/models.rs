@@ -231,3 +231,28 @@ pub struct ApiResponse<T> {
     pub data: Option<T>,
     pub message: String,
 }
+
+impl<T> ApiResponse<T> {
+    #[allow(dead_code)]
+    pub fn ok(data: T, msg: impl Into<String>) -> (axum::http::StatusCode, axum::response::Json<Self>) {
+        (axum::http::StatusCode::OK, axum::response::Json(Self { success: true, data: Some(data), message: msg.into() }))
+    }
+
+    pub fn created(data: T, msg: impl Into<String>) -> (axum::http::StatusCode, axum::response::Json<Self>) {
+        (axum::http::StatusCode::CREATED, axum::response::Json(Self { success: true, data: Some(data), message: msg.into() }))
+    }
+}
+
+impl ApiResponse<()> {
+    pub fn success(msg: impl Into<String>) -> (axum::http::StatusCode, axum::response::Json<Self>) {
+        (axum::http::StatusCode::OK, axum::response::Json(Self { success: true, data: None, message: msg.into() }))
+    }
+
+    pub fn not_found(msg: impl Into<String>) -> (axum::http::StatusCode, axum::response::Json<Self>) {
+        (axum::http::StatusCode::NOT_FOUND, axum::response::Json(Self { success: false, data: None, message: msg.into() }))
+    }
+
+    pub fn unauthorized(msg: impl Into<String>) -> (axum::http::StatusCode, axum::response::Json<Self>) {
+        (axum::http::StatusCode::UNAUTHORIZED, axum::response::Json(Self { success: false, data: None, message: msg.into() }))
+    }
+}

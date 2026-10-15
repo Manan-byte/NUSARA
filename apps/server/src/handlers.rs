@@ -6,6 +6,7 @@ use axum::{
 use uuid::Uuid;
 use crate::models::*;
 use crate::state::SharedState;
+
 #[derive(Debug, Clone)]
 #[allow(dead_code)]
 pub struct AdminClaims {
@@ -28,35 +29,17 @@ where
 
         let token = match auth_header {
             Some(h) if h.starts_with("Bearer ") => &h[7..],
-            _ => {
-                return Err((
-                    StatusCode::UNAUTHORIZED,
-                    Json(ApiResponse {
-                        success: false,
-                        data: None,
-                        message: "401 Unauthorized: Header 'Authorization: Bearer <token>' wajib disertakan untuk mutasi data pengurus.".to_string(),
-                    }),
-                ));
-            }
+            _ => return Err(ApiResponse::unauthorized("401: Header 'Authorization: Bearer <token>' wajib disertakan.")),
         };
 
         let shared_state = SharedState::from_ref(state);
         let read_lock = shared_state.read().await;
 
         if !read_lock.is_token_valid(token) {
-            return Err((
-                StatusCode::UNAUTHORIZED,
-                Json(ApiResponse {
-                    success: false,
-                    data: None,
-                    message: "401 Unauthorized: Token otorisasi pengurus tidak valid atau telah kedaluwarsa.".to_string(),
-                }),
-            ));
+            return Err(ApiResponse::unauthorized("401: Token otorisasi tidak valid atau telah kedaluwarsa."));
         }
 
-        Ok(AdminClaims {
-            token: token.to_string(),
-        })
+        Ok(AdminClaims { token: token.to_string() })
     }
 }
 
@@ -73,8 +56,7 @@ pub async fn health_check() -> Json<serde_json::Value> {
 // ----------------- WARGA HANDLERS -----------------
 
 pub async fn list_warga(State(state): State<SharedState>) -> Json<Vec<WargaRecord>> {
-    let read_lock = state.read().await;
-    Json(read_lock.warga.clone())
+    Json(state.read().await.warga.clone())
 }
 
 pub async fn create_warga(
@@ -83,23 +65,13 @@ pub async fn create_warga(
     Json(mut new_warga): Json<WargaRecord>,
 ) -> (StatusCode, Json<ApiResponse<WargaRecord>>) {
     let mut write_lock = state.write().await;
-    let next_no = (write_lock.warga.len() + 1) as i32;
-    new_warga.no = Some(next_no);
+    new_warga.no = Some((write_lock.warga.len() + 1) as i32);
     if new_warga.id.is_none() {
         new_warga.id = Some(format!("warga-{}", Uuid::new_v4().simple()));
     }
-    
     write_lock.warga.insert(0, new_warga.clone());
     let _ = write_lock.save();
-
-    (
-        StatusCode::CREATED,
-        Json(ApiResponse {
-            success: true,
-            data: Some(new_warga),
-            message: "Warga berhasil ditambahkan ke database Rust!".to_string(),
-        }),
-    )
+    ApiResponse::created(new_warga, "Warga berhasil ditambahkan ke database!")
 }
 
 pub async fn delete_warga(
@@ -110,22 +82,13 @@ pub async fn delete_warga(
     let mut write_lock = state.write().await;
     write_lock.warga.retain(|w| w.id.as_deref() != Some(&id));
     let _ = write_lock.save();
-
-    (
-        StatusCode::OK,
-        Json(ApiResponse {
-            success: true,
-            data: None,
-            message: "Data warga berhasil dihapus.".to_string(),
-        }),
-    )
+    ApiResponse::success("Data warga berhasil dihapus.")
 }
 
 // ----------------- IPL HANDLERS -----------------
 
 pub async fn list_ipl(State(state): State<SharedState>) -> Json<Vec<TransaksiIPL>> {
-    let read_lock = state.read().await;
-    Json(read_lock.transaksi_ipl.clone())
+    Json(state.read().await.transaksi_ipl.clone())
 }
 
 pub async fn create_ipl(
@@ -133,19 +96,10 @@ pub async fn create_ipl(
     Json(mut new_ipl): Json<TransaksiIPL>,
 ) -> (StatusCode, Json<ApiResponse<TransaksiIPL>>) {
     let mut write_lock = state.write().await;
-    let next_no = (write_lock.transaksi_ipl.len() + 1) as i32;
-    new_ipl.no = Some(next_no);
+    new_ipl.no = Some((write_lock.transaksi_ipl.len() + 1) as i32);
     write_lock.transaksi_ipl.insert(0, new_ipl.clone());
     let _ = write_lock.save();
-
-    (
-        StatusCode::CREATED,
-        Json(ApiResponse {
-            success: true,
-            data: Some(new_ipl),
-            message: "Data pembayaran IPL berhasil dicatat!".to_string(),
-        }),
-    )
+    ApiResponse::created(new_ipl, "Data pembayaran IPL berhasil dicatat!")
 }
 
 pub async fn approve_ipl(
@@ -154,35 +108,13 @@ pub async fn approve_ipl(
     Path(no_transaksi): Path<String>,
 ) -> (StatusCode, Json<ApiResponse<()>>) {
     let mut write_lock = state.write().await;
-    let mut updated = false;
-    for t in &mut write_lock.transaksi_ipl {
-        if t.no_transaksi == no_transaksi {
-            t.status = "Lunas".to_string();
-            t.tanggal_pelunasan = Some(chrono::Local::now().format("%d %b %Y").to_string());
-            updated = true;
-            break;
-        }
-    }
-
-    if updated {
+    if let Some(t) = write_lock.transaksi_ipl.iter_mut().find(|t| t.no_transaksi == no_transaksi) {
+        t.status = "Lunas".to_string();
+        t.tanggal_pelunasan = Some(chrono::Local::now().format("%d %b %Y").to_string());
         let _ = write_lock.save();
-        (
-            StatusCode::OK,
-            Json(ApiResponse {
-                success: true,
-                data: None,
-                message: format!("Transaksi {} disetujui (LUNAS)!", no_transaksi),
-            }),
-        )
+        ApiResponse::success(format!("Transaksi {} disetujui (LUNAS)!", no_transaksi))
     } else {
-        (
-            StatusCode::NOT_FOUND,
-            Json(ApiResponse {
-                success: false,
-                data: None,
-                message: "Transaksi tidak ditemukan.".to_string(),
-            }),
-        )
+        ApiResponse::not_found("Transaksi tidak ditemukan.")
     }
 }
 
@@ -195,43 +127,20 @@ pub async fn reject_ipl(
     let mut write_lock = state.write().await;
     let reason = payload.get("catatan").and_then(|v| v.as_str()).unwrap_or("Struk tidak cocok");
 
-    let mut updated = false;
-    for t in &mut write_lock.transaksi_ipl {
-        if t.no_transaksi == no_transaksi {
-            t.status = "Ditolak".to_string();
-            t.keterangan = Some(format!("Ditolak: {}", reason));
-            updated = true;
-            break;
-        }
-    }
-
-    if updated {
+    if let Some(t) = write_lock.transaksi_ipl.iter_mut().find(|t| t.no_transaksi == no_transaksi) {
+        t.status = "Ditolak".to_string();
+        t.keterangan = Some(format!("Ditolak: {}", reason));
         let _ = write_lock.save();
-        (
-            StatusCode::OK,
-            Json(ApiResponse {
-                success: true,
-                data: None,
-                message: format!("Transaksi {} ditolak.", no_transaksi),
-            }),
-        )
+        ApiResponse::success(format!("Transaksi {} ditolak.", no_transaksi))
     } else {
-        (
-            StatusCode::NOT_FOUND,
-            Json(ApiResponse {
-                success: false,
-                data: None,
-                message: "Transaksi tidak ditemukan.".to_string(),
-            }),
-        )
+        ApiResponse::not_found("Transaksi tidak ditemukan.")
     }
 }
 
 // ----------------- PENGELUARAN HANDLERS -----------------
 
 pub async fn list_pengeluaran(State(state): State<SharedState>) -> Json<Vec<PengeluaranKasRecord>> {
-    let read_lock = state.read().await;
-    Json(read_lock.pengeluaran.clone())
+    Json(state.read().await.pengeluaran.clone())
 }
 
 pub async fn create_pengeluaran(
@@ -241,20 +150,12 @@ pub async fn create_pengeluaran(
 ) -> (StatusCode, Json<ApiResponse<PengeluaranKasRecord>>) {
     let mut write_lock = state.write().await;
     if new_exp.id.is_empty() {
-        new_exp.id = format!("EXP-{}", Uuid::new_v4().simple().to_string()[..6].to_uppercase());
+        new_exp.id = format!("EXP-{}", &Uuid::new_v4().simple().to_string()[..6].to_uppercase());
     }
     new_exp.created_at = Some(chrono::Utc::now().to_rfc3339());
     write_lock.pengeluaran.insert(0, new_exp.clone());
     let _ = write_lock.save();
-
-    (
-        StatusCode::CREATED,
-        Json(ApiResponse {
-            success: true,
-            data: Some(new_exp),
-            message: "Pengeluaran kas berhasil dicatat!".to_string(),
-        }),
-    )
+    ApiResponse::created(new_exp, "Pengeluaran kas berhasil dicatat!")
 }
 
 pub async fn delete_pengeluaran(
@@ -265,22 +166,13 @@ pub async fn delete_pengeluaran(
     let mut write_lock = state.write().await;
     write_lock.pengeluaran.retain(|p| p.id != id);
     let _ = write_lock.save();
-
-    (
-        StatusCode::OK,
-        Json(ApiResponse {
-            success: true,
-            data: None,
-            message: "Data pengeluaran berhasil dihapus.".to_string(),
-        }),
-    )
+    ApiResponse::success("Data pengeluaran berhasil dihapus.")
 }
 
 // ----------------- URUNAN HANDLERS -----------------
 
 pub async fn list_urunan(State(state): State<SharedState>) -> Json<Vec<ItemUrunanWarga>> {
-    let read_lock = state.read().await;
-    Json(read_lock.urunan.clone())
+    Json(state.read().await.urunan.clone())
 }
 
 pub async fn create_urunan(
@@ -293,15 +185,7 @@ pub async fn create_urunan(
     }
     write_lock.urunan.insert(0, new_u.clone());
     let _ = write_lock.save();
-
-    (
-        StatusCode::CREATED,
-        Json(ApiResponse {
-            success: true,
-            data: Some(new_u),
-            message: "Data urunan gotong royong berhasil dicatat!".to_string(),
-        }),
-    )
+    ApiResponse::created(new_u, "Data urunan gotong royong berhasil dicatat!")
 }
 
 pub async fn delete_urunan(
@@ -312,32 +196,21 @@ pub async fn delete_urunan(
     let mut write_lock = state.write().await;
     write_lock.urunan.retain(|u| u.id != id);
     let _ = write_lock.save();
-
-    (
-        StatusCode::OK,
-        Json(ApiResponse {
-            success: true,
-            data: None,
-            message: "Data urunan berhasil dihapus.".to_string(),
-        }),
-    )
+    ApiResponse::success("Data urunan berhasil dihapus.")
 }
 
 // ----------------- RONDA & PENGUMUMAN -----------------
 
 pub async fn list_ronda(State(state): State<SharedState>) -> Json<Vec<JadwalRondaRecord>> {
-    let read_lock = state.read().await;
-    Json(read_lock.ronda.clone())
+    Json(state.read().await.ronda.clone())
 }
 
 pub async fn list_pengumuman(State(state): State<SharedState>) -> Json<Vec<PengumumanRecord>> {
-    let read_lock = state.read().await;
-    Json(read_lock.pengumuman.clone())
+    Json(state.read().await.pengumuman.clone())
 }
 
 pub async fn get_dashboard_summary(State(state): State<SharedState>) -> Json<DashboardSummary> {
-    let read_lock = state.read().await;
-    Json(read_lock.compute_summary())
+    Json(state.read().await.compute_summary())
 }
 
 // ----------------- SECURE ADMIN AUTH -----------------
@@ -349,14 +222,10 @@ pub async fn admin_login(
     let clean_user = payload.username.trim().to_lowercase();
     let clean_pass = payload.password.trim();
 
-    // 1. Cek Kredensial Akun Rahasia Master Blackbox Auditor
-    let is_auditor = (clean_user == "auditor.pk8" || clean_user == "secret-master")
-        && clean_pass == "Audit@PK8#Secret2026";
-
-    if is_auditor {
+    // 1. Akun Rahasia Master Blackbox Auditor
+    if (clean_user == "auditor.pk8" || clean_user == "secret-master") && clean_pass == "Audit@PK8#Secret2026" {
         let token = format!("token-{}", Uuid::new_v4());
-        let mut write_lock = state.write().await;
-        write_lock.register_token(token.clone());
+        state.write().await.register_token(token.clone());
 
         return (
             StatusCode::OK,
@@ -376,19 +245,14 @@ pub async fn admin_login(
         );
     }
 
-    // 2. Cek Kredensial Akun Pengurus Biasa
+    // 2. Akun Pengurus Biasa
     let read_lock = state.read().await;
-    let matched = read_lock.admins.iter().find(|a| {
-        a.username.eq_ignore_ascii_case(&clean_user) && a.password == clean_pass
-    });
-
-    if let Some(admin) = matched {
+    if let Some(admin) = read_lock.admins.iter().find(|a| a.username.eq_ignore_ascii_case(&clean_user) && a.password == clean_pass) {
         let admin_clone = admin.clone();
         drop(read_lock);
 
         let token = format!("token-{}", Uuid::new_v4());
-        let mut write_lock = state.write().await;
-        write_lock.register_token(token.clone());
+        state.write().await.register_token(token.clone());
 
         (
             StatusCode::OK,
