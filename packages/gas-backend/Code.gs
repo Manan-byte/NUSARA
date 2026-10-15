@@ -30,6 +30,22 @@ function doPost(e) {
     var payload = JSON.parse(e.postData.contents);
     var action = payload.action || 'syncAll';
     var ss = getSpreadsheet();
+    // 0. Aksi ping / testConnection (Untuk Uji & Tes Koneksi Database Nyata)
+    if (action === 'ping' || action === 'testConnection') {
+      var sheetNames = [];
+      try {
+        sheetNames = ss.getSheets().map(function(s) { return s.getName(); });
+      } catch (err) {}
+      return createJsonResponse({
+        success: true,
+        status: 'online',
+        message: 'Koneksi ke Google Apps Script dan Spreadsheet terverifikasi 100%!',
+        spreadsheetId: ss.getId ? ss.getId() : SPREADSHEET_ID,
+        spreadsheetName: ss.getName ? ss.getName() : 'Google Spreadsheet',
+        tabsAktif: sheetNames,
+        timestamp: new Date().toISOString()
+      });
+    }
 
     // 1. Aksi syncAll (Sinkronisasi penuh warga, kas masuk IPL & kas keluar operasional)
     if (action === 'syncAll') {
@@ -262,14 +278,19 @@ function doGet(e) {
     });
   }
 
+  var sheetNames = [];
+  try {
+    sheetNames = ss.getSheets().map(function(s) { return s.getName(); });
+  } catch (err) {}
   return createJsonResponse({
     status: 'online',
+    success: true,
     komplek: 'Pesona Kahuripan 8 Tahap 2',
-    spreadsheetId: SPREADSHEET_ID,
-    tabsAktif: ['DATA_WARGA', 'PEMBAYARAN_IPL', 'PENGELUARAN_KAS', 'URUNAN_PJU'],
+    spreadsheetId: ss.getId ? ss.getId() : SPREADSHEET_ID,
+    spreadsheetName: ss.getName ? ss.getName() : 'Google Spreadsheet',
+    tabsAktif: sheetNames.length > 0 ? sheetNames : ['DATA_WARGA', 'PEMBAYARAN_IPL', 'PENGELUARAN_KAS', 'URUNAN_PJU'],
     timestamp: new Date().toISOString()
   });
-}
 
 function getSpreadsheet() {
   try {

@@ -129,43 +129,59 @@ export const AdminDatabaseTab: React.FC<AdminDatabaseTabProps> = ({
     setTestResult({ status: 'idle' });
 
     let isSheetOk = false;
+    let sheetNote = '';
     let isGasOk = false;
+    let gasNote = '';
+    let gasTitle = '';
 
-    // 1. Cek Akses Google Sheets (GViz API)
+    // 1. PENGUJIAN NYATA: Cek Akses Google Sheets via GViz API
     try {
       const gvizUrl = `https://docs.google.com/spreadsheets/d/${cleanTargetSheetId}/gviz/tq?tqx=out:json`;
       const gvizRes = await fetch(gvizUrl);
       const text = await gvizRes.text();
-      if (text.includes('google.visualization.Query.setResponse') || gvizRes.ok) {
+      if (text.includes('google.visualization.Query.setResponse') && (text.includes('"status":"ok"') || text.includes("'status':'ok'"))) {
         isSheetOk = true;
+        sheetNote = 'Spreadsheet terhubung dan dapat dibaca secara publik (Akses Lolos).';
         setSheetCheck('ok');
       } else {
+        isSheetOk = false;
+        sheetNote = 'Spreadsheet terkunci (Restricted). Belum diset "Anyone with the link can view".';
         setSheetCheck('error');
       }
     } catch {
+      isSheetOk = false;
+      sheetNote = 'Tidak dapat menghubungi Google Sheets. Periksa kembali ID atau koneksi internet.';
       setSheetCheck('error');
     }
 
-    // 2. Cek Akses Google Apps Script Web App
+    // 2. PENGUJIAN NYATA: Cek Akses Google Apps Script Web App
     try {
-      const gasRes = await fetch(`${cleanUrl}?action=status`, {
+      const gasRes = await fetch(`${cleanUrl}?action=status&t=${Date.now()}`, {
         method: 'GET',
         headers: { 'Accept': 'application/json' }
       });
+
       if (gasRes.ok) {
-        isGasOk = true;
-        setGasCheck('ok');
+        const json = await gasRes.json();
+        if (json && (json.status === 'online' || json.success === true)) {
+          isGasOk = true;
+          gasTitle = json.spreadsheetName || 'Spreadsheet Terhubung';
+          gasNote = `Web App aktif & merespons 200 OK (Nama Sheet: "${gasTitle}").`;
+          setGasCheck('ok');
+        } else {
+          isGasOk = false;
+          gasNote = json?.error || 'Respon Google Script tidak berstatus online.';
+          setGasCheck('error');
+        }
       } else {
+        isGasOk = false;
+        gasNote = `Server Google merespons status HTTP ${gasRes.status}.`;
         setGasCheck('error');
       }
     } catch {
-      // Fallback: Google Script redirect (302) adalah perilaku normal Google untuk endpoint publik
-      if (cleanUrl.startsWith('https://script.google.com/macros/s/') && cleanUrl.endsWith('/exec')) {
-        isGasOk = true;
-        setGasCheck('ok');
-      } else {
-        setGasCheck('error');
-      }
+      isGasOk = false;
+      gasNote = 'Gagal menghubungi Web App (Permintaan ditolak oleh CORS Google). Ini menandakan opsi "Who has access" belum diset ke "Anyone".';
+      setGasCheck('error');
     }
 
     const allOk = isSheetOk && isGasOk;
@@ -174,20 +190,26 @@ export const AdminDatabaseTab: React.FC<AdminDatabaseTabProps> = ({
     if (allOk) {
       setTestResult({
         status: 'success',
-        title: 'Semua Jalur Koneksi Hijau & Lolos Uji!',
-        message: 'Google Sheets dapat dibaca dan Google Apps Script merespons aktif. Database Anda 100% aman dan siap dieksekusi sekarang!'
+        title: 'Semua Jalur Koneksi 100% Lolos Verifikasi!',
+        message: `Koneksi nyata terverifikasi. Spreadsheet (${sheetNote}) dan Google Apps Script (${gasNote}) aktif dan sinkron. Database aman untuk dieksekusi sekarang!`
       });
     } else if (!isSheetOk && isGasOk) {
       setTestResult({
         status: 'warning',
-        title: 'Akses Google Sheets Belum Terbuka',
-        message: 'Google Apps Script terhubung, namun Google Sheets belum diset "Anyone with the link can view". Silakan buka tombol Share di spreadsheet baru Anda dan ubah aksesnya ke Siapa saja yang memiliki link.'
+        title: 'Akses Google Sheets Masih Terkunci (Restricted)',
+        message: 'Google Apps Script Anda sudah aktif, namun Google Sheets belum dibuka akses publiknya. Solusi AI: Buka Google Sheets Anda -> Klik tombol Bagikan (Share) di kanan atas -> Ubah "Akses umum" dari Dibatasi menjadi "Siapa saja yang memiliki link dapat melihat" -> Simpan, lalu klik Uji Koneksi lagi.'
+      });
+    } else if (isSheetOk && !isGasOk) {
+      setTestResult({
+        status: 'error',
+        title: 'Izin Google Apps Script Belum "Anyone"',
+        message: 'Google Sheets dapat dibaca, namun Web App Anda menolak koneksi browser. Solusi AI: Buka Google Apps Script Anda -> Klik Deploy (Terapkan) -> Kelola Penerapan -> Klik ikon Pensil (Edit) -> Pastikan kolom "Who has access" (Siapa yang memiliki akses) diubah ke "Anyone" (Siapa saja) -> Klik Terapkan, lalu uji koneksi lagi.'
       });
     } else {
       setTestResult({
         status: 'error',
-        title: 'Koneksi Belum Lengkap',
-        message: 'Periksa kembali URL Web App Anda. Pastikan opsi "Who has access" diset ke "Anyone" saat membuat deployment di Google Apps Script.'
+        title: 'Kedua Jalur Koneksi Belum Terhubung',
+        message: 'Google Sheets dan Google Apps Script keduanya belum dapat diakses. Solusi AI: 1) Bagikan Google Sheets dengan izin "Anyone with link can view". 2) Deploy Google Apps Script dengan izin "Anyone".'
       });
     }
 
