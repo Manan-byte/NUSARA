@@ -351,7 +351,7 @@ export const DashboardAdmin: React.FC<DashboardAdminProps> = ({
   };
 
   return (
-    <div className="w-full max-w-full overflow-hidden h-screen max-h-screen bg-[#F4F4F0] dark:bg-[#031A1C] text-[#1C221E] dark:text-[#E8EFE9] flex flex-col antialiased selection:bg-[#0B484C] selection:text-[#F3D37A]">
+    <div className="w-full max-w-full overflow-y-auto md:overflow-hidden min-h-screen md:h-screen md:max-h-screen bg-[#F4F4F0] dark:bg-[#031A1C] text-[#1C221E] dark:text-[#E8EFE9] flex flex-col antialiased selection:bg-[#0B484C] selection:text-[#F3D37A]">
       {/* =================================================================== */}
       {/* 1. TOP HEADER BAR                                                   */}
       {/* =================================================================== */}
@@ -451,7 +451,7 @@ export const DashboardAdmin: React.FC<DashboardAdminProps> = ({
       {/* =================================================================== */}
       {/* 2. BODY: 5 ACTION HUBS SIDEBAR + MAIN WORKSPACE                    */}
       {/* =================================================================== */}
-      <div className="flex flex-col md:flex-row flex-1 min-h-0 h-[calc(100vh-3.5rem)] max-h-[calc(100vh-3.5rem)] w-full max-w-full overflow-hidden">
+      <div className="flex flex-col md:flex-row flex-1 min-h-0 h-auto md:h-[calc(100vh-3.5rem)] md:max-h-[calc(100vh-3.5rem)] w-full max-w-full overflow-visible md:overflow-hidden">
         {/* LEFT SIDEBAR NAVIGATION */}
         <aside className="w-full md:w-60 h-full max-h-full bg-white/70 dark:bg-[#052123]/80 border-r border-stone-200/70 dark:border-[#D9B352]/20 p-3 flex md:flex-col justify-between flex-shrink-0 overflow-y-auto">
           <nav className="flex md:flex-col gap-1.5 overflow-x-auto md:overflow-visible w-full">
@@ -500,7 +500,7 @@ export const DashboardAdmin: React.FC<DashboardAdminProps> = ({
         </aside>
 
         {/* WORKSPACE AREA (5 ACTION HUBS) */}
-        <main className="flex-1 min-w-0 max-w-full h-full max-h-full overflow-hidden p-3 sm:p-4 flex flex-col">
+        <main className="flex-1 min-w-0 max-w-full h-auto md:h-full md:max-h-full overflow-y-auto md:overflow-hidden p-3 sm:p-4 flex flex-col">
           {activeHub === 'aksi' && (
             <AdminActionCenterTab
               currentAdmin={currentAdmin}

@@ -1936,8 +1936,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
       {/* =================================================================== */}
       {/* FULL-WIDTH TRANSLUCENT GLASS BOARD OVER SCENIC WEBSITE BACKGROUND   */}
       {/* =================================================================== */}
-      <div className="carlic-board w-full max-w-[1680px] flex-1 flex flex-col rounded-[22px] sm:rounded-[26px] p-2 sm:p-2.5 overflow-hidden min-h-0">
-        {/* 1. PANORAMIC SCENIC PESONA KAHURIPAN HEADER BANNER (RINGKAS)      */}
+        <div className="carlic-board w-full max-w-[1680px] flex-1 flex flex-col rounded-[22px] sm:rounded-[26px] p-2 sm:p-2.5 overflow-y-auto lg:overflow-hidden min-h-0">
         {/* ================================================================= */}
         <header className="relative z-30 rounded-[18px] px-3.5 py-2 sm:px-4 sm:py-2 mb-2 flex flex-col lg:flex-row lg:items-center justify-between gap-2">
           {/* Decorative Clipped Background Layer so Popover is Never Clipped */}
@@ -2180,8 +2179,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
         {/* ================================================================= */}
         {/* 2. MAIN BODY: VERTICAL PILL SIDEBAR KIRI + KONTEN MENU KANAN      */}
         {/* ================================================================= */}
-        <div className="flex flex-col lg:flex-row gap-3 items-stretch flex-1 min-h-0">
-          {/* LEFT SLIM VERTICAL PILL SIDEBAR (SEJAJAR PENUH DENGAN KONTEN KANAN) */}
+        <div className="flex flex-col lg:flex-row gap-3 items-stretch flex-1 min-h-0 overflow-y-auto lg:overflow-visible">
           <aside className="carlic-card lg:rounded-full px-2 py-2.5 flex lg:flex-col items-center justify-between gap-1.5 lg:w-[58px] flex-shrink-0 lg:h-full">
             <nav className="flex lg:flex-col items-center gap-1.5 overflow-x-auto lg:overflow-visible w-full lg:w-auto justify-around lg:justify-start scrollbar-none">
               {navItems.map((item) => {
@@ -2246,8 +2244,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
           </aside>
 
           {/* RIGHT CONTENT AREA (KONSISTEN 456PX DI SEMUA 6 MENU) */}
-          <div className="flex-1 min-w-0 lg:h-full">
-            {/* ============================================================= */}
+          <div className="flex-1 min-w-0 lg:h-full overflow-y-auto lg:overflow-visible pr-0.5">
             {/* MENU 1: BERANDA (TANPA DUPLIKASI ANGKA KAS & TANPA FINGERPRINT)*/}
             {/* ============================================================= */}
             {currentTab === 'beranda' && (
@@ -2693,14 +2690,18 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                                   const pendingCount = wargaList.filter(
                                     (w) => w.statusIpl === 'Menunggu Verifikasi'
                                   ).length;
+                                  const count =
+                                    st === 'ALL'
+                                      ? wargaList.length
+                                      : wargaList.filter((w) => w.statusIpl === st).length;
                                   const label =
                                     st === 'ALL'
-                                      ? 'Semua (12)'
+                                      ? `Semua (${count})`
                                       : st === 'Menunggu Verifikasi'
-                                      ? `⏳ Verifikasi${pendingCount > 0 ? ` (${pendingCount})` : ''}`
+                                      ? `⏳ Verifikasi (${count})`
                                       : st === 'Lunas'
-                                      ? 'Lunas (6)'
-                                      : 'Belum Bayar (3)';
+                                      ? `Lunas (${count})`
+                                      : `Belum Bayar (${count})`;
                                   return (
                                     <div key={st} className="relative group/tip inline-flex">
                                       <button
