@@ -2023,14 +2023,14 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
             );
 
             return (
-              <div className="relative z-20 flex flex-wrap sm:flex-nowrap items-center gap-1.5 sm:gap-2.5 max-w-full justify-start sm:justify-end">
+              <div className="relative z-20 flex items-center gap-1.5 sm:gap-2 max-w-full justify-end">
                 <button
                   type="button"
                   onClick={() => {
                     handleOpenFormWarga();
                     onSelectTab('warga');
                   }}
-                  className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-white/95 hover:bg-white text-[#092C2E] text-[11px] sm:text-xs font-extrabold shadow-md transition-colors flex items-center gap-1.5 flex-shrink-0"
+                  className="hidden sm:inline-flex px-3.5 py-2 rounded-full bg-white/95 hover:bg-white text-[#092C2E] text-xs font-extrabold shadow-md transition-colors items-center gap-1.5 flex-shrink-0"
                 >
                   <UserPlus className="w-3.5 h-3.5 text-[#0B484C]" />
                   <span>+ Isi Data Warga</span>
@@ -2039,12 +2039,21 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                 <button
                   type="button"
                   onClick={() => onSelectTab('ipl')}
-                  className="pk-gold-gradient px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-[#062C2F] text-[11px] sm:text-xs font-extrabold shadow-md hover:brightness-105 transition-all flex items-center gap-1.5 flex-shrink-0"
+                  className="hidden sm:inline-flex pk-gold-gradient px-3.5 py-2 rounded-full text-[#062C2F] text-xs font-extrabold shadow-md hover:brightness-105 transition-all items-center gap-1.5 flex-shrink-0"
                 >
                   <CreditCard className="w-3.5 h-3.5 text-[#062C2F]" />
                   <span>Bayar / Cek IPL</span>
                 </button>
-                {/* Tombol Lonceng Pusat Notifikasi Paguyuban */}
+
+                {/* Tombol Tema Cepat di Mobile */}
+                <button
+                  type="button"
+                  onClick={onToggleTheme}
+                  title={isDarkMode ? 'Beralih ke Mode Terang' : 'Beralih ke Mode Gelap'}
+                  className="sm:hidden w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 text-white border border-[#E5C158]/40 backdrop-blur-xs flex items-center justify-center flex-shrink-0"
+                >
+                  {isDarkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
+                </button>
                 <div className="relative">
                   <button
                     type="button"
@@ -2179,8 +2188,9 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
         {/* 2. MAIN BODY: VERTICAL PILL SIDEBAR KIRI + KONTEN MENU KANAN      */}
         {/* ================================================================= */}
         <div className="flex flex-col lg:flex-row gap-2.5 sm:gap-3 items-stretch flex-1 min-h-0 w-full max-w-full overflow-x-hidden">
-          <aside className="carlic-card lg:rounded-full px-2 py-2 flex lg:flex-col items-center justify-between gap-1.5 lg:w-[58px] flex-shrink-0 lg:h-full max-w-full overflow-hidden">
-            <nav className="flex lg:flex-col items-center gap-1 overflow-x-auto max-w-full justify-around lg:justify-start scrollbar-none">
+          {/* DESKTOP-ONLY VERTICAL PILL SIDEBAR */}
+          <aside className="hidden lg:flex carlic-card lg:rounded-full px-2 py-3 flex-col items-center justify-between gap-2 lg:w-[58px] flex-shrink-0 lg:h-full">
+            <nav className="flex flex-col items-center gap-1.5">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = currentTab === item.id;
@@ -2211,8 +2221,7 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
               })}
             </nav>
 
-            {/* Bottom Utility: Hanya 1 Tombol Tema & 1 Tombol Login Pengurus */}
-            <div className="hidden lg:flex flex-col items-center gap-1.5 pt-2 mt-1 border-t border-stone-200/80 dark:border-stone-800">
+            <div className="flex flex-col items-center gap-1.5 pt-2 mt-1 border-t border-stone-200/80 dark:border-stone-800">
               <button
                 type="button"
                 onClick={onToggleTheme}
@@ -2231,19 +2240,10 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
                 <LogIn className="w-4 h-4" />
               </button>
             </div>
-            <button
-              type="button"
-              onClick={onOpenLoginModal}
-              title="Login Pengurus Paguyuban"
-              className="lg:hidden px-3 py-2 rounded-full bg-stone-100 dark:bg-stone-800 text-xs font-bold text-[#1C221E] dark:text-white flex items-center gap-1.5 flex-shrink-0"
-            >
-              <Settings className="w-3.5 h-3.5" />
-              <span>Admin</span>
-            </button>
           </aside>
 
-          {/* RIGHT CONTENT AREA (KONSISTEN 456PX DI SEMUA 6 MENU) */}
-          <div className="flex-1 min-w-0 w-full max-w-full lg:h-full overflow-y-auto lg:overflow-visible pr-0.5">
+          {/* RIGHT CONTENT AREA */}
+          <div className="flex-1 min-w-0 w-full max-w-full lg:h-full pb-20 lg:pb-0 overflow-y-auto lg:overflow-visible pr-0.5">
             {/* MENU 1: BERANDA (TANPA DUPLIKASI ANGKA KAS & TANPA FINGERPRINT)*/}
             {/* ============================================================= */}
             {currentTab === 'beranda' && (
@@ -7508,6 +7508,46 @@ export const DashboardWarga: React.FC<DashboardWargaProps> = ({
           </div>
         </div>
       )}
+      {/* MOBILE BOTTOM NAVIGATION BAR: Diletakkan di bawah rapi seperti standar mobile app */}
+      <nav className="lg:hidden fixed bottom-0 inset-x-0 z-50 bg-white/95 dark:bg-[#072426]/95 backdrop-blur-md border-t border-stone-200/90 dark:border-[#D9B352]/30 px-2 py-1.5 flex items-center justify-around shadow-2xl">
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = currentTab === item.id;
+          return (
+            <button
+              key={item.id}
+              type="button"
+              disabled={isSyncingSheets}
+              onClick={() => {
+                if (!isSyncingSheets) {
+                  setIplMode('daftar');
+                  setUrunanMode('daftar');
+                  setWargaMode('direktori');
+                  setIsWargaLockedInForm(false);
+                  onSelectTab(item.id);
+                }
+              }}
+              className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all ${
+                isActive
+                  ? 'text-[#0B484C] dark:text-[#F3D37A] font-extrabold scale-105'
+                  : 'text-stone-400 hover:text-stone-600 dark:hover:text-stone-300 font-semibold'
+              }`}
+            >
+              <Icon className={`w-5 h-5 ${isActive ? 'stroke-[2.5]' : 'stroke-2'}`} />
+              <span className="text-[10px] leading-tight mt-0.5">{item.label}</span>
+            </button>
+          );
+        })}
+        <button
+          type="button"
+          onClick={onOpenLoginModal}
+          className="flex flex-col items-center justify-center py-1 px-2.5 rounded-xl text-stone-400 hover:text-stone-600 dark:hover:text-stone-300 font-semibold transition-all"
+        >
+          <Settings className="w-5 h-5 stroke-2" />
+          <span className="text-[10px] leading-tight mt-0.5">Admin</span>
+        </button>
+      </nav>
+
     </div>
   );
 };

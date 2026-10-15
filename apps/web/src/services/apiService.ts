@@ -578,3 +578,97 @@ export async function fetchLiveSheetData(): Promise<LiveSheetData | null> {
     return null;
   }
 }
+
+export function formatPayloadForGas(
+  updatedWarga: WargaRecord[],
+  updatedTrx: TransaksiIPL[],
+  updatedExp: PengeluaranKasRecord[] = [],
+  updatedUrunan: ItemUrunanWarga[] = []
+) {
+  const nowWib =
+    new Date().toLocaleString('id-ID', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    }) + ' WIB';
+
+  const residents = updatedWarga.map((w, idx) => {
+    const wrgId = w.id && w.id.startsWith('#WRG-') ? w.id : `#WRG-${('000' + (idx + 1)).slice(-3)}`;
+    const cleanName = w.namaLengkap.replace(/^\[#WRG-\d+\]\s*/i, '').trim();
+    const rawNote = (w.catatan || 'Warga Terdata').replace(/^ID:\s*#WRG-\d+\s*•\s*/i, '');
+    const noteWithIdAndPw = `ID: ${wrgId} • ${rawNote}${rawNote.includes('Password:') || !w.pin ? '' : ` • Password: ${w.pin}`}`;
+
+    return {
+      id: wrgId,
+      nama: cleanName,
+      jenisKelamin: w.jenisKelamin,
+      blok: w.blok,
+      nomor: parseInt(String(w.noRumah), 10) || 1,
+      blokNomor: w.alamatRumah,
+      telepon: w.noWhatsapp,
+      statusTempatTinggal: w.statusTempatTinggal,
+      pekerjaan: w.pekerjaan,
+      agama: w.agama,
+      statusPernikahan: w.statusPernikahan,
+      statusDalamKeluarga: w.statusDalamKeluarga,
+      jumlahAnggota: w.jmlJiwa,
+      anggotaKeluarga: w.anggotaKeluargaTambahan || '-',
+      statusIpl: w.statusIpl,
+      periodeIpl: w.periodeTercover || 'Oktober 2026',
+      nominalIpl: w.nominalIpl || 30000,
+      tanggalBayarIpl: w.tanggalUpdate || '-',
+      catatan: noteWithIdAndPw,
+      pin: w.pin || '-',
+      waktuInput: w.waktuInput || nowWib,
+    };
+  });
+
+  const iplRecords = updatedTrx.map((item, idx) => ({
+    id: item.noTransaksi || `#IPL-${('000' + (idx + 1)).slice(-3)}`,
+    nama: item.namaWarga,
+    blokNomor: item.lokasiRumah,
+    periode: item.periodeTercover || 'Oktober 2026',
+    durasiLabel: item.durasiPaket || '1 Bulan',
+    nominal: item.nominalBayar || 30000,
+    status: item.status || 'Lunas',
+    tanggalBayar: item.tanggalPelunasan || '-',
+    metode: item.metodePembayaran || 'Transfer Bank',
+    buktiBayar: item.buktiBayar || '-',
+    keterangan: item.keterangan || 'Lunas',
+    waktuInput: item.waktuInput || nowWib,
+  }));
+
+  const pengeluaranRecords = updatedExp.map((exp, idx) => ({
+    id: exp.id || `#EXP-${('000' + (idx + 1)).slice(-3)}`,
+    tanggal: exp.tanggal,
+    kategori: exp.kategori,
+    keterangan: exp.keterangan,
+    nominal: exp.nominal,
+    penerima: exp.penerima,
+    createdAt: exp.createdAt || new Date().toISOString(),
+    waktuInput: exp.waktuInput || exp.createdAt || nowWib,
+  }));
+
+  const urunanRecords = updatedUrunan.map((item, idx) => {
+    const pjuId = item.id && item.id.startsWith('#PJU-') ? item.id : `#PJU-${('000' + (idx + 1)).slice(-3)}`;
+    const cleanName = item.namaWarga.replace(/^\[#PJU-\d+\]\s*/i, '').trim();
+    return {
+      id: pjuId,
+      noUrut: idx + 1,
+      namaWarga: cleanName,
+      kategori: item.tipe === 'DONATUR' ? 'Donatur Sukarela' : 'Iuran Wajib PJU',
+      nominal: item.nominal,
+      metode: item.metode || 'TF',
+      status: item.status || 'Lunas',
+      tanggal: item.tanggal || '14 Okt 2026',
+      keterangan: item.keterangan || (item.tipe === 'DONATUR' ? 'Donasi Sukarela PJU' : 'Iuran Wajib Lampu PJU'),
+      buktiBayar: item.buktiBayar || '-',
+      waktuInput: item.waktuInput || nowWib,
+    };
+  });
+
+  return { residents, iplRecords, pengeluaranRecords, urunanRecords };
+}

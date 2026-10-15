@@ -22,6 +22,7 @@ import {
   LogOut,
   RefreshCw,
   Activity,
+  Database,
 } from 'lucide-react';
 
 import { AdminActionCenterTab } from './tabs/AdminActionCenterTab';
@@ -29,7 +30,7 @@ import { AdminFinanceTab } from './tabs/AdminFinanceTab';
 import { AdminResidentsTab } from './tabs/AdminResidentsTab';
 import { AdminPengumumanTab } from './tabs/AdminPengumumanTab';
 import { AdminAuditLogTab } from './tabs/AdminAuditLogTab';
-
+import { AdminDatabaseTab } from './tabs/AdminDatabaseTab';
 import { ProofPreviewModal } from './modals/ProofPreviewModal';
 import { RejectReasonModal } from './modals/RejectReasonModal';
 import { AddWargaModal } from './modals/AddWargaModal';
@@ -201,18 +202,26 @@ export const DashboardAdmin: React.FC<DashboardAdminProps> = ({
           badge: 0,
           tooltip: 'Pencatatan mutasi data warga & pengurus dengan analisis ringkas AI (otomatis bersih tiap 30 hari).',
         },
+        {
+          id: 'database',
+          label: 'Migrasi & Database',
+          icon: Database,
+          badge: 0,
+          tooltip: 'Koneksi, migrasi 1-klik, dan kloning database ke Google Sheets baru dengan asisten AI.',
+        },
       ];
 
   // Resolve which hub is active based on activeTab
   const resolveActiveHub = (
     tab: string
-  ): 'aksi' | 'keuangan' | 'kependudukan' | 'pengumuman' | 'log' => {
+  ): 'aksi' | 'keuangan' | 'kependudukan' | 'pengumuman' | 'log' | 'database' => {
     if (isSecretAuditor) return 'log';
     if (tab === 'beranda' || tab === 'aksi') return 'aksi';
     if (tab === 'ipl' || tab === 'urunan' || tab === 'keuangan') return 'keuangan';
     if (tab === 'warga' || tab === 'ronda' || tab === 'kependudukan') return 'kependudukan';
     if (tab === 'pengumuman') return 'pengumuman';
     if (tab === 'log') return 'log';
+    if (tab === 'database') return 'database';
     return 'aksi';
   };
 
@@ -605,6 +614,18 @@ export const DashboardAdmin: React.FC<DashboardAdminProps> = ({
             <AdminAuditLogTab
               currentAdminName={currentAdmin.nama}
               isSecretAuditor={isSecretAuditor}
+            />
+          )}
+
+          {activeHub === 'database' && (
+            <AdminDatabaseTab
+              wargaList={wargaList}
+              transaksiList={transaksiList}
+              pengeluaranList={pengeluaranList}
+              urunanList={urunanList}
+              onMigrateSuccess={() => {
+                alert('Database berhasil dialihkan ke Google Sheets baru!');
+              }}
             />
           )}
         </main>
