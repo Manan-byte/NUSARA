@@ -11,6 +11,7 @@ import {
   FileText,
   FileSpreadsheet,
 } from 'lucide-react';
+import { getActiveSpreadsheetUrl } from '../../services/apiService';
 
 export interface AdminVerifikasiQueueProps {
   transaksiList: TransaksiIPL[];
@@ -206,7 +207,7 @@ export const AdminVerifikasiQueue: React.FC<AdminVerifikasiQueueProps> = ({
             {/* Tombol aksi cepat */}
             <div className="flex items-center justify-between pt-3 border-t border-slate-100">
               <a
-                href="https://docs.google.com/spreadsheets/d/1Tt692ZhKSoWV13GMZGCXdcSYi3DOPLFqaIBstql-neM/edit#gid=0"
+                href={getActiveSpreadsheetUrl()}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-1 text-slate-500 hover:text-emerald-700 font-bold"

@@ -21,6 +21,9 @@ export function setSpreadsheetId(id: string): void {
 
 export const SPREADSHEET_ID = DEFAULT_SPREADSHEET_ID;
 
+export function getActiveSpreadsheetUrl(): string {
+  return `https://docs.google.com/spreadsheets/d/${getSpreadsheetId()}/edit`;
+}
 const DEFAULT_GAS_URL =
   'https://script.google.com/macros/s/AKfycbw9v-Ihioux0HFuvq_CV-b1OkUSZ53IDUZBPJnE2ej21abxj_pKgSMbiSmPeko9zYmY/exec';
 

@@ -16,6 +16,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { RupiahInput } from '../common/RupiahInput';
+import { getActiveSpreadsheetUrl } from '../../services/apiService';
 
 export interface AdminTransaksiIplTableProps {
   transaksiList: TransaksiIPL[];
@@ -420,7 +421,7 @@ export const AdminTransaksiIplTable: React.FC<AdminTransaksiIplTableProps> = ({
             {/* Tombol aksi cepat */}
             <div className="flex items-center justify-between pt-3 border-t border-slate-100">
               <a
-                href="https://docs.google.com/spreadsheets/d/1ilMcUp9_zyjE3BfT9j0BFg-h8lrp9YCuObrS44DTUT0/edit#gid=0"
+                href={getActiveSpreadsheetUrl()}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-1 text-slate-500 hover:text-emerald-700 font-bold"

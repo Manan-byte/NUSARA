@@ -25,6 +25,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
+import { getActiveSpreadsheetUrl } from '../../../services/apiService';
 
 export interface AdminBerandaTabProps {
   currentAdmin: AdminAccount;
@@ -399,7 +400,7 @@ export const AdminBerandaTab: React.FC<AdminBerandaTabProps> = ({
                 <Folder className="w-3 h-3 text-[#0B484C]" /> Database Master Spreadsheet
               </span>
               <a
-                href="https://docs.google.com/spreadsheets/d/1ilMcUp9_zyjE3BfT9j0BFg-h8lrp9YCuObrS44DTUT0/edit"
+                href={getActiveSpreadsheetUrl()}
                 target="_blank"
                 rel="noreferrer"
                 className="text-[#0B484C] dark:text-[#F3D37A] font-bold hover:underline"

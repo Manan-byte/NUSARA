@@ -26,6 +26,7 @@ import {
   Printer,
   Check,
 } from 'lucide-react';
+import { getActiveSpreadsheetUrl } from '../../../services/apiService';
 import { AddUrunanModal } from '../modals/AddUrunanModal';
 import { ConfirmActionModal } from '../modals/ConfirmActionModal';
 
@@ -201,7 +202,7 @@ export const AdminFinanceTab: React.FC<AdminFinanceTabProps> = ({
         </div>
 
         <a
-          href="https://docs.google.com/spreadsheets/d/1ilMcUp9_zyjE3BfT9j0BFg-h8lrp9YCuObrS44DTUT0/edit"
+          href={getActiveSpreadsheetUrl()}
           target="_blank"
           rel="noreferrer"
           title="Buka dokumen master spreadsheet Google Sheets resmi RT 08 di tab baru."

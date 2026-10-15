@@ -12,6 +12,7 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { PengumumanModal, getDefaultAnnouncementBanner } from '../modals/PengumumanModal';
+import { getActiveSpreadsheetUrl } from '../../../services/apiService';
 
 export interface AdminPengumumanTabProps {
   pengumumanList: PengumumanRecord[];
@@ -88,7 +89,7 @@ export const AdminPengumumanTab: React.FC<AdminPengumumanTabProps> = ({
           </button>
 
           <a
-            href="https://docs.google.com/spreadsheets/d/1ilMcUp9_zyjE3BfT9j0BFg-h8lrp9YCuObrS44DTUT0/edit"
+            href={getActiveSpreadsheetUrl()}
             target="_blank"
             rel="noreferrer"
             className="h-9 px-3.5 rounded-2xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 text-xs font-bold transition-colors flex items-center gap-1.5 border border-stone-200/80"

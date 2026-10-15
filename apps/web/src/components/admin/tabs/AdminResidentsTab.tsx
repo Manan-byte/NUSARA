@@ -14,6 +14,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
+import { getActiveSpreadsheetUrl } from '../../../services/apiService';
 export interface AdminResidentsTabProps {
   wargaList: WargaRecord[];
   rondaList: RondaWithStatus[];
@@ -92,7 +93,7 @@ export const AdminResidentsTab: React.FC<AdminResidentsTabProps> = ({
         </div>
 
         <a
-          href="https://docs.google.com/spreadsheets/d/1ilMcUp9_zyjE3BfT9j0BFg-h8lrp9YCuObrS44DTUT0/edit"
+          href={getActiveSpreadsheetUrl()}
           target="_blank"
           rel="noreferrer"
           className="h-9 px-3.5 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 text-xs font-bold transition-colors flex items-center gap-1.5 border-2 border-stone-300 dark:border-stone-700 shadow-2xs"

@@ -17,6 +17,7 @@ import {
   X,
 } from 'lucide-react';
 import { AdminAccount } from '@sim-warga/types';
+import { getActiveSpreadsheetUrl } from '../../services/apiService';
 
 export interface FloatingPillHeaderProps {
   activeTab: string;
@@ -136,7 +137,7 @@ export const FloatingPillHeader: React.FC<FloatingPillHeaderProps> = ({
           {isAdmin ? (
             <div className="flex items-center gap-2">
               <a
-                href="https://docs.google.com/spreadsheets/d/1ilMcUp9_zyjE3BfT9j0BFg-h8lrp9YCuObrS44DTUT0/edit"
+                href={getActiveSpreadsheetUrl()}
                 target="_blank"
                 rel="noreferrer"
                 className="hidden md:inline-flex items-center gap-1 text-xs font-bold px-3 py-2 rounded-full bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-300 border border-blue-200/80 dark:border-slate-700 shadow-2xs"
